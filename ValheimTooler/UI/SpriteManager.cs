@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,11 +6,11 @@ namespace ValheimTooler.UI
 {
     public static class SpriteManager
     {
-        private static Dictionary<string, Texture2D> _atlasCache;
+        private static readonly Dictionary<string, Texture2D> s_atlasCache;
 
         static SpriteManager()
         {
-            _atlasCache = new Dictionary<string, Texture2D>();
+            s_atlasCache = new Dictionary<string, Texture2D>();
         }
 
         public static Texture2D TextureFromSprite(Sprite sprite)
@@ -20,15 +20,16 @@ namespace ValheimTooler.UI
                 return sprite.texture;
             }
 
-            Texture2D spriteTexture = null;
+            Texture2D spriteTexture;
 
-            if (_atlasCache.ContainsKey(sprite.texture.name))
+            if (s_atlasCache.ContainsKey(sprite.texture.name))
             {
-                spriteTexture = _atlasCache[sprite.texture.name];
-            } else
+                spriteTexture = s_atlasCache[sprite.texture.name];
+            }
+            else
             {
                 spriteTexture = DuplicateTexture(sprite.texture);
-                _atlasCache.Add(sprite.texture.name, spriteTexture);
+                s_atlasCache.Add(sprite.texture.name, spriteTexture);
             }
 
             Texture2D newText = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
