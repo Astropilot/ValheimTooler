@@ -25,7 +25,6 @@ namespace ValheimTooler
         private Vector2 itemGiverScrollPosition;
         List<InventoryItem> items = new List<InventoryItem>();
         List<GUIContent> itemsGUI = new List<GUIContent>();
-        private Texture2D itemSpreedSheetTexture;
 
         // For World Message functionnality
         private string worldMessageText = "";
@@ -76,7 +75,7 @@ namespace ValheimTooler
 
                 if (component.m_itemData?.m_shared?.m_icons?.Length <= 0) continue;
 
-                Texture texture = this.textureFromSprite(component.m_itemData.m_shared.m_icons[0]);
+                Texture texture = SpriteManager.TextureFromSprite(component.m_itemData.m_shared.m_icons[0]);
                 itemsGUI.Add(new GUIContent(texture, component.m_itemData.m_shared.m_name));
                 items.Add(new InventoryItem(gameObject, component));
             }
@@ -291,40 +290,6 @@ namespace ValheimTooler
                     });
                 }
             }
-        }
-
-        public Texture2D textureFromSprite(Sprite sprite)
-        {
-            if (itemSpreedSheetTexture == null)
-                itemSpreedSheetTexture = duplicateTexture(sprite.texture);
-            Texture2D newText = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
-            Color[] newColors = itemSpreedSheetTexture.GetPixels((int)Math.Ceiling(sprite.textureRect.x),
-                                                                 (int)Math.Ceiling(sprite.textureRect.y),
-                                                                 (int)Math.Ceiling(sprite.textureRect.width),
-                                                                 (int)Math.Ceiling(sprite.textureRect.height));
-            newText.SetPixels(newColors);
-            newText.Apply();
-            return newText;
-        }
-
-        public static Texture2D duplicateTexture(Texture2D source)
-        {
-            RenderTexture renderTex = RenderTexture.GetTemporary(
-                        source.width,
-                        source.height,
-                        0,
-                        RenderTextureFormat.Default,
-                        RenderTextureReadWrite.Linear);
-
-            Graphics.Blit(source, renderTex);
-            RenderTexture previous = RenderTexture.active;
-            RenderTexture.active = renderTex;
-            Texture2D readableText = new Texture2D(source.width, source.height);
-            readableText.ReadPixels(new Rect(0, 0, renderTex.width, renderTex.height), 0, 0);
-            readableText.Apply();
-            RenderTexture.active = previous;
-            RenderTexture.ReleaseTemporary(renderTex);
-            return readableText;
         }
     }
 }
