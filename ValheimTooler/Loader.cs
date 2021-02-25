@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RapidGUI;
 using UnityEngine;
 
 namespace ValheimTooler
@@ -11,9 +7,10 @@ namespace ValheimTooler
     {
         public static void Init()
         {
-            Loader.Load = new GameObject();
-            Loader.Load.AddComponent<Hax>();
-            UnityEngine.Object.DontDestroyOnLoad(Loader.Load);
+            Loader.s_entryPoint = new GameObject();
+            Loader.s_entryPoint.AddComponent<EntryPoint>();
+            Loader.s_entryPoint.AddComponent<RapidGUIBehaviour>();
+            Object.DontDestroyOnLoad(Loader.s_entryPoint);
         }
 
         public static void Unload()
@@ -22,10 +19,10 @@ namespace ValheimTooler
         }
         private static void _Unload()
         {
-            GameObject.Destroy(Loader.Load);
+            GameObject.Destroy(Loader.s_entryPoint);
         }
 
-        private static GameObject Load;
+        private static GameObject s_entryPoint;
     }
 
 }

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace ValheimTooler.UI
+namespace RapidGUI
 {
     public static class RGUIStyle
     {
@@ -46,7 +41,7 @@ namespace ValheimTooler.UI
         {
             var style = new GUIStyle(GUI.skin.label)
             {
-                wordWrap = false,
+                wordWrap = false, 
                 alignment = TextAnchor.MiddleCenter
             };
 
@@ -62,7 +57,7 @@ namespace ValheimTooler.UI
             style.name = nameof(flatButton);
             flatButton = style;
         }
-
+        
         static void CreatePopupFlatButton()
         {
             var style = new GUIStyle(flatButton)
@@ -132,7 +127,7 @@ namespace ValheimTooler.UI
 
             var dst = new Texture2D(src.width, src.height, TextureFormat.RGBA32, false);
             dst.ReadPixels(new Rect(0f, 0f, src.width, src.height), 0, 0);
-
+            
 
             RenderTexture.active = prev;
             RenderTexture.ReleaseTemporary(tmp);
@@ -162,7 +157,7 @@ namespace ValheimTooler.UI
             var style = new GUIStyle(GUI.skin.box)
             {
                 alignment = GUI.skin.label.alignment,
-                richText = true,
+                richText = true, 
                 name = nameof(warningLabel)
             };
 

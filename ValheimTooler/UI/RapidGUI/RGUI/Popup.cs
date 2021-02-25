@@ -1,97 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-namespace ValheimTooler.UI
+namespace RapidGUI
 {
-
-    public interface IDoGUIWindow
-    {
-        void DoGUIWindow();
-        void CloseWindow();
-    }
-
-    public static class WindowInvoker
-    {
-        static readonly HashSet<IDoGUIWindow> Windows = new HashSet<IDoGUIWindow>();
-
-        static WindowInvoker()
-        {
-            Hax.Instance.onGUI += DoGUI;
-        }
-
-
-        public static void Add(IDoGUIWindow window) => Windows.Add(window);
-        public static void Remove(IDoGUIWindow window) => Windows.Remove(window);
-
-        static IDoGUIWindow focusedWindow;
-
-        public static void SetFocusedWindow(IDoGUIWindow window)
-        {
-            focusedWindow = window;
-        }
-
-        static void DoGUI()
-        {
-            foreach (IDoGUIWindow l in Windows)
-            {
-                l?.DoGUIWindow();
-            }
-
-            var evt = Event.current;
-
-            if ((evt.type == EventType.KeyUp)
-                && (evt.keyCode == Hax.Instance.closeFocusedWindowKey)
-                && (GUIUtility.keyboardControl == 0)
-                )
-            {
-                if (Windows.Contains(focusedWindow))
-                {
-                    focusedWindow.CloseWindow();
-                    focusedWindow = null;
-                }
-            }
-
-
-            if (Event.current.type == EventType.Repaint)
-            {
-                Windows.Clear();
-            }
-        }
-    }
-
-    public static class RGUIUtility
-    {
-        static GUIContent tempContent = new GUIContent();
-
-
-        public static GUIContent TempContent(string text)
-        {
-            tempContent.text = text;
-            tempContent.tooltip = null;
-            tempContent.image = null;
-
-            return tempContent;
-        }
-
-        public static Vector2 GetMouseScreenPos(Vector2? screenInsideOffset = null)
-        {
-            //var windowPos = GUIUtility.GUIToScreenPoint(pos); // doesn't seem to work on the unity2020 Editor.
-
-            var mousePos = Input.mousePosition;
-            var ret = new Vector2(mousePos.x, Screen.height - mousePos.y);
-
-            if (screenInsideOffset.HasValue)
-            {
-                var maxPos = new Vector2(Screen.width, Screen.height) - screenInsideOffset.Value;
-                ret = Vector2.Min(ret, maxPos);
-            }
-
-            return ret;
-        }
-    }
-
-    public static class ComboBox
+    public static partial class RGUI
     {
         static int popupControlId;
         static readonly PopupWindow popupWindow = new PopupWindow();
@@ -101,7 +13,7 @@ namespace ValheimTooler.UI
             var idx = Array.IndexOf(displayOptions, current);
             GUILayout.Box(current, RGUIStyle.alignLeftBox);
             var newIdx = PopupOnLastRect(idx, displayOptions);
-            if (newIdx != idx)
+            if ( newIdx != idx)
             {
                 current = displayOptions[newIdx];
             }
@@ -119,7 +31,7 @@ namespace ValheimTooler.UI
         public static int PopupOnLastRect(string[] displayOptions, string label = "") => PopupOnLastRect(-1, displayOptions, -1, label);
         public static int PopupOnLastRect(string[] displayOptions, int button, string label = "") => PopupOnLastRect(-1, displayOptions, button, label);
 
-        public static int PopupOnLastRect(int selectionIndex, string[] displayOptions, int mouseButton = -1, string label = "") => Popup(GUILayoutUtility.GetLastRect(), mouseButton, selectionIndex, displayOptions, label);
+        public static int PopupOnLastRect(int selectionIndex, string[] displayOptions, int mouseButton=-1, string label = "") => Popup(GUILayoutUtility.GetLastRect(), mouseButton, selectionIndex, displayOptions, label);
 
 
 
@@ -137,7 +49,7 @@ namespace ValheimTooler.UI
                 if ((ev.type == EventType.MouseUp)
                     && ((mouseButton < 0) || (ev.button == mouseButton))
                     && launchRect.Contains(pos)
-                    && displayOptions != null
+                    && displayOptions != null 
                     && displayOptions.Length > 0
                     )
                 {
@@ -150,7 +62,7 @@ namespace ValheimTooler.UI
             else
             {
                 var type = Event.current.type;
-
+                
                 var result = popupWindow.result;
                 if (result.HasValue && type == EventType.Layout)
                 {
