@@ -82,6 +82,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -186,20 +187,61 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\InventoryItem.cs" />
-    <Compile Include="Core\ReflectionExtensions.cs" />
+    <Compile Include="Core\EntitiesItemsHacks.cs" />
+    <Compile Include="Core\ItemGiver.cs" />
+    <Compile Include="Core\MiscHacks.cs" />
+    <Compile Include="Core\PlayerHacks.cs" />
+    <Compile Include="Core\WindowToolbar.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Core\ESP.cs" />
+    <Compile Include="UI\InterfaceMaker.cs" />
+    <Compile Include="Utils\ReflectionExtensions.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\RapidGUI\Component\IDoGUI.cs" />
     <Compile Include="UI\RapidGUI\Component\Utilities\IDoGUIWindow.cs" />
     <Compile Include="UI\RapidGUI\Component\Utilities\RapidGUIBehaviour.cs" />
-    <Compile Include="UI\RapidGUI\Component\Utilities\RGUIStyle.cs" />
     <Compile Include="UI\RapidGUI\Component\Utilities\RGUIUtility.cs" />
     <Compile Include="UI\RapidGUI\Component\Utilities\WindowInvoker.cs" />
     <Compile Include="UI\RapidGUI\RGUI\Popup.cs" />
     <Compile Include="UI\SpriteManager.cs" />
+    <Compile Include="Utils\ResourceUtils.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\field.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\box.png" />
+    <EmbeddedResource Include="Resources\button_active.png" />
+    <EmbeddedResource Include="Resources\button_hover.png" />
+    <EmbeddedResource Include="Resources\button_normal.png" />
+    <EmbeddedResource Include="Resources\toggle_off.png" />
+    <EmbeddedResource Include="Resources\toggle_on.png" />
+    <EmbeddedResource Include="Resources\window.png" />
+    <EmbeddedResource Include="Resources\window_title.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\scroll_background.png" />
+    <EmbeddedResource Include="Resources\scroll_thumb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\prefabs.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\button_active_active.png" />
+    <EmbeddedResource Include="Resources\button_active_hover.png" />
+    <EmbeddedResource Include="Resources\button_active_normal.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
