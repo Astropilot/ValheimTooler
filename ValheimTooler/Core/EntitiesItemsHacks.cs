@@ -50,13 +50,12 @@ namespace ValheimTooler.Core
 
         public static void DisplayGUI()
         {
-            GUILayout.BeginVertical("Spawn Entity", GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(Translator.Localize("$vt_entities_spawn_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label("Entity Prefab: ");
-                    // s_entityPrefabText = GUILayout.TextField(s_entityPrefabText, GUILayout.ExpandWidth(true));
+                    GUILayout.Label(Translator.Localize("$vt_entities_spawn_entity_name :"));
                     s_entityPrefabIdx = RGUI.SearchableSelectionPopup(s_entityPrefabIdx, s_entityPrefabsFiltered.ToArray(), ref s_entitySearchTerms);
 
                     SearchItem(s_entitySearchTerms);
@@ -65,19 +64,19 @@ namespace ValheimTooler.Core
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label("Quantity: ");
+                    GUILayout.Label(Translator.Localize("$vt_entities_spawn_quantity :"));
                     s_entityQuantityText = GUILayout.TextField(s_entityQuantityText, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label("Entity Level: ");
+                    GUILayout.Label(Translator.Localize("$vt_entities_spawn_level :"));
                     s_entityLevelIdx = RGUI.SelectionPopup(s_entityLevelIdx, s_entityLevels.ToArray());
                 }
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Spawn"))
+                if (GUILayout.Button(Translator.Localize("$vt_entities_spawn_button")))
                 {
                     if (int.TryParse(s_entityQuantityText, out int entityQuantity) && int.TryParse(s_entityLevels[s_entityLevelIdx], out int entityLevel))
                     {
@@ -90,20 +89,20 @@ namespace ValheimTooler.Core
             }
             GUILayout.EndVertical();
 
-            GUILayout.BeginVertical("Remove Drops", GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(Translator.Localize("$vt_entities_drops_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
-                if (GUILayout.Button("Remove all drops"))
+                if (GUILayout.Button(Translator.Localize("$vt_entities_drops_button")))
                 {
                     RemoveAllDrops();
                 }
             }
             GUILayout.EndVertical();
 
-            GUILayout.BeginVertical("Item Giver", GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(Translator.Localize("$vt_entities_item_giver_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
-                if (GUILayout.Button(EntryPoint.s_showItemGiver ? "Hide Item Giver" : "Show Item Giver"))
+                if (GUILayout.Button(EntryPoint.s_showItemGiver ? Translator.Localize("$vt_entities_item_giver_button_hide") : Translator.Localize("$vt_entities_item_giver_button_show")))
                 {
                     EntryPoint.s_showItemGiver = !EntryPoint.s_showItemGiver;
                 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using ValheimTooler.UI;
+using ValheimTooler.Utils;
 
 namespace ValheimTooler.Core
 {
@@ -22,7 +23,7 @@ namespace ValheimTooler.Core
 
         public static void Start()
         {
-            s_itemGiverRect = new Rect(Screen.width - 400, Screen.height / 2, 400, 400);
+            s_itemGiverRect = new Rect(Screen.width - 400, 5, 400, 400);
 
             if (ObjectDB.instance == null)
             {
@@ -56,7 +57,7 @@ namespace ValheimTooler.Core
 
         public static void DisplayGUI()
         {
-            s_itemGiverRect = GUILayout.Window(1002, s_itemGiverRect, ItemGiverWindow, "Item Giver");
+            s_itemGiverRect = GUILayout.Window(1002, s_itemGiverRect, ItemGiverWindow, Translator.Localize("$vt_item_giver_title"));
         }
 
         public static void ItemGiverWindow(int windowID)
@@ -77,19 +78,19 @@ namespace ValheimTooler.Core
 
             GUILayout.BeginHorizontal();
             {
-                GUILayout.Label("Quantity :");
+                GUILayout.Label(Translator.Localize("$vt_item_giver_quantity :"));
                 s_quantityItem = GUILayout.TextField(s_quantityItem, GUILayout.ExpandWidth(true));
             }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             {
-                GUILayout.Label("Quality :");
+                GUILayout.Label(Translator.Localize("$vt_item_giver_quality :"));
                 s_qualityItem = GUILayout.TextField(s_qualityItem, GUILayout.ExpandWidth(true));
             }
             GUILayout.EndHorizontal();
 
-            if (GUILayout.Button("Add item"))
+            if (GUILayout.Button(Translator.Localize("$vt_item_giver_button")))
             {
                 if (int.TryParse(s_quantityItem, out int quantity) && int.TryParse(s_qualityItem, out int quality))
                 {

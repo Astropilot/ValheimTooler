@@ -1,0 +1,15 @@
+<Application x:Class="ValheimToolerLauncher.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ValheimToolerLauncher"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <hc:ThemeResources RequestedTheme="Dark" AccentColor="#FF21AC40"/>
+        <hc:Theme/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Application.Resources>
+</Application>

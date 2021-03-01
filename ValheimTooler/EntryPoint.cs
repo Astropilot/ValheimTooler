@@ -1,6 +1,9 @@
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using ValheimTooler.Core;
 using ValheimTooler.UI;
+using ValheimTooler.Utils;
 
 namespace ValheimTooler
 {
@@ -14,17 +17,32 @@ namespace ValheimTooler
         public static bool s_showESP = false;
 
         private WindowToolbar _windowToolbar = WindowToolbar.PLAYER;
-        private readonly string[] _toolbarChoices = { "Player", "Entities & Items", "Misc" };
+        private readonly string[] _toolbarChoices = {
+            "$vt_toolbar_player",
+            "$vt_toolbar_entities",
+            "$vt_toolbar_misc"
+        };
+
+        private string _version;
 
         public void Start()
         {
-            _valheimToolerRect = new Rect(5, Screen.height / 2, 350, 300);
+            _valheimToolerRect = new Rect(5, 5, 350, 300);
 
             PlayerHacks.Start();
             EntitiesItemsHacks.Start();
             ItemGiver.Start();
             MiscHacks.Start();
             ESP.Start();
+
+            _version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            Translator.InitLocalization("English");
+            string prefLanguage = PlayerPrefs.GetString("language", "");
+            if (prefLanguage.Length > 0)
+            {
+                Translator.InitLocalization(prefLanguage);
+            }
         }
         public void Update()
         {
@@ -46,7 +64,7 @@ namespace ValheimTooler
 
             if (_showMainWindow)
             {
-                _valheimToolerRect = GUILayout.Window(1001, _valheimToolerRect, ValheimToolerWindow, "ValheimTooler", GUILayout.Height(10));
+                _valheimToolerRect = GUILayout.Window(1001, _valheimToolerRect, ValheimToolerWindow, Translator.Localize($"$vt_main_title (v{_version})"), GUILayout.Height(10));
             }
 
             if (s_showItemGiver)
@@ -64,7 +82,7 @@ namespace ValheimTooler
         {
             GUILayout.Space(10);
 
-            _windowToolbar = (WindowToolbar)GUILayout.Toolbar((int)_windowToolbar, _toolbarChoices);
+            _windowToolbar = (WindowToolbar)GUILayout.Toolbar((int)_windowToolbar, _toolbarChoices.Select(choice => Translator.Localize(choice)).ToArray());
 
             switch (_windowToolbar)
             {

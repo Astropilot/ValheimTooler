@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RapidGUI;
 using UnityEngine;
+using ValheimTooler.Utils;
 
 namespace ValheimTooler.Core
 {
@@ -42,24 +43,24 @@ namespace ValheimTooler.Core
 
         public static void DisplayGUI()
         {
-            GUILayout.BeginVertical("Deal Damage", GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(Translator.Localize("$vt_misc_damage_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label("Player: ");
+                    GUILayout.Label(Translator.Localize("$vt_misc_damage_player :"));
                     s_playerDamageIdx = RGUI.SelectionPopup(s_playerDamageIdx, s_playerNames.ToArray());
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label("Damage value: ");
+                    GUILayout.Label(Translator.Localize("$vt_misc_damage_value :"));
                     s_damageToDeal = GUILayout.TextField(s_damageToDeal, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Damage player (Ignore No-PVP)"))
+                if (GUILayout.Button(Translator.Localize("$vt_misc_damage_button_player")))
                 {
                     
                     if (int.TryParse(s_damageToDeal, out int damage))
@@ -67,47 +68,47 @@ namespace ValheimTooler.Core
                         DamageCharacter(s_players[s_playerDamageIdx], damage);
                     }
                 }
-                if (GUILayout.Button("Kill all (Except players)"))
+                if (GUILayout.Button(Translator.Localize("$vt_misc_damage_button_entities")))
                 {
                     DamageAllCharacters();
                 }
-                if (GUILayout.Button("Kill all other players"))
+                if (GUILayout.Button(Translator.Localize("$vt_misc_damage_button_players")))
                 {
                     DamageAllOtherPlayers();
                 }
             }
             GUILayout.EndVertical();
 
-            GUILayout.BeginVertical("Event Message", GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(Translator.Localize("$vt_misc_event_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label("Message: ");
+                    GUILayout.Label(Translator.Localize("$vt_misc_event_message :"));
                     s_worldMessageText = GUILayout.TextField(s_worldMessageText, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Send event message"))
+                if (GUILayout.Button(Translator.Localize("$vt_misc_event_button")))
                 {
                     MessageAllInRange(MessageHud.MessageType.Center, s_worldMessageText);
                 }
             }
             GUILayout.EndVertical();
 
-            GUILayout.BeginVertical("Chat Message", GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(Translator.Localize("$vt_misc_chat_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label("Username: ");
+                    GUILayout.Label(Translator.Localize("$vt_misc_chat_username :"));
                     s_chatUsernameText = GUILayout.TextField(s_chatUsernameText, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label("Message: ");
+                    GUILayout.Label(Translator.Localize("$vt_misc_chat_message :"));
                     s_chatMessageText = GUILayout.TextField(s_chatMessageText, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
@@ -115,22 +116,22 @@ namespace ValheimTooler.Core
                 GUILayout.BeginHorizontal();
                 {
                     s_isShoutMessage = GUILayout.Toggle(s_isShoutMessage, "");
-                    GUILayout.Label("Shout message");
+                    GUILayout.Label(Translator.Localize("$vt_misc_chat_shout"));
                 }
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Send chat message"))
+                if (GUILayout.Button(Translator.Localize("$vt_misc_chat_button")))
                 {
                     ChatMessage(s_isShoutMessage ? Talker.Type.Shout : Talker.Type.Normal, s_chatUsernameText, s_chatMessageText);
                 }
             }
             GUILayout.EndVertical();
 
-            GUILayout.BeginVertical("ESP", GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(Translator.Localize("$vt_misc_esp_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
 
-                if (GUILayout.Button("ESP: " + (EntryPoint.s_showESP ? "ON" : "OFF")))
+                if (GUILayout.Button(Translator.Localize("$vt_misc_esp_button : " + (EntryPoint.s_showESP ? Translator.s_cheatOn : Translator.s_cheatOff))))
                 {
                     EntryPoint.s_showESP = !EntryPoint.s_showESP;
                 }
