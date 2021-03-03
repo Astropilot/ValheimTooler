@@ -4,12 +4,13 @@ using AutoUpdaterDotNET;
 using ValheimToolerLauncher.Utils;
 using System.Threading.Tasks;
 using ValheimToolerLauncher.Properties;
+using ValheimToolerLauncher.Views;
 
 namespace ValheimToolerLauncher.ViewModels
 {
     public class MainWindowViewModel : ViewModel
     {
-        private readonly Installer _installer;
+        private Installer _installer;
 
         public RelayCommand InstallCommand { get; }
 
@@ -20,6 +21,8 @@ namespace ValheimToolerLauncher.ViewModels
         public RelayCommand UninstallCommand { get; }
 
         public RelayCommand BrowseCommand { get; }
+
+        public RelayCommand OnWindowLoadedCommand { get; }
 
         private UpdateInfoEventArgs _updateInfoEventArgs;
         public UpdateInfoEventArgs UpdateInfoEventArgs
@@ -40,6 +43,21 @@ namespace ValheimToolerLauncher.ViewModels
                 Set(ref _isInstalled, value);
                 InstallCommand.RaiseCanExecuteChanged();
                 LaunchCommand.RaiseCanExecuteChanged();
+                BrowseCommand.RaiseCanExecuteChanged();
+                UninstallCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        private bool _isIntegrityValid;
+        public bool IsIntegrityValid
+        {
+            get => _isIntegrityValid;
+            set
+            {
+                Set(ref _isIntegrityValid, value);
+                InstallCommand.RaiseCanExecuteChanged();
+                LaunchCommand.RaiseCanExecuteChanged();
+                BrowseCommand.RaiseCanExecuteChanged();
                 UninstallCommand.RaiseCanExecuteChanged();
             }
         }
@@ -73,6 +91,7 @@ namespace ValheimToolerLauncher.ViewModels
             {
                 Set(ref _gamePath, value);
                 InstallCommand.RaiseCanExecuteChanged();
+                BrowseCommand.RaiseCanExecuteChanged();
                 UninstallCommand.RaiseCanExecuteChanged();
             }
         }
@@ -83,12 +102,15 @@ namespace ValheimToolerLauncher.ViewModels
             get => _installStatus;
             set
             {
-                _installStatus = value;
+                Set(ref _installStatus, value);
                 InstallCommand.RaiseCanExecuteChanged();
                 LaunchCommand.RaiseCanExecuteChanged();
+                BrowseCommand.RaiseCanExecuteChanged();
                 UninstallCommand.RaiseCanExecuteChanged();
             }
         }
+
+        private bool _isUpgrade = false;
 
         public MainWindowViewModel()
         {
@@ -97,33 +119,52 @@ namespace ValheimToolerLauncher.ViewModels
             LaunchCommand = new RelayCommand(ExecuteLaunchCommand, CanExecuteLaunchCommand);
             BrowseCommand = new RelayCommand(ExecuteBrowseCommand, CanExecuteBrowseCommand);
             UninstallCommand = new RelayCommand(ExecuteUninstallCommand, CanExecuteUninstallCommand);
+            OnWindowLoadedCommand = new RelayCommand(ExecuteOnWindowLoadedCommand);
 
+            InstallStatus = Installer.InstallStatus.PROCESSING;
+        }
+
+        private async void ExecuteOnWindowLoadedCommand(object parameter)
+        {
+            // Detect that we just updated the tool
             if (Settings.Default.updateSettings)
             {
                 Settings.Default.Upgrade();
                 Settings.Default.updateSettings = false;
                 Settings.Default.Save();
-
-                _installer = new Installer();
-
-                _installer.Upgrade();
+                _isUpgrade = true;
             }
-            else
+
+            _installer = new Installer();
+
+            Status = "Checking integrity...";
+            var checkIntegrityResult = await Task.Run(() =>
             {
-                _installer = new Installer();
-            }
+                return _installer.CheckBackupsIntegrity();
+            });
 
-            InstallStatus = Installer.InstallStatus.IDLE;
-            
+            IsIntegrityValid = checkIntegrityResult;
+
+            if (_isUpgrade)
+            {
+                Status = "Upgrading ValheimTooler...";
+                await Task.Run(() =>
+                {
+                    _installer.Upgrade();
+                });
+                IsIntegrityValid = true;
+            }
 
             IsInstalled = _installer.IsInstalled;
             GamePath = _installer.GamePath;
+
+            Status = "Checking for update...";
 
             AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
             AutoUpdater.Start("https://www.codexus.fr/valheimtooler/AutoUpdater.xml");
         }
 
-        private void AutoUpdaterOnCheckForUpdateEvent(UpdateInfoEventArgs args)
+        private async void AutoUpdaterOnCheckForUpdateEvent(UpdateInfoEventArgs args)
         {
             if (args.Error == null)
             {
@@ -131,8 +172,27 @@ namespace ValheimToolerLauncher.ViewModels
                 if (args.IsUpdateAvailable)
                 {
                     UpdateInfoEventArgs = args;
+                    InstallStatus = Installer.InstallStatus.IDLE;
+                    return;
                 }
             }
+
+            if (!IsIntegrityValid && !_isUpgrade)
+            {
+                var integrityPoup = new IntegrityPopup();
+
+                if (integrityPoup.ShowDialog() == true)
+                {
+                    await Task.Run(() =>
+                    {
+                        _installer.Upgrade();
+                    });
+                    IsInstalled = _installer.IsInstalled;
+                    IsIntegrityValid = true;
+                }
+            }
+            Status = "";
+            InstallStatus = Installer.InstallStatus.IDLE;
         }
 
         private void ExecuteUpdateCommand(object parameter)
@@ -146,24 +206,26 @@ namespace ValheimToolerLauncher.ViewModels
 
         private bool CanExecuteInstallCommand(object parameter)
         {
-            return !IsInstalled && !IsUpdateAvailable && !string.IsNullOrEmpty(GamePath) && _installStatus == Installer.InstallStatus.IDLE;
+            return !IsInstalled && !IsUpdateAvailable && !string.IsNullOrEmpty(GamePath) && _installStatus == Installer.InstallStatus.IDLE && IsIntegrityValid;
         }
 
         private async void ExecuteInstallCommand(object parameter)
         {
             InstallStatus = Installer.InstallStatus.PROCESSING;
 
-            await Task.Run(() =>
+            var installResult = await Task.Run(() =>
             {
-                if (!_installer.Install())
-                {
-                    Status = $"Failed to install: {_installer.LastErrorMsg}";
-                }
-                else
-                {
-                    Status = "Install success!";
-                }
+                return _installer.Install();
             });
+
+            if (installResult)
+            {
+                Status = "Install success!";
+            }
+            else
+            {
+                Status = $"Failed to install: {_installer.LastErrorMsg}";
+            }
 
             IsInstalled = _installer.IsInstalled;
 
@@ -172,7 +234,7 @@ namespace ValheimToolerLauncher.ViewModels
 
         private bool CanExecuteLaunchCommand(object parameter)
         {
-            return IsInstalled && !IsUpdateAvailable && _installStatus == Installer.InstallStatus.IDLE;
+            return IsInstalled && !IsUpdateAvailable && _installStatus == Installer.InstallStatus.IDLE && IsIntegrityValid;
         }
 
         private async void ExecuteLaunchCommand(object parameter)
@@ -181,17 +243,19 @@ namespace ValheimToolerLauncher.ViewModels
 
             InstallStatus = Installer.InstallStatus.PROCESSING;
 
-            await Task.Run(() =>
+            var injectResult = await Task.Run(() =>
             {
-                if (!injector.Inject())
-                {
-                    Status = $"Failed to inject: {injector.LastErrorMsg}";
-                }
-                else
-                {
-                    Status = "Injection done!";
-                }
+                return injector.Inject();
             });
+
+            if (injectResult)
+            {
+                Status = "Injection done!";
+            }
+            else
+            {
+                Status = $"Failed to inject: {injector.LastErrorMsg}";
+            }
 
             InstallStatus = Installer.InstallStatus.IDLE;
         }
@@ -228,17 +292,19 @@ namespace ValheimToolerLauncher.ViewModels
         {
             InstallStatus = Installer.InstallStatus.PROCESSING;
 
-            await Task.Run(() =>
+            var uninstallResult = await Task.Run(() =>
             {
-                if (!_installer.Uninstall())
-                {
-                    Status = $"Failed to uninstall: {_installer.LastErrorMsg}";
-                }
-                else
-                {
-                    Status = "Uninstall success!";
-                }
+                return _installer.Uninstall();
             });
+
+            if (uninstallResult)
+            {
+                Status = "Uninstall success!";
+            }
+            else
+            {
+                Status = $"Failed to uninstall: {_installer.LastErrorMsg}";
+            }
 
             IsInstalled = _installer.IsInstalled;
 

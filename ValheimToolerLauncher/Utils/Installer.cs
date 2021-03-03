@@ -3,25 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 
 namespace ValheimToolerLauncher.Utils
 {
     public class Installer
     {
-        /*
-         *  Click sur Install
-            > Game_Manage -> Backups
-            > Manage -> Game_Manage
-
-            On relance le launcher:
-            > On compare le backup avec le managed du jeu
-            > Pour chaque différence (nouveau fichier ou modifié), on compare avec le managed du cheat
-             - Si le fichier est présent dans managed du cheat et que son checksum est différent => backup
-             - Si le fichier n'est pas présent dans le managed du cheat => backup
-             - Si le fichier est présent dans managed du cheat et que son checksum est identique => Fait rien
-         * 
-         * 
-         * */
         private const string Steam32RegistryKeyPath = @"HKEY_CURRENT_USER\SOFTWARE\Valve\Steam";
         private const string Steam64RegistryKeyPath = @"HKEY_CURRENT_USER\SOFTWARE\Wow6432Node\Valve\Steam";
 
@@ -120,11 +107,82 @@ namespace ValheimToolerLauncher.Utils
                 return DoError(exc.Message);
             }
 
+            DirectoryInfo gameManagedDir = new DirectoryInfo(gameManagedPath);
+            IEnumerable<FileInfo> gameManagedFiles = gameManagedDir.GetFiles("*.*", SearchOption.AllDirectories);
+            var postInstallGameManagedFiles = new Dictionary<string, string>();
+
+            File.Delete("post_install.chk");
+            foreach (FileInfo file in gameManagedFiles)
+            {
+                postInstallGameManagedFiles.Add(FileUtils.GetRelativePath(file.FullName, gameManagedPath), file.ComputeHash());
+            }
+
+            var gameManagedHashesJson = JsonConvert.SerializeObject(postInstallGameManagedFiles);
+
+            File.AppendAllText("post_install.chk", gameManagedHashesJson);
+
             InstalledVersion = Assembly.GetEntryAssembly().GetName().Version;
 
             _isInstalled = true;
 
             return true;
+        }
+
+        public bool CheckBackupsIntegrity()
+        {
+            if (!IsInstalled)
+            {
+                return true;
+            }
+
+            string gameManagedPath = Path.Combine(GamePath, "valheim_Data", "Managed");
+            string gameManagedBackupPath = Path.Combine(_launcherPath, "Backups");
+            DirectoryInfo gameManagedDir = new DirectoryInfo(gameManagedPath);
+            IEnumerable<FileInfo> gameManagedFiles = gameManagedDir.GetFiles("*.*", SearchOption.AllDirectories);
+            var postInstallContents = File.ReadAllText("post_install.chk");
+            Dictionary<string, string> postInstallGameManagedFiles = JsonConvert.DeserializeObject<Dictionary<string, string>>(postInstallContents);
+            bool isIntegrityValid = true;
+
+            foreach (FileInfo gameManagedFile in gameManagedFiles)
+            {
+                var relativePath = FileUtils.GetRelativePath(gameManagedFile.FullName, gameManagedPath);
+
+                if (!postInstallGameManagedFiles.ContainsKey(relativePath))
+                {
+                    // New file, copy to backup
+                    string newPathInBackups = Path.Combine(gameManagedBackupPath, FileUtils.GetRelativePath(gameManagedFile.FullName, gameManagedPath));
+                    gameManagedFile.CopyTo(newPathInBackups, true);
+                    isIntegrityValid = false;
+                }
+                else
+                {
+                    string postInstallFileChecksum = postInstallGameManagedFiles[relativePath];
+                    string gameManagedFileChecksum = gameManagedFile.ComputeHash();
+
+                    if (postInstallFileChecksum != gameManagedFileChecksum)
+                    {
+                        // Modified file, copy to backup
+                        string newPathInBackups = Path.Combine(gameManagedBackupPath, FileUtils.GetRelativePath(gameManagedFile.FullName, gameManagedPath));
+                        gameManagedFile.CopyTo(newPathInBackups, true);
+                        isIntegrityValid = false;
+                    }
+                }
+            }
+
+            foreach (string postInstallGameManagedFile in postInstallGameManagedFiles.Keys)
+            {
+                string pathInGameManaged = Path.Combine(gameManagedPath, postInstallGameManagedFile);
+
+                if (!File.Exists(pathInGameManaged))
+                {
+                    // Deleted file, delete from backup too
+                    string pathInManagedBackups = Path.Combine(gameManagedBackupPath, postInstallGameManagedFile);
+                    File.Delete(pathInManagedBackups);
+                    isIntegrityValid = false;
+                }
+            }
+
+            return isIntegrityValid;
         }
 
         public bool Uninstall()
@@ -157,6 +215,8 @@ namespace ValheimToolerLauncher.Utils
             {
                 return DoError(exc.Message);
             }
+
+            File.Delete("post_install.chk");
 
             InstalledVersion = null;
 

@@ -1,19 +1,19 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace RapidGUI
 {
     public static partial class RGUIUtility
     {
-        static GUIContent tempContent = new GUIContent();
+        static readonly GUIContent s_tempContent = new GUIContent();
     
 
         public static GUIContent TempContent(string text)
         {
-            tempContent.text = text;
-            tempContent.tooltip = null;
-            tempContent.image = null;
+            s_tempContent.text = text;
+            s_tempContent.tooltip = null;
+            s_tempContent.image = null;
 
-            return tempContent;
+            return s_tempContent;
         }
 
         public static Vector2 GetMouseScreenPos(Vector2? screenInsideOffset = null)

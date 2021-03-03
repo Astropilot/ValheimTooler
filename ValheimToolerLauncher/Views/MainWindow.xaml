@@ -1,4 +1,4 @@
-<hc:GlowWindow x:Class="ValheimToolerLauncher.Views.MainWindow"
+<hc:Window x:Class="ValheimToolerLauncher.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,7 +10,6 @@
         mc:Ignorable="d"
         Title="ValheimTooler Launcher" Height="500" Width="800"
         Background="{DynamicResource SecondaryRegionBrush}"
-        ActiveGlowColor="{DynamicResource PrimaryColor}"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
   <Window.DataContext>
@@ -20,7 +19,13 @@
     <cv:BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     <cv:StringToVisibilityConverter x:Key="StringToVisConverter" />
     <cv:UpdateInfoToStringConverter x:Key="UpdateInfoToStringConverter" />
+    <cv:InstallStatusToVisibilityConverter x:Key="InstallStatusToVisConverter" />
   </Window.Resources>
+  <hc:Interaction.Triggers>
+    <hc:EventTrigger EventName="Loaded">
+      <hc:InvokeCommandAction Command="{Binding Path=OnWindowLoadedCommand}" />
+    </hc:EventTrigger>
+  </hc:Interaction.Triggers>
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="*"/>
@@ -44,8 +49,8 @@
         <RowDefinition Height="*"/>
       </Grid.RowDefinitions>
 
-      <hc:SimpleText Grid.Column="0" Grid.Row="0" Text="Valheim Tooler 1.1" Foreground="#FF21AC40" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Kristen ITC" FontSize="47"/>
-      <Button Grid.Column="0" Grid.Row="1" Visibility="{Binding Path=IsUpdateAvailable, Converter={StaticResource BoolToVisConverter} }" Content="{Binding Path=UpdateInfoEventArgs, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource UpdateInfoToStringConverter}}" Command="{Binding Path=UpdateCommand}" Style="{StaticResource ButtonWarning}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Height="30" FontFamily="Montserrat SemiBold" FontSize="17" hc:BorderElement.CornerRadius="8" />
+      <Image Source="/ValheimToolerLauncher;component/Resources/valheimtooler_logo.png" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,5,0"></Image>
+      <Button Grid.Column="0" Grid.Row="1" Visibility="{Binding Path=IsUpdateAvailable, Converter={StaticResource BoolToVisConverter} }" Content="{Binding Path=UpdateInfoEventArgs, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource UpdateInfoToStringConverter}}" Command="{Binding Path=UpdateCommand}" Style="{StaticResource ButtonWarning}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Height="30" FontFamily="Montserrat SemiBold" FontSize="17" hc:BorderElement.CornerRadius="8" Margin="0,5,0,0" />
       <Button Grid.Column="0" Grid.Row="2" Command="{Binding Path=InstallCommand}" Style="{StaticResource ButtonPrimary}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" Height="50" Content="Install" FontFamily="Montserrat SemiBold" FontSize="32" />
       <Grid Grid.Column="0" Grid.Row="3" Width="500" Visibility="{Binding Path=IsInstalled, Converter={StaticResource BoolToVisConverter}, ConverterParameter='negate' }">
         <Grid.ColumnDefinitions>
@@ -66,14 +71,17 @@
 
     <StatusBar Grid.Column="0" Grid.Row="2">
       <StatusBar.Items>
-        <StatusBarItem Foreground="#FF21AC40" BorderBrush="#FF272727" Background="#2A2A2C">
+        <StatusBarItem Foreground="#FF21AC40" BorderBrush="#FF272727" Background="#2A2A2C" HorizontalAlignment="Left" HorizontalContentAlignment="Left">
           <TextBlock Text="Status:"/>
         </StatusBarItem>
-        <StatusBarItem  BorderBrush="#FF272727" Background="#2A2A2C" Foreground="#FF1FA03C">
+        <StatusBarItem  BorderBrush="#FF272727" Background="#2A2A2C" Foreground="#FF1FA03C" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Width="425">
           <TextBlock Text="{Binding Path=Status}"/>
+        </StatusBarItem>
+        <StatusBarItem   BorderBrush="#FF272727" Background="#2A2A2C" Foreground="#FF1FA03C" HorizontalAlignment="Right" HorizontalContentAlignment="Right">
+          <ProgressBar Visibility="{Binding Path=InstallStatus, Converter={StaticResource InstallStatusToVisConverter } }" Width="300" IsIndeterminate="True"/>
         </StatusBarItem>
       </StatusBar.Items>
     </StatusBar>
 
   </Grid>
-</hc:GlowWindow>
+</hc:Window>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace RapidGUI
@@ -7,27 +7,27 @@ namespace RapidGUI
     {
         #region static 
 
-        static RapidGUIBehaviour instance;
+        static RapidGUIBehaviour s_instance;
         public static RapidGUIBehaviour Instance
         {
             get
             {
-                if (instance == null)
+                if (s_instance == null)
                 {
-                    instance = FindObjectOfType<RapidGUIBehaviour>();
-                    if (instance == null)
+                    s_instance = FindObjectOfType<RapidGUIBehaviour>();
+                    if (s_instance == null)
                     {
                         var ga = new GameObject("RapidGUI");
-                        instance = ga.AddComponent<RapidGUIBehaviour>();
+                        s_instance = ga.AddComponent<RapidGUIBehaviour>();
                     }
 
                     if (Application.isPlaying)
                     {
-                        DontDestroyOnLoad(instance);
+                        DontDestroyOnLoad(s_instance);
                     }
                 }
 
-                return instance;
+                return s_instance;
             }
         }
 

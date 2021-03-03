@@ -65,11 +65,11 @@ namespace ValheimTooler
             if (_showMainWindow)
             {
                 _valheimToolerRect = GUILayout.Window(1001, _valheimToolerRect, ValheimToolerWindow, Translator.Localize($"$vt_main_title (v{_version})"), GUILayout.Height(10));
-            }
 
-            if (s_showItemGiver)
-            {
-                ItemGiver.DisplayGUI();
+                if (s_showItemGiver)
+                {
+                    ItemGiver.DisplayGUI();
+                }
             }
 
             if (s_showESP)

@@ -1,0 +1,39 @@
+<hc:Window x:Class="ValheimToolerLauncher.Views.IntegrityPopup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ValheimToolerLauncher.Views"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        Background="{DynamicResource SecondaryRegionBrush}"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterScreen" 
+        mc:Ignorable="d"
+        Title="Game integrity compromised" Height="200" Width="600">
+    <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="5"/>
+      <RowDefinition Height="auto"/>
+    </Grid.RowDefinitions>
+    <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Style="{StaticResource TextBlockLarge}" FontFamily="Montserrat Medium" FontSize="14">
+      A modification of the game files has been detected, it is likely that a new version of Valheim has been installed since the last installation of ValheimTooler. Would you like to reinstall ValheimTooler?
+      Note: Reinstalling the tool does not guarantee that the last patch of the game will work properly, if after reinstalling the cheat still does not work, you should uninstall it and wait for an update which should be coming soon! The update will automatically appear on the launcher when it is available.
+    </TextBlock>
+    <Grid Grid.Column="0" Grid.Row="2">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+      <Button Grid.Column="1" Grid.Row="0" IsDefault="True" Width="130" HorizontalAlignment="Left" Style="{StaticResource ButtonSuccess}" Height="40" FontFamily="Montserrat Medium" FontSize="16" Click="Button_Click">Reinstall</Button>
+      <Button Grid.Column="1" Grid.Row="0" IsCancel="True" Width="130" HorizontalAlignment="Right" Style="{StaticResource ButtonWarning}" Height="40" FontFamily="Montserrat Medium" FontSize="16">Cancel</Button>
+    </Grid>
+  </Grid>
+</hc:Window>

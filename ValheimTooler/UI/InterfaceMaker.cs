@@ -28,7 +28,7 @@ namespace ValheimTooler.UI
         private static Texture2D s_flatButtonHoverBackground;
         private static Texture2D s_flatButtonActiveBackground;
 
-        private static Font s_Font;
+        private static Font s_font;
 
         private static GUISkin s_oldSkin;
 
@@ -67,7 +67,7 @@ namespace ValheimTooler.UI
 
             LoadTextures();
 
-            guiskin.font = s_Font;
+            guiskin.font = s_font;
 
             guiskin.label.normal.textColor = Color.gray;
 
@@ -93,7 +93,7 @@ namespace ValheimTooler.UI
             guiskin.button.onHover.background = s_buttonActiveHoverBackground;
             guiskin.button.onActive.textColor = Color.white;
             guiskin.button.onActive.background = s_buttonActiveActiveBackground;
-            guiskin.button.font = s_Font;
+            guiskin.button.font = s_font;
             guiskin.button.wordWrap = false;
 
             guiskin.toggle.normal.textColor = Color.gray;
@@ -230,11 +230,11 @@ namespace ValheimTooler.UI
             InterfaceMaker.s_flatButtonActiveBackground.Apply();
             UnityEngine.Object.DontDestroyOnLoad(InterfaceMaker.s_flatButtonActiveBackground);
 
-            InterfaceMaker.s_Font = (Resources.FindObjectsOfTypeAll(typeof(Font)) as Font[]).ToList().First(f => f.name.Equals("Norsebold"));
+            InterfaceMaker.s_font = (Resources.FindObjectsOfTypeAll(typeof(Font)) as Font[]).ToList().First(f => f.name.Equals("Norsebold"));
 
-            if (InterfaceMaker.s_Font != null)
+            if (InterfaceMaker.s_font != null)
             {
-                UnityEngine.Object.DontDestroyOnLoad(InterfaceMaker.s_Font);
+                UnityEngine.Object.DontDestroyOnLoad(InterfaceMaker.s_font);
             } else
             {
                 ZLog.Log("Error while loading font!");
