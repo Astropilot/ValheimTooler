@@ -339,6 +339,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\EntitiesItemsHacks.cs" />
+    <Compile Include="Core\Extensions\CharacterExtensions.cs" />
+    <Compile Include="Core\Extensions\MinimapExtensions.cs" />
+    <Compile Include="Core\Extensions\PlayerExtensions.cs" />
     <Compile Include="Core\ItemGiver.cs" />
     <Compile Include="Core\MiscHacks.cs" />
     <Compile Include="Core\PlayerHacks.cs" />

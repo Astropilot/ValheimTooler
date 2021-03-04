@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/Astropilot/ValheimTooler/blob/master/README.md">Version anglaise <img src="https://cdn.countryflags.com/thumbs/united-kingdom/flag-800.png" height="16"></a>
+    <a href="./README.md">Version anglaise <img src="https://cdn.countryflags.com/thumbs/united-kingdom/flag-800.png" height="16"></a>
 </p>
 
 <p align="center">
@@ -91,10 +91,9 @@ Voici également une vidéo tutoriel pour installer le programme et aussi une d�
 
 Le projet est ouvert aux contributions ! Ouvrez une Issue pour proposer de nouvelles fonctionnalités ou faites directement une merge request si vous souhaitez l'implémenter vous-même. Merci de respecter les conventions définies par l'editorconfig ! Il devrait être pris en compte automatiquement par Visual Studio.
 
-**Important**: Ce programme à pour objectif de rester simple (je l'ai initialement codé seulement pour apprendre à développer des triches sur des jeux Unity), c'est pour cela que je ne m'avancerais pas dans la modification des méthodes du jeu mais seulement l'appel ou la modification des variables de classe. Il n'est donc pas prévu d'utiliser des librairies comme Harmony pour patcher les méthodes quand bien même cela réduit les possibilités de fonctionnalités.
+Un fichier de contribution plus complet arrivera sous peu...
 
-The project is open for contributions! Feel free to open merge requests.
-Please respect the rules in editorconfig!
+**Important**: Ce programme à pour objectif de rester simple (je l'ai initialement codé seulement pour apprendre à développer des triches sur des jeux Unity), c'est pour cela que je ne m'avancerais pas dans la modification des méthodes du jeu mais seulement l'appel ou la modification des variables de classe. Il n'est donc pas prévu d'utiliser des librairies comme Harmony pour patcher les méthodes quand bien même cela réduit les possibilités de fonctionnalités.
 
 ## Mentions spéciales et crédits
 

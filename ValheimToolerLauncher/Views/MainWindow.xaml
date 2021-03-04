@@ -8,7 +8,7 @@
         xmlns:vm="clr-namespace:ValheimToolerLauncher.ViewModels"
         xmlns:cv="clr-namespace:ValheimToolerLauncher.Converters"
         mc:Ignorable="d"
-        Title="ValheimTooler Launcher" Height="500" Width="800"
+        Title="ValheimTooler Launcher by Astropilot" Height="500" Width="800"
         Background="{DynamicResource SecondaryRegionBrush}"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">

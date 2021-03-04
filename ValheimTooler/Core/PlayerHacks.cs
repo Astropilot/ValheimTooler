@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RapidGUI;
 using UnityEngine;
+using ValheimTooler.Core.Extensions;
 using ValheimTooler.Utils;
 
 namespace ValheimTooler.Core
@@ -15,13 +16,7 @@ namespace ValheimTooler.Core
         private static int s_teleportTargetIdx = -1;
         private static int s_healTargetIdx = -1;
         private static string s_guardianPowerIdx = "";
-        private static readonly IDictionary<string, string> s_guardianPowers = new Dictionary<string, string>() {
-            { "$se_eikthyr_name", "GP_Eikthyr" },
-            { "$se_theelder_name", "GP_TheElder" },
-            { "$se_bonemass_name", "GP_Bonemass" },
-            { "$se_moder_name", "GP_Moder" },
-            { "$se_yagluth_name", "GP_Yagluth" }
-        };
+        private static IDictionary<string, string> s_guardianPowers;
         private static int s_skillNameIdx = -1;
         private static int s_skillLevelIdx = 0;
 
@@ -52,6 +47,14 @@ namespace ValheimTooler.Core
             {
                 s_levels.Add(i.ToString());
             }
+
+            s_guardianPowers = new Dictionary<string, string>() {
+            { Translator.Localize("$se_eikthyr_name"), "GP_Eikthyr" },
+            { Translator.Localize("$se_theelder_name"), "GP_TheElder" },
+            { Translator.Localize("$se_bonemass_name"), "GP_Bonemass" },
+            { Translator.Localize("$se_moder_name"), "GP_Moder" },
+            { Translator.Localize("$se_yagluth_name"), "GP_Yagluth" }
+        };
         }
 
         public static void Update()
@@ -60,15 +63,15 @@ namespace ValheimTooler.Core
             {
                 if (s_isInfiniteStaminaMe)
                 {
-                    UpdateInfiniteStamina(Player.m_localPlayer);
+                    Player.m_localPlayer.VTSetMaxStamina();
                 }
                 if (s_isInfiniteStaminaOthers)
                 {
-                    UpdateInfiniteStamina();
+                    AllOtherPlayersMaxStamina();
                 }
                 if (s_isNoStaminaOthers)
                 {
-                    UpdateNoStamina();
+                    AllOtherPlayerNoStamina();
                 }
                 s_actionTimer = Time.time + s_actionTimerInterval;
             }
@@ -106,9 +109,9 @@ namespace ValheimTooler.Core
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
 
-                if (GUILayout.Button(Translator.Localize("$vt_player_god_mode : " + (InGodMode() ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                if (GUILayout.Button(Translator.Localize("$vt_player_god_mode : " + (Player.m_localPlayer.VTInGodMode() ? Translator.s_cheatOn : Translator.s_cheatOff))))
                 {
-                    SetGodMode(!InGodMode());
+                    Player.m_localPlayer.VTSetGodMode(!Player.m_localPlayer.VTInGodMode());
                 }
                 if (GUILayout.Button(Translator.Localize("$vt_player_inf_stamina_me : " + (s_isInfiniteStaminaMe ? Translator.s_cheatOn : Translator.s_cheatOff))))
                 {
@@ -122,21 +125,21 @@ namespace ValheimTooler.Core
                 {
                     s_isNoStaminaOthers = !s_isNoStaminaOthers;
                 }
-                if (GUILayout.Button(Translator.Localize("$vt_player_fly_mode : " + (InFlyMode() ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                if (GUILayout.Button(Translator.Localize("$vt_player_fly_mode : " + (Player.m_localPlayer.VTInFlyMode() ? Translator.s_cheatOn : Translator.s_cheatOff))))
                 {
-                    SetFlyMode(!InFlyMode());
+                    Player.m_localPlayer.VTSetFlyMode(!Player.m_localPlayer.VTInFlyMode());
                 }
-                if (GUILayout.Button(Translator.Localize("$vt_player_ghost_mode : " + (InGhostMode() ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                if (GUILayout.Button(Translator.Localize("$vt_player_ghost_mode : " + (Player.m_localPlayer.VTInGhostMode() ? Translator.s_cheatOn : Translator.s_cheatOff))))
                 {
-                    SetGhostMode(!InGhostMode());
+                    Player.m_localPlayer.VTSetGhostMode(!Player.m_localPlayer.VTInGhostMode());
                 }
-                if (GUILayout.Button(Translator.Localize("$vt_player_nop_lacement_cost : " + (IsNoPlacementCost() ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                if (GUILayout.Button(Translator.Localize("$vt_player_nop_lacement_cost : " + (Player.m_localPlayer.VTIsNoPlacementCost() ? Translator.s_cheatOn : Translator.s_cheatOff))))
                 {
-                    SetNoPlacementCost(!IsNoPlacementCost());
+                    Player.m_localPlayer.VTSetNoPlacementCost(!Player.m_localPlayer.VTIsNoPlacementCost());
                 }
                 if (GUILayout.Button(Translator.Localize("$vt_player_explore_minimap")))
                 {
-                    ExploreAllMinimap();
+                    Minimap.instance.VTExploreAll();
                 }
             }
             GUILayout.EndVertical();
@@ -156,7 +159,7 @@ namespace ValheimTooler.Core
                 {
                     if (s_netPlayers != null && s_teleportTargetIdx < s_netPlayers.Count && s_teleportTargetIdx >= 0)
                     {
-                        TeleportPlayerTo(s_netPlayers[s_teleportTargetIdx]);
+                        Player.m_localPlayer.VTTeleportTo(s_netPlayers[s_teleportTargetIdx]);
                     }
                 }
             }
@@ -177,14 +180,14 @@ namespace ValheimTooler.Core
                 {
                     if (s_healTargetIdx < s_players.Count && s_healTargetIdx >= 0)
                     {
-                        HealPlayer(s_players[s_healTargetIdx]);
+                        s_players[s_healTargetIdx].VTHeal();
                     }
                 }
                 if (GUILayout.Button(Translator.Localize("$vt_player_heal_all_players")))
                 {
                     foreach (Player player in s_players)
                     {
-                        HealPlayer(player);
+                        player.VTHeal();
                     }
                 }
             }
@@ -205,14 +208,14 @@ namespace ValheimTooler.Core
                 {
                     if (Player.m_localPlayer != null)
                     {
-                        AddGuardianPower(Player.m_localPlayer, s_guardianPowers[s_guardianPowerIdx]);
+                        Player.m_localPlayer.VTActiveGuardianPower(s_guardianPowers[s_guardianPowerIdx]);
                     }
                 }
                 if (GUILayout.Button(Translator.Localize("$vt_player_power_active_all")))
                 {
                     if (s_guardianPowers.ContainsKey(s_guardianPowerIdx))
                     {
-                        AddGuardianPower(s_guardianPowers[s_guardianPowerIdx]);
+                        AllPlayersActiveGuardianPower(s_guardianPowers[s_guardianPowerIdx]);
                     }
                 }
             }
@@ -239,31 +242,17 @@ namespace ValheimTooler.Core
                 {
                     if (s_skillNameIdx < s_skills.Count && s_skillNameIdx >= 0)
                     {
-                        UpdateSkillLevel(s_skills[s_skillNameIdx], s_levels[s_skillLevelIdx]);
+                        if (int.TryParse(s_levels[s_skillLevelIdx], out int levelInt))
+                        {
+                            Player.m_localPlayer.VTUpdateSkillLevel(s_skills[s_skillNameIdx], levelInt);
+                        }
                     }
                 }
             }
             GUILayout.EndVertical();
         }
 
-        private static bool InGodMode()
-        {
-            if (Player.m_localPlayer)
-            {
-                return Player.m_localPlayer.InGodMode();
-            }
-            return false;
-        }
-
-        private static void SetGodMode(bool isGodMode)
-        {
-            if (Player.m_localPlayer)
-            {
-                Player.m_localPlayer.SetGodMode(isGodMode);
-            }
-        }
-
-        private static void UpdateInfiniteStamina()
+        private static void AllOtherPlayersMaxStamina()
         {
             List<Player> players = Player.GetAllPlayers();
 
@@ -273,24 +262,13 @@ namespace ValheimTooler.Core
                 {
                     if (player.GetPlayerID() != Player.m_localPlayer.GetPlayerID())
                     {
-                        UpdateInfiniteStamina(player);
+                        player.VTSetMaxStamina();
                     }
                 }
             }
         }
 
-        private static void UpdateInfiniteStamina(Player player)
-        {
-            if (player == null || !player.GetFieldValue<ZNetView>("m_nview").IsValid())
-            {
-                return;
-            }
-
-            player.UseStamina(- player.GetMaxStamina());
-            player.GetFieldValue<ZNetView>("m_nview").GetZDO().Set("stamina", player.GetMaxStamina());
-        }
-
-        private static void UpdateNoStamina()
+        private static void AllOtherPlayerNoStamina()
         {
             List<Player> players = Player.GetAllPlayers();
 
@@ -300,114 +278,13 @@ namespace ValheimTooler.Core
                 {
                     if (player.GetPlayerID() != Player.m_localPlayer.GetPlayerID())
                     {
-                        if (player == null || !player.GetFieldValue<ZNetView>("m_nview").IsValid())
-                        {
-                            return;
-                        }
-
-                        player.UseStamina(99999f);
-                        player.GetFieldValue<ZNetView>("m_nview").GetZDO().Set("stamina", 0);
+                        player.VTSetNoStamina();
                     }
                 }
             }
         }
 
-        private static bool InFlyMode()
-        {
-            if (Player.m_localPlayer)
-            {
-                return Player.m_localPlayer.InDebugFlyMode();
-            }
-            return false;
-        }
-
-        private static void SetFlyMode(bool isFlyMode)
-        {
-            if (Player.m_localPlayer)
-            {
-                Player.m_localPlayer.SetFieldValue<bool>("m_debugFly", isFlyMode);
-                ZNetView m_nview = Player.m_localPlayer.GetFieldValue<ZNetView>("m_nview");
-                m_nview.GetZDO().Set("DebugFly", isFlyMode);
-            }
-        }
-
-        private static bool InGhostMode()
-        {
-            if (Player.m_localPlayer)
-            {
-                return Player.m_localPlayer.InGhostMode();
-            }
-            return false;
-        }
-
-        private static void SetGhostMode(bool isGhostMode)
-        {
-            if (Player.m_localPlayer)
-            {
-                Player.m_localPlayer.SetGhostMode(isGhostMode);
-            }
-        }
-
-        private static bool IsNoPlacementCost()
-        {
-            if (Player.m_localPlayer)
-            {
-                return Player.m_localPlayer.NoCostCheat();
-            }
-            return false;
-        }
-
-        private static void SetNoPlacementCost(bool isNoPlacementCost)
-        {
-            if (Player.m_localPlayer)
-            {
-                Player.m_localPlayer.SetFieldValue<bool>("m_noPlacementCost", isNoPlacementCost);
-                Player.m_localPlayer.CallMethod("UpdateAvailablePiecesList");
-            }
-        }
-
-        private static void ExploreAllMinimap()
-        {
-            if (Minimap.instance)
-            {
-                Minimap.instance.ExploreAll();
-            }
-        }
-
-        private static void TeleportPlayerTo(ZNet.PlayerInfo target)
-        {
-            Player localPlayer = Player.m_localPlayer;
-
-            if (localPlayer == null)
-            {
-                return;
-            }
-
-            ZDOID characterID = target.m_characterID;
-
-            if (!characterID.IsNone())
-            {
-                localPlayer.TeleportTo(target.m_position, localPlayer.transform.rotation, true);
-            }
-        }
-
-        private static void HealPlayer(Player player)
-        {
-            if (player != null)
-            {
-                player.Heal(player.GetMaxHealth(), true);
-            }
-        }
-
-        private static void AddGuardianPower(Player player, string guardianPower)
-        {
-            if (player != null)
-            {
-                player.GetSEMan().AddStatusEffect(guardianPower, true);
-            }
-        }
-
-        private static void AddGuardianPower(string guardianPower)
+        private static void AllPlayersActiveGuardianPower(string guardianPower)
         {
             List<Player> players = Player.GetAllPlayers();
 
@@ -415,32 +292,9 @@ namespace ValheimTooler.Core
             {
                 foreach (Player player in players)
                 {
-                    AddGuardianPower(player, guardianPower);
+                    player.VTActiveGuardianPower(guardianPower);
                 }
             }
-        }
-
-        private static void UpdateSkillLevel(string skillName, string level)
-        {
-            if (int.TryParse(level, out int levelInt))
-            {
-                UpdateSkillLevel(skillName, levelInt);
-            }
-        }
-
-        private static void UpdateSkillLevel(string skillName, int level)
-        {
-            if (Player.m_localPlayer == null)
-            {
-                return;
-            }
-
-            Skills.SkillType skillType = (Skills.SkillType)Enum.Parse(typeof(Skills.SkillType), skillName);
-            Skills.Skill skill = (Skills.Skill)Player.m_localPlayer.GetSkills().CallMethod("GetSkill", skillType);
-
-            int offset = (int)Math.Ceiling(level - skill.m_level);
-
-            Player.m_localPlayer.GetSkills().CheatRaiseSkill(skillName.ToLower(), offset);
         }
     }
 }

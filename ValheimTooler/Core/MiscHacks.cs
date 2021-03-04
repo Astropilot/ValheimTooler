@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RapidGUI;
 using UnityEngine;
+using ValheimTooler.Core.Extensions;
 using ValheimTooler.Utils;
 
 namespace ValheimTooler.Core
@@ -65,7 +66,7 @@ namespace ValheimTooler.Core
                     
                     if (int.TryParse(s_damageToDeal, out int damage))
                     {
-                        DamageCharacter(s_players[s_playerDamageIdx], damage);
+                        s_players[s_playerDamageIdx].VTDamage(damage);
                     }
                 }
                 if (GUILayout.Button(Translator.Localize("$vt_misc_damage_button_entities")))
@@ -139,27 +140,13 @@ namespace ValheimTooler.Core
             GUILayout.EndVertical();
         }
 
-        private static void DamageCharacter(Character character, int damage)
-        {
-            if (character != null)
-            {
-                HitData hitData = new HitData();
-
-                hitData.m_damage.m_damage = damage;
-                character.Damage(hitData);
-            }
-        }
-
         private static void DamageAllCharacters()
         {
             foreach (Character character in Character.GetAllCharacters())
             {
                 if (!character.IsPlayer())
                 {
-                    HitData hitData = new HitData();
-
-                    hitData.m_damage.m_damage = 1E+10f;
-                    character.Damage(hitData);
+                    character.VTDamage(1E+10f);
                 }
             }
         }
@@ -173,12 +160,9 @@ namespace ValheimTooler.Core
 
             foreach (Character character in Character.GetAllCharacters())
             {
-                if (character.IsPlayer() && ((Player)character).GetPlayerID() != Player.m_localPlayer.GetPlayerID())
+                if (character.IsPlayer() && (character as Player).GetPlayerID() != Player.m_localPlayer.GetPlayerID())
                 {
-                    HitData hitData = new HitData();
-
-                    hitData.m_damage.m_damage = 1E+10f;
-                    character.Damage(hitData);
+                    character.VTDamage(1E+10f);
                 }
             }
         }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using ValheimTooler.Core.Extensions;
 using ValheimTooler.UI;
 using ValheimTooler.Utils;
 
@@ -11,7 +12,6 @@ namespace ValheimTooler.Core
         private static Rect s_itemGiverRect;
         private static Vector2 s_itemGiverScrollPosition;
         private static readonly List<InventoryItem> s_items = new List<InventoryItem>();
-        private static readonly List<GUIContent> s_itemsGUI = new List<GUIContent>();
         private static List<InventoryItem> s_itemsFiltered = new List<InventoryItem>();
         private static List<GUIContent> s_itemsGUIFiltered = new List<GUIContent>();
 
@@ -41,8 +41,7 @@ namespace ValheimTooler.Core
                 {
                     Texture texture = SpriteManager.TextureFromSprite(component.m_itemData.m_shared.m_icons[variant]);
                     var content = new GUIContent(texture, Localization.instance.Localize(component.m_itemData.m_shared.m_name + (variant > 0 ? " Variant " + variant.ToString() : "")));
-                    var inventoryItem = new InventoryItem(gameObject, component, variant);
-                    s_itemsGUI.Add(content);
+                    var inventoryItem = new InventoryItem(gameObject, component, content, variant);
                     s_itemsGUIFiltered.Add(content);
                     s_items.Add(inventoryItem);
                     s_itemsFiltered.Add(inventoryItem);
@@ -94,7 +93,7 @@ namespace ValheimTooler.Core
             {
                 if (int.TryParse(s_quantityItem, out int quantity) && int.TryParse(s_qualityItem, out int quality))
                 {
-                    AddItemToPlayer(s_itemsFiltered[s_selectedItem].itemPrefab.name, quantity, quality, s_itemsFiltered[s_selectedItem].variant);
+                    Player.m_localPlayer.VTAddItemToInventory(s_itemsFiltered[s_selectedItem].itemPrefab.name, quantity, quality, s_itemsFiltered[s_selectedItem].variant);
                 }
             }
 
@@ -128,41 +127,29 @@ namespace ValheimTooler.Core
             }
             if (search.Length == 0)
             {
-                s_itemsGUIFiltered = s_itemsGUI;
                 s_itemsFiltered = s_items;
+                s_itemsGUIFiltered = s_itemsFiltered.Select(i => i.guiContent).ToList();
             }
             else
             {
-                s_itemsGUIFiltered = s_itemsGUI.Where(i => i.tooltip.ToLower().Contains(search)).ToList();
-                s_itemsFiltered = s_items.Where(i => Localization.instance.Localize(i.itemDrop.m_itemData.m_shared.m_name + (i.variant > 0 ? " Variant " + i.variant.ToString() : "")).Contains(search)).ToList();
+                s_itemsFiltered = s_items.Where(i => Localization.instance.Localize(i.itemDrop.m_itemData.m_shared.m_name + (i.variant > 0 ? " Variant " + i.variant.ToString() : "")).ToLower().Contains(search)).ToList();
+                s_itemsGUIFiltered = s_itemsFiltered.Select(i => i.guiContent).ToList();
             }
             s_previousSearchTerms = search;
-        }
-
-        private static void AddItemToPlayer(string itemPrefab, int quantity, int quality, int variant)
-        {
-            if (Player.m_localPlayer == null || Game.instance == null)
-            {
-                return;
-            }
-
-            long playerID = Player.m_localPlayer.GetPlayerID();
-            string playerName = Player.m_localPlayer.GetPlayerName();
-
-            Player.m_localPlayer.GetInventory().AddItem(itemPrefab, quantity, quality, variant, playerID, playerName);
-            Game.instance.GetPlayerProfile().m_playerStats.m_crafts++;
         }
 
         class InventoryItem
         {
             public GameObject itemPrefab;
             public ItemDrop itemDrop;
+            public GUIContent guiContent;
             public int variant;
 
-            public InventoryItem(GameObject itemPrefab, ItemDrop itemDrop, int variant)
+            public InventoryItem(GameObject itemPrefab, ItemDrop itemDrop, GUIContent guiContent, int variant)
             {
                 this.itemPrefab = itemPrefab;
                 this.itemDrop = itemDrop;
+                this.guiContent = guiContent;
                 this.variant = variant;
             }
         }

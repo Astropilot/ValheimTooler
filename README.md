@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/Astropilot/ValheimTooler/blob/master/README-FR.md">French Version <img src="https://cdn.countryflags.com/thumbs/france/flag-800.png" height="16"></a>
+    <a href="./README-FR.md">French Version <img src="https://cdn.countryflags.com/thumbs/france/flag-800.png" height="16"></a>
 </p>
 
 <p align="center">
@@ -38,7 +38,7 @@ Here is the list of features offered by this tool:
   * Unlimited stamina for you
   * Unlimited stamina for the other players
   * No stamina for the other players
-  * Fly Mode, sweet creative mode
+  * Fly Mode, sweet creative mode 🕊️
   * Ghost Mode, the monsters cannot see you
   * No placement cost
   * Explore all your minimap (Irreversible on the world on which it is activated!)
@@ -86,8 +86,9 @@ Here is also a video tutorial explaining its installation and a demonstration of
 
 ## Contributing
 
-The project is open for contributions! Feel free to open merge requests.
-Please respect the rules in editorconfig!
+The project is open for contributions! Open an Issue to propose new features or directly make a merge request if you want to implement it yourself. Please respect the conventions defined by editorconfig! It should be automatically taken into account by Visual Studio.
+
+A more complete contributing file will arrive soon...
 
 **Important**: This program aims to keep it simple (I initially coded it only to learn how to develop cheats on Unity games), that's why I won't go into modifying the game methods but only calling or modifying the class variables. So it is not planned to use libraries like Harmony to patch methods even if it reduces the possibilities of features.
 
