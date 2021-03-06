@@ -84,8 +84,8 @@ If you want to uninstall the cheat you just have to press the `Uninstall` button
 Here is also a video tutorial explaining its installation and a demonstration of its features:
 
 <p align="center">
-<a href="https://www.youtube.com/watch?feature=player_embedded&v=YOUTUBE_VIDEO_ID_HERE" target="_blank">
-  <img src="https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg" width="240" height="180" border="10">
+<a href="https://www.youtube.com/watch?feature=player_embedded&v=Xbt0V_1Xt4U" target="_blank">
+  <img src="https://img.youtube.com/vi/Xbt0V_1Xt4U/maxresdefault.jpg" width="640" height="360" border="10" alt="Tutorial/Demonstration video">
 </a>
 </p>
 
@@ -94,8 +94,6 @@ Here is also a video tutorial explaining its installation and a demonstration of
 The project is open for contributions! Open an Issue to propose new features or directly make a merge request if you want to implement it yourself. Please respect the conventions defined by editorconfig! It should be automatically taken into account by Visual Studio.
 
 A more complete contributing file will arrive soon...
-
-**Important**: This program aims to keep it simple (I initially coded it only to learn how to develop cheats on Unity games), that's why I won't go into modifying the game methods but only calling or modifying the class variables. So it is not planned to use libraries like Harmony to patch methods even if it reduces the possibilities of features.
 
 ## Special mentions and credits
 

@@ -87,8 +87,8 @@ Si vous souhaitez désinstaller le programme vous n'avez qu'à cliquer sur `Unin
 Voici également une vidéo tutoriel pour installer le programme et aussi une démonstration des fonctionnalités du cheat:
 
 <p align="center">
-<a href="https://www.youtube.com/watch?feature=player_embedded&v=YOUTUBE_VIDEO_ID_HERE" target="_blank">
-  <img src="https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg" width="240" height="180" border="10">
+<a href="https://www.youtube.com/watch?feature=player_embedded&v=Xbt0V_1Xt4U" target="_blank">
+  <img src="https://img.youtube.com/vi/Xbt0V_1Xt4U/maxresdefault.jpg" width="640" height="360" border="10" alt="Tutorial/Demonstration video">
 </a>
 </p>
 
@@ -97,8 +97,6 @@ Voici également une vidéo tutoriel pour installer le programme et aussi une d�
 Le projet est ouvert aux contributions ! Ouvrez une Issue pour proposer de nouvelles fonctionnalités ou faites directement une merge request si vous souhaitez l'implémenter vous-même. Merci de respecter les conventions définies par l'editorconfig ! Il devrait être pris en compte automatiquement par Visual Studio.
 
 Un fichier de contribution plus complet arrivera sous peu...
-
-**Important**: Ce programme à pour objectif de rester simple (je l'ai initialement codé seulement pour apprendre à développer des triches sur des jeux Unity), c'est pour cela que je ne m'avancerais pas dans la modification des méthodes du jeu mais seulement l'appel ou la modification des variables de classe. Il n'est donc pas prévu d'utiliser des librairies comme Harmony pour patcher les méthodes quand bien même cela réduit les possibilités de fonctionnalités.
 
 ## Mentions spéciales et crédits
 
