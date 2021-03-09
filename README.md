@@ -69,7 +69,7 @@ Here is the list of features offered by this tool:
 
 ## Usage
 
-I made sure that you can install and run this tool easily. Just [go here](https://github.com/Astropilot/ValheimTooler/release) to download the latest version. Take the .zip and extract it to any folder. Then run the `ValheimToolerLauncher.exe` and click on `Install`.
+I made sure that you can install and run this tool easily. Just [go here](https://github.com/Astropilot/ValheimTooler/releases) to download the latest version. Take the .zip and extract it to any folder. Then run the `ValheimToolerLauncher.exe` and click on `Install`.
 
 If the button is not available it is likely that the program has not found the path to the game, specify it just below and the button should become clickable.
 
