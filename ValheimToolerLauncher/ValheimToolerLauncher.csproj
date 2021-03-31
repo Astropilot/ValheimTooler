@@ -123,6 +123,7 @@
     <Compile Include="Utils\FileUtils.cs" />
     <Compile Include="Utils\Installer.cs" />
     <Compile Include="Utils\KeyValue.cs" />
+    <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\MonoInjector.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />

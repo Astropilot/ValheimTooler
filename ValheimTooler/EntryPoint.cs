@@ -14,7 +14,11 @@ namespace ValheimTooler
 
         private bool _showMainWindow = true;
         public static bool s_showItemGiver = false;
-        public static bool s_showESP = false;
+        public static bool s_showPlayerESP = false;
+        public static bool s_showMonsterESP = false;
+        public static bool s_showDroppedESP = false;
+        public static bool s_showDepositESP = false;
+        public static bool s_showPickableESP = false;
 
         private WindowToolbar _windowToolbar = WindowToolbar.PLAYER;
         private readonly string[] _toolbarChoices = {
@@ -27,7 +31,7 @@ namespace ValheimTooler
 
         public void Start()
         {
-            _valheimToolerRect = new Rect(5, 5, 350, 300);
+            _valheimToolerRect = new Rect(5, 5, 800, 300);
 
             PlayerHacks.Start();
             EntitiesItemsHacks.Start();
@@ -64,7 +68,7 @@ namespace ValheimTooler
 
             if (_showMainWindow)
             {
-                _valheimToolerRect = GUILayout.Window(1001, _valheimToolerRect, ValheimToolerWindow, Translator.Localize($"$vt_main_title (v{_version})"), GUILayout.Height(10));
+                _valheimToolerRect = GUILayout.Window(1001, _valheimToolerRect, ValheimToolerWindow, Translator.Localize($"$vt_main_title (v{_version})"), GUILayout.Height(10), GUILayout.Width(10));
 
                 if (s_showItemGiver)
                 {
@@ -72,10 +76,7 @@ namespace ValheimTooler
                 }
             }
 
-            if (s_showESP)
-            {
-                ESP.DisplayGUI();
-            }
+            ESP.DisplayGUI();
         }
 
         void ValheimToolerWindow(int windowID)

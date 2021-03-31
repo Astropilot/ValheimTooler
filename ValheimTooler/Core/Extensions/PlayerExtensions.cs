@@ -150,5 +150,37 @@ namespace ValheimTooler.Core.Extensions
                 player.GetInventory().AddItem(itemPrefab, quantity, quality, variant, playerID, playerName);
             }
         }
+
+        public static void VTTameNearbyCreatures(this Player player)
+        {
+            if (player != null)
+            {
+                Tameable.TameAllInArea(player.transform.position, 20f);
+            }
+        }
+
+        public static bool VTIsInventoryInfiniteWeight(this Player player)
+        {
+            if (player != null)
+            {
+                return player.m_maxCarryWeight != 300;
+            }
+            return false;
+        }
+
+        public static void VTInventoryInfiniteWeight(this Player player, bool isInventoryInfiniteWeight)
+        {
+            if (player != null)
+            {
+                if (isInventoryInfiniteWeight)
+                {
+                    player.m_maxCarryWeight = 999999999;
+                }
+                else
+                {
+                    player.m_maxCarryWeight = 300;
+                }
+            }
+        }
     }
 }

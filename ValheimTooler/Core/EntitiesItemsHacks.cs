@@ -55,7 +55,7 @@ namespace ValheimTooler.Core
                 GUILayout.Space(EntryPoint.s_boxSpacing);
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_entities_spawn_entity_name :"));
+                    GUILayout.Label(Translator.Localize("$vt_entities_spawn_entity_name :"), GUILayout.ExpandWidth(false));
                     s_entityPrefabIdx = RGUI.SearchableSelectionPopup(s_entityPrefabIdx, s_entityPrefabsFiltered.ToArray(), ref s_entitySearchTerms);
 
                     SearchItem(s_entitySearchTerms);
@@ -64,14 +64,14 @@ namespace ValheimTooler.Core
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_entities_spawn_quantity :"));
+                    GUILayout.Label(Translator.Localize("$vt_entities_spawn_quantity :"), GUILayout.ExpandWidth(false));
                     s_entityQuantityText = GUILayout.TextField(s_entityQuantityText, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_entities_spawn_level :"));
+                    GUILayout.Label(Translator.Localize("$vt_entities_spawn_level :"), GUILayout.ExpandWidth(false));
                     s_entityLevelIdx = RGUI.SelectionPopup(s_entityLevelIdx, s_entityLevels.ToArray());
                 }
                 GUILayout.EndHorizontal();

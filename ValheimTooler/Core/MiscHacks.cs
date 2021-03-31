@@ -49,14 +49,14 @@ namespace ValheimTooler.Core
                 GUILayout.Space(EntryPoint.s_boxSpacing);
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_misc_damage_player :"));
+                    GUILayout.Label(Translator.Localize("$vt_misc_damage_player :"), GUILayout.ExpandWidth(false));
                     s_playerDamageIdx = RGUI.SelectionPopup(s_playerDamageIdx, s_playerNames.ToArray());
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_misc_damage_value :"));
+                    GUILayout.Label(Translator.Localize("$vt_misc_damage_value :"), GUILayout.ExpandWidth(false));
                     s_damageToDeal = GUILayout.TextField(s_damageToDeal, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
@@ -85,7 +85,7 @@ namespace ValheimTooler.Core
                 GUILayout.Space(EntryPoint.s_boxSpacing);
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_misc_event_message :"));
+                    GUILayout.Label(Translator.Localize("$vt_misc_event_message :"), GUILayout.ExpandWidth(false));
                     s_worldMessageText = GUILayout.TextField(s_worldMessageText, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
@@ -102,14 +102,14 @@ namespace ValheimTooler.Core
                 GUILayout.Space(EntryPoint.s_boxSpacing);
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_misc_chat_username :"));
+                    GUILayout.Label(Translator.Localize("$vt_misc_chat_username :"), GUILayout.ExpandWidth(false));
                     s_chatUsernameText = GUILayout.TextField(s_chatUsernameText, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_misc_chat_message :"));
+                    GUILayout.Label(Translator.Localize("$vt_misc_chat_message :"), GUILayout.ExpandWidth(false));
                     s_chatMessageText = GUILayout.TextField(s_chatMessageText, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
@@ -132,9 +132,29 @@ namespace ValheimTooler.Core
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
 
-                if (GUILayout.Button(Translator.Localize("$vt_misc_esp_button : " + (EntryPoint.s_showESP ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                if (GUILayout.Button(Translator.Localize("$vt_misc_player_esp_button : " + (EntryPoint.s_showPlayerESP ? Translator.s_cheatOn : Translator.s_cheatOff))))
                 {
-                    EntryPoint.s_showESP = !EntryPoint.s_showESP;
+                    EntryPoint.s_showPlayerESP = !EntryPoint.s_showPlayerESP;
+                }
+
+                if (GUILayout.Button(Translator.Localize("$vt_misc_monster_esp_button : " + (EntryPoint.s_showMonsterESP ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                {
+                    EntryPoint.s_showMonsterESP = !EntryPoint.s_showMonsterESP;
+                }
+
+                if (GUILayout.Button(Translator.Localize("$vt_misc_dropped_esp_button : " + (EntryPoint.s_showDroppedESP ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                {
+                    EntryPoint.s_showDroppedESP = !EntryPoint.s_showDroppedESP;
+                }
+
+                if (GUILayout.Button(Translator.Localize("$vt_misc_deposit_esp_button : " + (EntryPoint.s_showDepositESP ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                {
+                    EntryPoint.s_showDepositESP = !EntryPoint.s_showDepositESP;
+                }
+
+                if (GUILayout.Button(Translator.Localize("$vt_misc_pickable_esp_button : " + (EntryPoint.s_showPickableESP ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                {
+                    EntryPoint.s_showPickableESP = !EntryPoint.s_showPickableESP;
                 }
             }
             GUILayout.EndVertical();

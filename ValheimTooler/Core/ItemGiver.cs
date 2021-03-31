@@ -77,14 +77,14 @@ namespace ValheimTooler.Core
 
             GUILayout.BeginHorizontal();
             {
-                GUILayout.Label(Translator.Localize("$vt_item_giver_quantity :"));
+                GUILayout.Label(Translator.Localize("$vt_item_giver_quantity :"), GUILayout.ExpandWidth(false));
                 s_quantityItem = GUILayout.TextField(s_quantityItem, GUILayout.ExpandWidth(true));
             }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             {
-                GUILayout.Label(Translator.Localize("$vt_item_giver_quality :"));
+                GUILayout.Label(Translator.Localize("$vt_item_giver_quality :"), GUILayout.ExpandWidth(false));
                 s_qualityItem = GUILayout.TextField(s_qualityItem, GUILayout.ExpandWidth(true));
             }
             GUILayout.EndHorizontal();
