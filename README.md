@@ -4,7 +4,7 @@
 </h1>
 
 <p align="center">
-  <a href="https://github.com/Astropilot/ValheimTooler/release">
+  <a href="https://github.com/Astropilot/ValheimTooler/releases">
     <img src="https://img.shields.io/github/downloads/Astropilot/ValheimTooler/total"
          alt="Download counter">
   </a>
@@ -47,12 +47,15 @@ Here is the list of features offered by this tool:
   * Ghost Mode, the monsters cannot see you
   * No placement cost
   * Explore all your minimap (Irreversible on the world on which it is activated!)
+  * Reset your minimap
   * Teleport to another player (works only if the player is visible on the minimap)
   * Instantly heals a player
   * Instantly heals all players
   * Activate a Guardian Power for you
   * Activate a Guardian Power for all players
   * Raise/Decrease a skill to any level
+  * Tame all nearby creatures
+  * Unlimited weight for inventory
 * **Entities & Items**
   * Spawn any entity
   * Delete all drops on the ground
@@ -63,7 +66,7 @@ Here is the list of features offered by this tool:
   * Kill all players
   * Send a event message to all players (the yellow one on the middle of the screen)
   * Send a chat message as any username
-  * A simple ESP
+  * A ESP for players, monsters, pickables, deposits and drops
 
 **⚠️ Warning ⚠️**: On each feature that allows you to choose a player, the list will only include players who are at a certain distance from you (quite large but not the whole map for all that). This is not a personal choice but a technical limitation of the game. Until I find a way to get around it (if possible) this behavior will remain.
 
