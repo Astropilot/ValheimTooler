@@ -73,7 +73,7 @@ Voici la liste des fonctionnalités disponibles:
 
 ## Utilisation
 
-je me suis assuré que l'installation et le lancement du cheat soit le plus simple possible. Rendez-vous simplement [ici](https://github.com/Astropilot/ValheimTooler/release) pour télécharger la dernière version. Prenez le .zip et extrayez-le dans n'importe quel dossier. Puis lancez le programme `ValheimToolerLauncher.exe` et cliquez sur `Install`.
+je me suis assuré que l'installation et le lancement du cheat soit le plus simple possible. Rendez-vous simplement [ici](https://github.com/Astropilot/ValheimTooler/releases) pour télécharger la dernière version. Prenez le .zip et extrayez-le dans n'importe quel dossier. Puis lancez le programme `ValheimToolerLauncher.exe` et cliquez sur `Install`.
 
 Si le bouton n'est clickable, c'est très certainement car le launcher n'a pas réussi à trouver de lui même le chemin vers le jeu. Spécifiez le chemin en dessous du bouton.
 Le chemin le plus probable est quelque chose du genre: `C:\Program Files (x86)\Steam\steamapps\common\Valheim`.
