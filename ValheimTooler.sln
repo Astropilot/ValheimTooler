@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValheimToolerLauncher", "ValheimToolerLauncher\ValheimToolerLauncher.csproj", "{132806F1-5D56-4DE6-82C8-0CEE9B8778BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValheimToolerMod", "ValheimToolerMod\ValheimToolerMod.csproj", "{3D5F17BB-BB22-440E-848E-5F5F45A530F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,12 +32,20 @@ Global
 		{66A8DE82-AE2D-4A68-BC1B-84452AFE01BD}.Release|x64.Build.0 = Release|x64
 		{132806F1-5D56-4DE6-82C8-0CEE9B8778BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{132806F1-5D56-4DE6-82C8-0CEE9B8778BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{132806F1-5D56-4DE6-82C8-0CEE9B8778BB}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{132806F1-5D56-4DE6-82C8-0CEE9B8778BB}.Debug|x64.Build.0 = Debug|Any CPU
+		{132806F1-5D56-4DE6-82C8-0CEE9B8778BB}.Debug|x64.ActiveCfg = Debug|x64
+		{132806F1-5D56-4DE6-82C8-0CEE9B8778BB}.Debug|x64.Build.0 = Debug|x64
 		{132806F1-5D56-4DE6-82C8-0CEE9B8778BB}.Release|Any CPU.ActiveCfg = Release|x64
 		{132806F1-5D56-4DE6-82C8-0CEE9B8778BB}.Release|Any CPU.Build.0 = Release|x64
 		{132806F1-5D56-4DE6-82C8-0CEE9B8778BB}.Release|x64.ActiveCfg = Release|x64
 		{132806F1-5D56-4DE6-82C8-0CEE9B8778BB}.Release|x64.Build.0 = Release|x64
+		{3D5F17BB-BB22-440E-848E-5F5F45A530F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D5F17BB-BB22-440E-848E-5F5F45A530F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D5F17BB-BB22-440E-848E-5F5F45A530F9}.Debug|x64.ActiveCfg = Debug|x64
+		{3D5F17BB-BB22-440E-848E-5F5F45A530F9}.Debug|x64.Build.0 = Debug|x64
+		{3D5F17BB-BB22-440E-848E-5F5F45A530F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D5F17BB-BB22-440E-848E-5F5F45A530F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D5F17BB-BB22-440E-848E-5F5F45A530F9}.Release|x64.ActiveCfg = Release|x64
+		{3D5F17BB-BB22-440E-848E-5F5F45A530F9}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
