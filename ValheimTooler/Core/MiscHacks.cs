@@ -44,24 +44,24 @@ namespace ValheimTooler.Core
 
         public static void DisplayGUI()
         {
-            GUILayout.BeginVertical(Translator.Localize("$vt_misc_damage_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_damage_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_misc_damage_player :"), GUILayout.ExpandWidth(false));
+                    GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_damage_player :"), GUILayout.ExpandWidth(false));
                     s_playerDamageIdx = RGUI.SelectionPopup(s_playerDamageIdx, s_playerNames.ToArray());
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_misc_damage_value :"), GUILayout.ExpandWidth(false));
+                    GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_damage_value :"), GUILayout.ExpandWidth(false));
                     s_damageToDeal = GUILayout.TextField(s_damageToDeal, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button(Translator.Localize("$vt_misc_damage_button_player")))
+                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_damage_button_player")))
                 {
                     
                     if (int.TryParse(s_damageToDeal, out int damage))
@@ -69,47 +69,47 @@ namespace ValheimTooler.Core
                         s_players[s_playerDamageIdx].VTDamage(damage);
                     }
                 }
-                if (GUILayout.Button(Translator.Localize("$vt_misc_damage_button_entities")))
+                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_damage_button_entities")))
                 {
                     DamageAllCharacters();
                 }
-                if (GUILayout.Button(Translator.Localize("$vt_misc_damage_button_players")))
+                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_damage_button_players")))
                 {
                     DamageAllOtherPlayers();
                 }
             }
             GUILayout.EndVertical();
 
-            GUILayout.BeginVertical(Translator.Localize("$vt_misc_event_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_event_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_misc_event_message :"), GUILayout.ExpandWidth(false));
+                    GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_event_message :"), GUILayout.ExpandWidth(false));
                     s_worldMessageText = GUILayout.TextField(s_worldMessageText, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button(Translator.Localize("$vt_misc_event_button")))
+                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_event_button")))
                 {
                     MessageAllInRange(MessageHud.MessageType.Center, s_worldMessageText);
                 }
             }
             GUILayout.EndVertical();
 
-            GUILayout.BeginVertical(Translator.Localize("$vt_misc_chat_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_chat_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_misc_chat_username :"), GUILayout.ExpandWidth(false));
+                    GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_chat_username :"), GUILayout.ExpandWidth(false));
                     s_chatUsernameText = GUILayout.TextField(s_chatUsernameText, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_misc_chat_message :"), GUILayout.ExpandWidth(false));
+                    GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_chat_message :"), GUILayout.ExpandWidth(false));
                     s_chatMessageText = GUILayout.TextField(s_chatMessageText, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
@@ -117,42 +117,42 @@ namespace ValheimTooler.Core
                 GUILayout.BeginHorizontal();
                 {
                     s_isShoutMessage = GUILayout.Toggle(s_isShoutMessage, "");
-                    GUILayout.Label(Translator.Localize("$vt_misc_chat_shout"));
+                    GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_chat_shout"));
                 }
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button(Translator.Localize("$vt_misc_chat_button")))
+                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_chat_button")))
                 {
                     ChatMessage(s_isShoutMessage ? Talker.Type.Shout : Talker.Type.Normal, s_chatUsernameText, s_chatMessageText);
                 }
             }
             GUILayout.EndVertical();
 
-            GUILayout.BeginVertical(Translator.Localize("$vt_misc_esp_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_esp_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
 
-                if (GUILayout.Button(Translator.Localize("$vt_misc_player_esp_button : " + (EntryPoint.s_showPlayerESP ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_player_esp_button : " + (EntryPoint.s_showPlayerESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
                 {
                     EntryPoint.s_showPlayerESP = !EntryPoint.s_showPlayerESP;
                 }
 
-                if (GUILayout.Button(Translator.Localize("$vt_misc_monster_esp_button : " + (EntryPoint.s_showMonsterESP ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_monster_esp_button : " + (EntryPoint.s_showMonsterESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
                 {
                     EntryPoint.s_showMonsterESP = !EntryPoint.s_showMonsterESP;
                 }
 
-                if (GUILayout.Button(Translator.Localize("$vt_misc_dropped_esp_button : " + (EntryPoint.s_showDroppedESP ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_dropped_esp_button : " + (EntryPoint.s_showDroppedESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
                 {
                     EntryPoint.s_showDroppedESP = !EntryPoint.s_showDroppedESP;
                 }
 
-                if (GUILayout.Button(Translator.Localize("$vt_misc_deposit_esp_button : " + (EntryPoint.s_showDepositESP ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_deposit_esp_button : " + (EntryPoint.s_showDepositESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
                 {
                     EntryPoint.s_showDepositESP = !EntryPoint.s_showDepositESP;
                 }
 
-                if (GUILayout.Button(Translator.Localize("$vt_misc_pickable_esp_button : " + (EntryPoint.s_showPickableESP ? Translator.s_cheatOn : Translator.s_cheatOff))))
+                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_pickable_esp_button : " + (EntryPoint.s_showPickableESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
                 {
                     EntryPoint.s_showPickableESP = !EntryPoint.s_showPickableESP;
                 }

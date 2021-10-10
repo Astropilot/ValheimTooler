@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RapidGUI;
@@ -15,11 +16,19 @@ namespace ValheimTooler.Core
         private static string s_entitySearchTerms = "";
         private static string s_previousSearchTerms = "";
 
+        private static float s_updateTimer = 0f;
+        private static readonly float s_updateTimerInterval = 1.5f;
+
 
         private static readonly List<string> s_entityLevels = new List<string>();
 
         private static readonly List<string> s_entityPrefabs = new List<string>();
         private static List<string> s_entityPrefabsFiltered = new List<string>();
+
+        private static int NameComparator(string a, string b)
+        {
+            return string.Compare(a, b, StringComparison.InvariantCultureIgnoreCase);
+        }
 
         public static void Start()
         {
@@ -27,35 +36,35 @@ namespace ValheimTooler.Core
             {
                 s_entityLevels.Add(i.ToString());
             }
-
-            var prefabFile = ResourceUtils.GetEmbeddedResource("Resources.prefabs.txt", null);
-
-            var prefabFileContents = System.Text.Encoding.UTF8.GetString(prefabFile, 0, prefabFile.Length);
-
-            using (System.IO.StringReader reader = new System.IO.StringReader(prefabFileContents))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    s_entityPrefabs.Add(line);
-                    s_entityPrefabsFiltered.Add(line);
-                }
-            }
         }
 
         public static void Update()
         {
-            return;
+            if (Time.time >= s_updateTimer && s_entityPrefabs.Count == 0)
+            {
+                if (ZNetScene.instance)
+                {
+                    foreach (GameObject prefab in ZNetScene.instance.m_prefabs)
+                    {
+                        s_entityPrefabs.Add(prefab.name);
+                    }
+
+                    s_entityPrefabs.Sort(NameComparator);
+                    s_entityPrefabsFiltered = s_entityPrefabs;
+                }
+
+                s_updateTimer = Time.time + s_updateTimerInterval;
+            }
         }
 
         public static void DisplayGUI()
         {
-            GUILayout.BeginVertical(Translator.Localize("$vt_entities_spawn_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_entities_spawn_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_entities_spawn_entity_name :"), GUILayout.ExpandWidth(false));
+                    GUILayout.Label(VTLocalization.instance.Localize("$vt_entities_spawn_entity_name :"), GUILayout.ExpandWidth(false));
                     s_entityPrefabIdx = RGUI.SearchableSelectionPopup(s_entityPrefabIdx, s_entityPrefabsFiltered.ToArray(), ref s_entitySearchTerms);
 
                     SearchItem(s_entitySearchTerms);
@@ -64,19 +73,19 @@ namespace ValheimTooler.Core
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_entities_spawn_quantity :"), GUILayout.ExpandWidth(false));
+                    GUILayout.Label(VTLocalization.instance.Localize("$vt_entities_spawn_quantity :"), GUILayout.ExpandWidth(false));
                     s_entityQuantityText = GUILayout.TextField(s_entityQuantityText, GUILayout.ExpandWidth(true));
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label(Translator.Localize("$vt_entities_spawn_level :"), GUILayout.ExpandWidth(false));
+                    GUILayout.Label(VTLocalization.instance.Localize("$vt_entities_spawn_level :"), GUILayout.ExpandWidth(false));
                     s_entityLevelIdx = RGUI.SelectionPopup(s_entityLevelIdx, s_entityLevels.ToArray());
                 }
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button(Translator.Localize("$vt_entities_spawn_button")))
+                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_entities_spawn_button")))
                 {
                     if (int.TryParse(s_entityQuantityText, out int entityQuantity) && int.TryParse(s_entityLevels[s_entityLevelIdx], out int entityLevel))
                     {
@@ -89,20 +98,20 @@ namespace ValheimTooler.Core
             }
             GUILayout.EndVertical();
 
-            GUILayout.BeginVertical(Translator.Localize("$vt_entities_drops_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_entities_drops_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
-                if (GUILayout.Button(Translator.Localize("$vt_entities_drops_button")))
+                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_entities_drops_button")))
                 {
                     RemoveAllDrops();
                 }
             }
             GUILayout.EndVertical();
 
-            GUILayout.BeginVertical(Translator.Localize("$vt_entities_item_giver_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_entities_item_giver_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
-                if (GUILayout.Button(EntryPoint.s_showItemGiver ? Translator.Localize("$vt_entities_item_giver_button_hide") : Translator.Localize("$vt_entities_item_giver_button_show")))
+                if (GUILayout.Button(EntryPoint.s_showItemGiver ? VTLocalization.instance.Localize("$vt_entities_item_giver_button_hide") : VTLocalization.instance.Localize("$vt_entities_item_giver_button_show")))
                 {
                     EntryPoint.s_showItemGiver = !EntryPoint.s_showItemGiver;
                 }
@@ -112,7 +121,6 @@ namespace ValheimTooler.Core
 
         private static void SearchItem(string search)
         {
-            search = search.ToLower();
             if (s_previousSearchTerms.Equals(search))
             {
                 return;
@@ -123,7 +131,8 @@ namespace ValheimTooler.Core
             }
             else
             {
-                s_entityPrefabsFiltered = s_entityPrefabs.Where(i => i.ToLower().Contains(search)).ToList();
+                string searchLower = search.ToLower();
+                s_entityPrefabsFiltered = s_entityPrefabs.Where(i => i.ToLower().Contains(searchLower)).ToList();
             }
             s_previousSearchTerms = search;
         }

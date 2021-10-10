@@ -40,13 +40,6 @@ namespace ValheimTooler
             ESP.Start();
 
             _version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-            Translator.InitLocalization("English");
-            string prefLanguage = PlayerPrefs.GetString("language", "");
-            if (prefLanguage.Length > 0)
-            {
-                Translator.InitLocalization(prefLanguage);
-            }
         }
         public void Update()
         {
@@ -68,7 +61,7 @@ namespace ValheimTooler
 
             if (_showMainWindow)
             {
-                _valheimToolerRect = GUILayout.Window(1001, _valheimToolerRect, ValheimToolerWindow, Translator.Localize($"$vt_main_title (v{_version})"), GUILayout.Height(10), GUILayout.Width(10));
+                _valheimToolerRect = GUILayout.Window(1001, _valheimToolerRect, ValheimToolerWindow, VTLocalization.instance.Localize($"$vt_main_title (v{_version})"), GUILayout.Height(10), GUILayout.Width(10));
 
                 if (s_showItemGiver)
                 {
@@ -83,7 +76,7 @@ namespace ValheimTooler
         {
             GUILayout.Space(10);
 
-            _windowToolbar = (WindowToolbar)GUILayout.Toolbar((int)_windowToolbar, _toolbarChoices.Select(choice => Translator.Localize(choice)).ToArray());
+            _windowToolbar = (WindowToolbar)GUILayout.Toolbar((int)_windowToolbar, _toolbarChoices.Select(choice => VTLocalization.instance.Localize(choice)).ToArray());
 
             switch (_windowToolbar)
             {

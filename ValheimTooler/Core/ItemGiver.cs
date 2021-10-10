@@ -56,7 +56,7 @@ namespace ValheimTooler.Core
 
         public static void DisplayGUI()
         {
-            s_itemGiverRect = GUILayout.Window(1002, s_itemGiverRect, ItemGiverWindow, Translator.Localize("$vt_item_giver_title"));
+            s_itemGiverRect = GUILayout.Window(1002, s_itemGiverRect, ItemGiverWindow, VTLocalization.instance.Localize("$vt_item_giver_title"));
         }
 
         public static void ItemGiverWindow(int windowID)
@@ -77,19 +77,19 @@ namespace ValheimTooler.Core
 
             GUILayout.BeginHorizontal();
             {
-                GUILayout.Label(Translator.Localize("$vt_item_giver_quantity :"), GUILayout.ExpandWidth(false));
+                GUILayout.Label(VTLocalization.instance.Localize("$vt_item_giver_quantity :"), GUILayout.ExpandWidth(false));
                 s_quantityItem = GUILayout.TextField(s_quantityItem, GUILayout.ExpandWidth(true));
             }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             {
-                GUILayout.Label(Translator.Localize("$vt_item_giver_quality :"), GUILayout.ExpandWidth(false));
+                GUILayout.Label(VTLocalization.instance.Localize("$vt_item_giver_quality :"), GUILayout.ExpandWidth(false));
                 s_qualityItem = GUILayout.TextField(s_qualityItem, GUILayout.ExpandWidth(true));
             }
             GUILayout.EndHorizontal();
 
-            if (GUILayout.Button(Translator.Localize("$vt_item_giver_button")))
+            if (GUILayout.Button(VTLocalization.instance.Localize("$vt_item_giver_button")))
             {
                 if (int.TryParse(s_quantityItem, out int quantity) && int.TryParse(s_qualityItem, out int quality))
                 {
