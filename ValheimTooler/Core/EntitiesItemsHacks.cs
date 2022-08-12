@@ -177,7 +177,7 @@ namespace ValheimTooler.Core
             foreach (ItemDrop itemDrop in itemDrops)
             {
                 ZNetView component = itemDrop.GetComponent<ZNetView>();
-                if (component)
+                if (component && component.IsValid() && component.IsOwner())
                 {
                     component.Destroy();
                 }
