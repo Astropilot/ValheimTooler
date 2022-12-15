@@ -240,11 +240,16 @@ namespace ValheimToolerLauncher.ViewModels
         private async void ExecuteLaunchCommand(object parameter)
         {
             MonoInjector injector = new MonoInjector();
+            string configpathfilepath = Path.Combine(GamePath, "config_vt.path");
 
             InstallStatus = Installer.InstallStatus.PROCESSING;
 
             var injectResult = await Task.Run(() =>
             {
+                var launcherAssemblyPath = Path.GetDirectoryName(new System.Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+
+                File.WriteAllText(configpathfilepath, launcherAssemblyPath);
+
                 return injector.Inject();
             });
 
@@ -290,10 +295,16 @@ namespace ValheimToolerLauncher.ViewModels
 
         private async void ExecuteUninstallCommand(object parameter)
         {
+            string configpathfilepath = Path.Combine(GamePath, "config_vt.path");
             InstallStatus = Installer.InstallStatus.PROCESSING;
 
             var uninstallResult = await Task.Run(() =>
             {
+                if (File.Exists(configpathfilepath))
+                {
+                    File.Delete(configpathfilepath);
+                }
+
                 return _installer.Uninstall();
             });
 

@@ -219,7 +219,8 @@ namespace ValheimTooler.Core
                             playerSender.GetHeadPoint(),
                             2,
                             username,
-                            message
+                            message,
+                            PrivilegeManager.GetNetworkUserId()
                         });
                     }
                     return;
@@ -232,7 +233,8 @@ namespace ValheimTooler.Core
                     {
                         (int)type,
                         username,
-                        message
+                        message,
+                        PrivilegeManager.GetNetworkUserId()
                     });
                 }
             }

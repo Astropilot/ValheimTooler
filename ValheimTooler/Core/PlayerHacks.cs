@@ -53,7 +53,8 @@ namespace ValheimTooler.Core
             { Localization.instance.Localize("$se_theelder_name"), "GP_TheElder" },
             { Localization.instance.Localize("$se_bonemass_name"), "GP_Bonemass" },
             { Localization.instance.Localize("$se_moder_name"), "GP_Moder" },
-            { Localization.instance.Localize("$se_yagluth_name"), "GP_Yagluth" }
+            { Localization.instance.Localize("$se_yagluth_name"), "GP_Yagluth" },
+            { Localization.instance.Localize("$se_queen_name"), "GP_Queen" },
         };
         }
 

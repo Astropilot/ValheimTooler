@@ -23,7 +23,8 @@ namespace ValheimTooler.Core
 
         public static void Start()
         {
-            s_itemGiverRect = new Rect(Screen.width - 400, 5, 400, 400);
+            var _config = ConfigManager.instance;
+            s_itemGiverRect = new Rect(_config.s_itemGiverInitialPosition.x, _config.s_itemGiverInitialPosition.y, 400, 400);
 
             if (ObjectDB.instance == null)
             {
@@ -39,12 +40,20 @@ namespace ValheimTooler.Core
 
                 for (var variant = 0; variant < component.m_itemData.m_shared.m_icons.Length; variant++)
                 {
-                    Texture texture = SpriteManager.TextureFromSprite(component.m_itemData.m_shared.m_icons[variant]);
-                    var content = new GUIContent(texture, Localization.instance.Localize(component.m_itemData.m_shared.m_name + (variant > 0 ? " Variant " + variant.ToString() : "")));
-                    var inventoryItem = new InventoryItem(gameObject, component, content, variant);
-                    s_itemsGUIFiltered.Add(content);
-                    s_items.Add(inventoryItem);
-                    s_itemsFiltered.Add(inventoryItem);
+                    try
+                    {
+                        Texture texture = SpriteManager.TextureFromSprite(component.m_itemData.m_shared.m_icons[variant]);
+                        var content = new GUIContent(texture, Localization.instance.Localize(component.m_itemData.m_shared.m_name + (variant > 0 ? " Variant " + variant.ToString() : "")));
+                        var inventoryItem = new InventoryItem(gameObject, component, content, variant);
+                        s_itemsGUIFiltered.Add(content);
+                        s_items.Add(inventoryItem);
+                        s_itemsFiltered.Add(inventoryItem);
+                    } catch
+                    {
+                        ZLog.Log($"[ValheimTooler - ItemGiver] Failed to load item {component.m_itemData.m_shared.m_name} with variant {variant}. This item will be ignored.");
+                        continue;
+                    }
+                    
                 }
             }
         }
@@ -57,6 +66,8 @@ namespace ValheimTooler.Core
         public static void DisplayGUI()
         {
             s_itemGiverRect = GUILayout.Window(1002, s_itemGiverRect, ItemGiverWindow, VTLocalization.instance.Localize("$vt_item_giver_title"));
+
+            ConfigManager.instance.s_itemGiverInitialPosition = s_itemGiverRect.position;
         }
 
         public static void ItemGiverWindow(int windowID)

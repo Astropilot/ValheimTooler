@@ -85,8 +85,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Valheim_Files\assembly_valheim.dll</HintPath>
     </Reference>
-    <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
-      <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
+    <Reference Include="SharpConfig, Version=3.2.9.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpConfig.3.2.9.1\lib\net461\SharpConfig.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -353,6 +353,7 @@
     </Compile>
     <Compile Include="Core\ESP.cs" />
     <Compile Include="UI\InterfaceMaker.cs" />
+    <Compile Include="Utils\ConfigManager.cs" />
     <Compile Include="Utils\Translator.cs" />
     <Compile Include="Utils\ReflectionExtensions.cs" />
     <Compile Include="EntryPoint.cs" />
@@ -391,9 +392,6 @@
     <EmbeddedResource Include="Resources\scroll_thumb.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\prefabs.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\button_active_active.png" />
     <EmbeddedResource Include="Resources\button_active_hover.png" />
     <EmbeddedResource Include="Resources\button_active_normal.png" />
@@ -402,7 +400,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Localization\translations.ini" />
+    <EmbeddedResource Include="Resources\Localization\translations.cfg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

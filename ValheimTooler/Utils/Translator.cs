@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
-using IniParser.Model;
-using IniParser.Parser;
+using SharpConfig;
 using UnityEngine;
 
 namespace ValheimTooler.Utils
@@ -37,11 +36,21 @@ namespace ValheimTooler.Utils
         private VTLocalization()
         {
             SetupLanguage("English");
-            string prefLanguage = PlayerPrefs.GetString("language", "");
-            if (prefLanguage.Length > 0)
+
+            var configLanguage = ConfigManager.instance.s_language;
+
+            if (configLanguage == "Auto")
             {
-                SetupLanguage(prefLanguage);
+                string prefLanguage = PlayerPrefs.GetString("language", "");
+                if (prefLanguage.Length > 0)
+                {
+                    SetupLanguage(prefLanguage);
+                }
+            } else if (configLanguage != "English")
+            {
+                SetupLanguage(configLanguage);
             }
+            
         }
         public string Localize(string text)
         {
@@ -125,16 +134,16 @@ namespace ValheimTooler.Utils
 
         public bool SetupLanguage(string language)
         {
-            if (!LoadINI(language))
+            if (!LoadCFG(language))
             {
                 return false;
             }
             return true;
         }
 
-        public bool LoadINI(string language)
+        public bool LoadCFG(string language)
         {
-            var translationFile = ResourceUtils.GetEmbeddedResource("Resources.Localization.translations.ini", null);
+            byte[] translationFile = ResourceUtils.GetEmbeddedResource("Resources.Localization.translations.cfg", null);
 
             if (translationFile == null)
             {
@@ -142,20 +151,19 @@ namespace ValheimTooler.Utils
                 return false;
             }
 
-            var translationFileContents = System.Text.Encoding.UTF8.GetString(translationFile, 0, translationFile.Length);
-            var parser = new IniDataParser();
-            IniData iniData = parser.Parse(translationFileContents);
+            var translationFileContents = Encoding.UTF8.GetString(translationFile, 0, translationFile.Length);
+            var langueConfig = Configuration.LoadFromString(translationFileContents);
 
-            if (!iniData.Sections.ContainsSection(language))
+            if (!langueConfig.Contains(language))
             {
                 ZLog.Log("Failed to find language: " + language);
                 return false;
             }
 
-            SectionData sectionData = iniData.Sections.GetSectionData(language);
-            foreach (KeyData key in sectionData.Keys)
+            var langSection = langueConfig[language];
+            foreach (var key in langSection)
             {
-                AddWord(key.KeyName, key.Value);
+                AddWord(key.Name, key.StringValue);
             }
             return true;
         }

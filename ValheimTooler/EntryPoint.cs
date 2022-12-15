@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using RapidGUI;
 using UnityEngine;
 using ValheimTooler.Core;
+using ValheimTooler.Core.Extensions;
 using ValheimTooler.UI;
 using ValheimTooler.Utils;
 
@@ -13,6 +16,7 @@ namespace ValheimTooler
         private Rect _valheimToolerRect;
 
         private bool _showMainWindow = true;
+        private bool _wasMainWindowShowed = false;
         public static bool s_showItemGiver = false;
         public static bool s_showPlayerESP = false;
         public static bool s_showMonsterESP = false;
@@ -28,10 +32,13 @@ namespace ValheimTooler
         };
 
         private string _version;
+        private ConfigManager _config;
 
         public void Start()
         {
-            _valheimToolerRect = new Rect(5, 5, 800, 300);
+            _config = ConfigManager.instance;
+            _valheimToolerRect = new Rect(_config.s_mainWindowInitialPosition.x, _config.s_mainWindowInitialPosition.y, 800, 300);
+            _showMainWindow = _config.s_showAtStartup;
 
             PlayerHacks.Start();
             EntitiesItemsHacks.Start();
@@ -43,7 +50,7 @@ namespace ValheimTooler
         }
         public void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Delete))
+            if (Input.GetKeyDown(_config.s_toggleInterfaceKey))
             {
                 _showMainWindow = !_showMainWindow;
             }
@@ -61,11 +68,31 @@ namespace ValheimTooler
 
             if (_showMainWindow)
             {
+                if (GameCamera.instance != null)
+                {
+                    GameCamera.instance.SetFieldValue<bool>("m_mouseCapture", false);
+                    GameCamera.instance.CallMethod("UpdateMouseCapture");
+                }
+
                 _valheimToolerRect = GUILayout.Window(1001, _valheimToolerRect, ValheimToolerWindow, VTLocalization.instance.Localize($"$vt_main_title (v{_version})"), GUILayout.Height(10), GUILayout.Width(10));
 
                 if (s_showItemGiver)
                 {
                     ItemGiver.DisplayGUI();
+                }
+                _wasMainWindowShowed = true;
+
+                _config.s_mainWindowInitialPosition = _valheimToolerRect.position;
+            } else
+            {
+                if (_wasMainWindowShowed)
+                {
+                    if (GameCamera.instance != null)
+                    {
+                        GameCamera.instance.SetFieldValue<bool>("m_mouseCapture", true);
+                        GameCamera.instance.CallMethod("UpdateMouseCapture");
+                    }
+                    _wasMainWindowShowed = false;
                 }
             }
 
@@ -92,6 +119,11 @@ namespace ValheimTooler
             }
 
             GUI.DragWindow();
+        }
+
+        public void OnDestroy()
+        {
+            ConfigManager.instance.SaveConfig();
         }
     }
 }

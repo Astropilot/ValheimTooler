@@ -280,13 +280,20 @@ namespace ValheimToolerLauncher.Utils
             var configFile = new Utils.KeyValue();
             configFile.ReadFileAsText(libraryfoldersPath);
 
-            var steamGamePathConfig = configFile["1"];
+            var alternateFolders = configFile.Children;
 
-            if (!string.IsNullOrEmpty(steamGamePathConfig.Value) && Directory.Exists(steamGamePathConfig.Value))
+            foreach (var alternateFolder in alternateFolders)
             {
-                var steamGamePath = steamGamePathConfig.Value;
+                if (alternateFolder.Name != "0")
+                {
+                    var steamGamePath = alternateFolder["path"].Value;
+                    var valheimGamePath = FindValheimGameInSteamPath(steamGamePath);
 
-                return FindValheimGameInSteamPath(steamGamePath);
+                    if (!string.IsNullOrEmpty(valheimGamePath))
+                    {
+                        return valheimGamePath;
+                    }
+                }
             }
 
             return gamePath;

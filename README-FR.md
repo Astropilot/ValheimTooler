@@ -95,6 +95,20 @@ Voici également une vidéo tutoriel pour installer le programme et aussi une d�
 </a>
 </p>
 
+### Configuration
+
+Un fichier de configuration est disponible pour modifier certains des paramètres de l'outil, ce fichier est créé lors du premier lancement de l'outil.
+Le fichier est disponible :
+- Si vous utilisez le launcher, le fichier devrait apparaître au même endroit que le `ValheimToolerLauncher.exe`.
+- Si vous utilisez la version moddé BepInEx, il devrait être disponible dans le dossier `BepInEx/config`.
+
+Le nom du fichier de configuration est `valheimtooler_settings.cfg`.
+
+Ce fichier vous permet de modifier les paramètres suivants:
+- Changer la touche qui permet d'afficher/cacher l'outil, par défaut sur la touche Delete
+- Choisir d'afficher l'outil lorsqu'il démarre, actif par défaut
+- Choisir la langue d'affichage du programme, auto par défaut (en fonction de la langue du jeu)
+
 ## Contribution
 
 Le projet est ouvert aux contributions ! Ouvrez une Issue pour proposer de nouvelles fonctionnalités ou faites directement une merge request si vous souhaitez l'implémenter vous-même. Merci de respecter les conventions définies par l'editorconfig ! Il devrait être pris en compte automatiquement par Visual Studio.
