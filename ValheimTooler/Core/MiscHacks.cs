@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using RapidGUI;
 using UnityEngine;
 using ValheimTooler.Core.Extensions;
@@ -9,6 +10,7 @@ namespace ValheimTooler.Core
 {
     public static class MiscHacks
     {
+        public static bool s_enableAutopinMap = false;
         private static int s_playerDamageIdx = 0;
         private static string s_damageToDeal = "1";
 
@@ -19,7 +21,6 @@ namespace ValheimTooler.Core
         private static bool s_isShoutMessage = false;
 
         private static List<Player> s_players = null;
-        private static List<string> s_playerNames = new List<string>();
 
         private static float s_updateTimer = 0f;
         private static readonly float s_updateTimerInterval = 1.5f;
@@ -33,10 +34,7 @@ namespace ValheimTooler.Core
         {
             if (Time.time >= s_updateTimer)
             {
-                s_playerNames.Clear();
-
                 s_players = Player.GetAllPlayers();
-                s_playerNames = s_players.Select(p => p.GetPlayerName()).ToList();
 
                 s_updateTimer = Time.time + s_updateTimerInterval;
             }
@@ -44,120 +42,175 @@ namespace ValheimTooler.Core
 
         public static void DisplayGUI()
         {
-            GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_damage_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+            GUILayout.BeginHorizontal();
             {
-                GUILayout.Space(EntryPoint.s_boxSpacing);
-                GUILayout.BeginHorizontal();
+                GUILayout.BeginVertical();
                 {
-                    GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_damage_player :"), GUILayout.ExpandWidth(false));
-                    s_playerDamageIdx = RGUI.SelectionPopup(s_playerDamageIdx, s_playerNames.ToArray());
-                }
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                {
-                    GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_damage_value :"), GUILayout.ExpandWidth(false));
-                    s_damageToDeal = GUILayout.TextField(s_damageToDeal, GUILayout.ExpandWidth(true));
-                }
-                GUILayout.EndHorizontal();
-
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_damage_button_player")))
-                {
-                    
-                    if (int.TryParse(s_damageToDeal, out int damage))
+                    GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_damage_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
                     {
-                        s_players[s_playerDamageIdx].VTDamage(damage);
+                        GUILayout.Space(EntryPoint.s_boxSpacing);
+                        GUILayout.BeginHorizontal();
+                        {
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_damage_player :"), GUILayout.ExpandWidth(false));
+                            s_playerDamageIdx = RGUI.SelectionPopup(s_playerDamageIdx, s_players?.Select(p => p.GetPlayerName()).ToArray());
+                        }
+                        GUILayout.EndHorizontal();
+
+                        GUILayout.BeginHorizontal();
+                        {
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_damage_value :"), GUILayout.ExpandWidth(false));
+                            s_damageToDeal = GUILayout.TextField(s_damageToDeal, GUILayout.ExpandWidth(true));
+                        }
+                        GUILayout.EndHorizontal();
+
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_damage_button_player")))
+                        {
+
+                            if (int.TryParse(s_damageToDeal, out int damage))
+                            {
+                                s_players[s_playerDamageIdx].VTDamage(damage);
+                            }
+                        }
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_damage_button_entities")))
+                        {
+                            DamageAllCharacters();
+                        }
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_damage_button_players")))
+                        {
+                            DamageAllOtherPlayers();
+                        }
                     }
+                    GUILayout.EndVertical();
+
+                    GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_map_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+                    {
+                        GUILayout.Space(EntryPoint.s_boxSpacing);
+
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_autopin : " + (s_enableAutopinMap ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        {
+                            s_enableAutopinMap = !s_enableAutopinMap;
+                        }
+
+                        GUILayout.BeginHorizontal();
+                        {
+                            ConfigManager.instance.s_permanentPins = GUILayout.Toggle(ConfigManager.instance.s_permanentPins, "");
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_autopin_permanent"));
+                        }
+                        GUILayout.EndHorizontal();
+
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_autopin_clear")))
+                        {
+                            if (Minimap.instance != null)
+                            {
+                                var pinListCopy = new List<Minimap.PinData>(Minimap.instance.GetFieldValue<List<Minimap.PinData>>("m_pins"));
+                                foreach (var pin in pinListCopy)
+                                {
+                                    if (Regex.IsMatch(pin.m_name, @"^.+\[VT[0-9]{5}]$"))
+                                    {
+                                        Minimap.instance.RemovePin(pin);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    GUILayout.EndVertical();
+
+                    GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_event_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+                    {
+                        GUILayout.Space(EntryPoint.s_boxSpacing);
+                        GUILayout.BeginHorizontal();
+                        {
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_event_message :"), GUILayout.ExpandWidth(false));
+                            s_worldMessageText = GUILayout.TextField(s_worldMessageText, GUILayout.ExpandWidth(true));
+                        }
+                        GUILayout.EndHorizontal();
+
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_event_button")))
+                        {
+                            MessageAllInRange(MessageHud.MessageType.Center, s_worldMessageText);
+                        }
+                    }
+                    GUILayout.EndVertical();
                 }
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_damage_button_entities")))
+                GUILayout.EndVertical();
+
+                GUILayout.BeginVertical();
                 {
-                    DamageAllCharacters();
+                    GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_chat_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+                    {
+                        GUILayout.Space(EntryPoint.s_boxSpacing);
+                        GUILayout.BeginHorizontal();
+                        {
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_chat_username :"), GUILayout.ExpandWidth(false));
+                            s_chatUsernameText = GUILayout.TextField(s_chatUsernameText, GUILayout.ExpandWidth(true));
+                        }
+                        GUILayout.EndHorizontal();
+
+                        GUILayout.BeginHorizontal();
+                        {
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_chat_message :"), GUILayout.ExpandWidth(false));
+                            s_chatMessageText = GUILayout.TextField(s_chatMessageText, GUILayout.ExpandWidth(true));
+                        }
+                        GUILayout.EndHorizontal();
+
+                        GUILayout.BeginHorizontal();
+                        {
+                            s_isShoutMessage = GUILayout.Toggle(s_isShoutMessage, "");
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_chat_shout"));
+                        }
+                        GUILayout.EndHorizontal();
+
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_chat_button")))
+                        {
+                            ChatMessage(s_isShoutMessage ? Talker.Type.Shout : Talker.Type.Normal, s_chatUsernameText, s_chatMessageText);
+                        }
+                    }
+                    GUILayout.EndVertical();
+
+                    GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_esp_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+                    {
+                        GUILayout.Space(EntryPoint.s_boxSpacing);
+
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_player_esp_button : " + (ESP.s_showPlayerESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        {
+                            ESP.s_showPlayerESP = !ESP.s_showPlayerESP;
+                        }
+
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_monster_esp_button : " + (ESP.s_showMonsterESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        {
+                            ESP.s_showMonsterESP = !ESP.s_showMonsterESP;
+                        }
+
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_dropped_esp_button : " + (ESP.s_showDroppedESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        {
+                            ESP.s_showDroppedESP = !ESP.s_showDroppedESP;
+                        }
+
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_deposit_esp_button : " + (ESP.s_showDepositESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        {
+                            ESP.s_showDepositESP = !ESP.s_showDepositESP;
+                        }
+
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_pickable_esp_button : " + (ESP.s_showPickableESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        {
+                            ESP.s_showPickableESP = !ESP.s_showPickableESP;
+                        }
+
+                        GUILayout.Label("ESP Radius distance (" + ConfigManager.instance.s_espRadius.ToString("0.0") + "m)", GUILayout.MinWidth(200));
+                        ConfigManager.instance.s_espRadius = GUILayout.HorizontalSlider(ConfigManager.instance.s_espRadius, 5f, 500f, GUILayout.ExpandWidth(true));
+
+                        GUILayout.BeginHorizontal();
+                        {
+                            ConfigManager.instance.s_espRadiusEnabled = GUILayout.Toggle(ConfigManager.instance.s_espRadiusEnabled, "");
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_radius_enable"));
+                        }
+                        GUILayout.EndHorizontal();
+                    }
+                    GUILayout.EndVertical();
                 }
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_damage_button_players")))
-                {
-                    DamageAllOtherPlayers();
-                }
+                GUILayout.EndVertical();
             }
-            GUILayout.EndVertical();
-
-            GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_event_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
-            {
-                GUILayout.Space(EntryPoint.s_boxSpacing);
-                GUILayout.BeginHorizontal();
-                {
-                    GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_event_message :"), GUILayout.ExpandWidth(false));
-                    s_worldMessageText = GUILayout.TextField(s_worldMessageText, GUILayout.ExpandWidth(true));
-                }
-                GUILayout.EndHorizontal();
-
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_event_button")))
-                {
-                    MessageAllInRange(MessageHud.MessageType.Center, s_worldMessageText);
-                }
-            }
-            GUILayout.EndVertical();
-
-            GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_chat_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
-            {
-                GUILayout.Space(EntryPoint.s_boxSpacing);
-                GUILayout.BeginHorizontal();
-                {
-                    GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_chat_username :"), GUILayout.ExpandWidth(false));
-                    s_chatUsernameText = GUILayout.TextField(s_chatUsernameText, GUILayout.ExpandWidth(true));
-                }
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                {
-                    GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_chat_message :"), GUILayout.ExpandWidth(false));
-                    s_chatMessageText = GUILayout.TextField(s_chatMessageText, GUILayout.ExpandWidth(true));
-                }
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                {
-                    s_isShoutMessage = GUILayout.Toggle(s_isShoutMessage, "");
-                    GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_chat_shout"));
-                }
-                GUILayout.EndHorizontal();
-
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_chat_button")))
-                {
-                    ChatMessage(s_isShoutMessage ? Talker.Type.Shout : Talker.Type.Normal, s_chatUsernameText, s_chatMessageText);
-                }
-            }
-            GUILayout.EndVertical();
-
-            GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_esp_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
-            {
-                GUILayout.Space(EntryPoint.s_boxSpacing);
-
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_player_esp_button : " + (EntryPoint.s_showPlayerESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
-                {
-                    EntryPoint.s_showPlayerESP = !EntryPoint.s_showPlayerESP;
-                }
-
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_monster_esp_button : " + (EntryPoint.s_showMonsterESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
-                {
-                    EntryPoint.s_showMonsterESP = !EntryPoint.s_showMonsterESP;
-                }
-
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_dropped_esp_button : " + (EntryPoint.s_showDroppedESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
-                {
-                    EntryPoint.s_showDroppedESP = !EntryPoint.s_showDroppedESP;
-                }
-
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_deposit_esp_button : " + (EntryPoint.s_showDepositESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
-                {
-                    EntryPoint.s_showDepositESP = !EntryPoint.s_showDepositESP;
-                }
-
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_pickable_esp_button : " + (EntryPoint.s_showPickableESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
-                {
-                    EntryPoint.s_showPickableESP = !EntryPoint.s_showPickableESP;
-                }
-            }
-            GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
         }
 
         private static void DamageAllCharacters()

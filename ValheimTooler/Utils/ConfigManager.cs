@@ -22,6 +22,9 @@ namespace ValheimTooler.Utils
 
         public Vector2 s_mainWindowInitialPosition = new Vector2(5, 5);
         public Vector2 s_itemGiverInitialPosition = new Vector2(Screen.width - 400, 5);
+        public bool s_permanentPins = false;
+        public bool s_espRadiusEnabled = false;
+        public float s_espRadius = 5.0f;
 
         public static ConfigManager instance
         {
@@ -137,6 +140,21 @@ namespace ValheimTooler.Utils
                         var itemGiverLocationY = internalSection["ItemGiverLocationY"].FloatValue;
                         s_itemGiverInitialPosition = new Vector2(itemGiverLocationX, itemGiverLocationY);
                     }
+
+                    if (internalSection.Contains("PermanentPins"))
+                    {
+                        s_permanentPins = internalSection["PermanentPins"].BoolValue;
+                    }
+
+                    if (internalSection.Contains("RadiusEnabled"))
+                    {
+                        s_espRadiusEnabled = internalSection["RadiusEnabled"].BoolValue;
+                    }
+
+                    if (internalSection.Contains("RadiusValue"))
+                    {
+                        s_espRadius = internalSection["RadiusValue"].FloatValue;
+                    }
                 }
                 else
                 {
@@ -181,6 +199,10 @@ namespace ValheimTooler.Utils
 
             _internalConfiguration["Internal"]["ItemGiverLocationX"].FloatValue = s_itemGiverInitialPosition.x;
             _internalConfiguration["Internal"]["ItemGiverLocationY"].FloatValue = s_itemGiverInitialPosition.y;
+
+            _internalConfiguration["Internal"]["PermanentPins"].BoolValue = s_permanentPins;
+            _internalConfiguration["Internal"]["RadiusEnabled"].BoolValue = s_espRadiusEnabled;
+            _internalConfiguration["Internal"]["RadiusValue"].FloatValue = s_espRadius;
 
             _internalConfiguration.SaveToFile(internalFilePath);
         }

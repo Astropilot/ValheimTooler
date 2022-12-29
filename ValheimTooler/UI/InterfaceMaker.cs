@@ -96,6 +96,15 @@ namespace ValheimTooler.UI
             guiskin.button.font = s_font;
             guiskin.button.wordWrap = false;
 
+            guiskin.horizontalSliderThumb.normal.background = s_buttonNormalBackground;
+            guiskin.horizontalSliderThumb.hover.background = s_buttonHoverBackground;
+            guiskin.horizontalSliderThumb.active.background = s_buttonActiveBackground;
+            guiskin.horizontalSliderThumb.onNormal.background = s_buttonActiveNormalBackground;
+            guiskin.horizontalSliderThumb.onHover.background = s_buttonActiveHoverBackground;
+            guiskin.horizontalSliderThumb.onActive.background = s_buttonActiveActiveBackground;
+
+            guiskin.horizontalSlider.normal.background = s_scrollBackground;
+
             guiskin.toggle.normal.textColor = Color.gray;
             guiskin.toggle.normal.background = s_toggleOffBackground;
             guiskin.toggle.onNormal.textColor = Color.gray;

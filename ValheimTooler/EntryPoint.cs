@@ -1,10 +1,7 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using RapidGUI;
 using UnityEngine;
 using ValheimTooler.Core;
-using ValheimTooler.Core.Extensions;
 using ValheimTooler.UI;
 using ValheimTooler.Utils;
 
@@ -18,11 +15,6 @@ namespace ValheimTooler
         private bool _showMainWindow = true;
         private bool _wasMainWindowShowed = false;
         public static bool s_showItemGiver = false;
-        public static bool s_showPlayerESP = false;
-        public static bool s_showMonsterESP = false;
-        public static bool s_showDroppedESP = false;
-        public static bool s_showDepositESP = false;
-        public static bool s_showPickableESP = false;
 
         private WindowToolbar _windowToolbar = WindowToolbar.PLAYER;
         private readonly string[] _toolbarChoices = {

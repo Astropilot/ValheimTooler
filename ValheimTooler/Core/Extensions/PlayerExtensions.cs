@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using ValheimTooler.Utils;
 
 namespace ValheimTooler.Core.Extensions
@@ -127,16 +128,19 @@ namespace ValheimTooler.Core.Extensions
             }
         }
 
-        public static void VTUpdateSkillLevel(this Player player, string skillName, int level)
+        public static void VTUpdateSkillLevel(this Player player, Skills.SkillType skillType, int level)
         {
             if (player != null)
             {
-                Skills.SkillType skillType = (Skills.SkillType)Enum.Parse(typeof(Skills.SkillType), skillName);
-                Skills.Skill skill = (Skills.Skill)player.GetSkills().CallMethod("GetSkill", skillType);
+                Skills.SkillDef skillDef = (Skills.SkillDef)player.GetSkills().CallMethod("GetSkillDef", skillType);
 
-                int offset = (int)Math.Ceiling(level - skill.m_level);
+                if (skillDef != null)
+                {
+                    Skills.Skill skill = (Skills.Skill)player.GetSkills().CallMethod("GetSkill", skillType);
 
-                player.GetSkills().CheatRaiseSkill(skillName.ToLower(), offset);
+                    skill.m_level = level;
+                    skill.m_level = Mathf.Clamp(skill.m_level, 0f, 100f);
+                }
             }
         }
 

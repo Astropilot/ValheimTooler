@@ -1,6 +1,6 @@
+using HarmonyLib;
 using RapidGUI;
 using UnityEngine;
-using ValheimTooler.Utils;
 
 namespace ValheimTooler
 {
@@ -8,10 +8,19 @@ namespace ValheimTooler
     {
         public static void Init()
         {
-            Loader.s_entryPoint = new GameObject();
-            Loader.s_entryPoint.AddComponent<EntryPoint>();
-            Loader.s_entryPoint.AddComponent<RapidGUIBehaviour>();
-            Object.DontDestroyOnLoad(Loader.s_entryPoint);
+            if (Loader.s_entryPoint == null)
+            {
+                RunPatches();
+                Loader.s_entryPoint = new GameObject();
+                Loader.s_entryPoint.AddComponent<EntryPoint>();
+                Loader.s_entryPoint.AddComponent<RapidGUIBehaviour>();
+                Object.DontDestroyOnLoad(Loader.s_entryPoint);
+            }
+        }
+
+        private static void RunPatches()
+        {
+            s_harmony.PatchAll();
         }
 
         public static void Unload()
@@ -21,9 +30,12 @@ namespace ValheimTooler
         private static void _Unload()
         {
             GameObject.Destroy(Loader.s_entryPoint);
+
+            s_harmony.UnpatchSelf();
         }
 
-        private static GameObject s_entryPoint;
+        private static GameObject s_entryPoint = null;
+        private static readonly Harmony s_harmony = new Harmony("ValheimTooler");
     }
 
 }

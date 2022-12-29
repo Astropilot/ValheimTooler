@@ -176,11 +176,17 @@ namespace ValheimTooler.Core
             ItemDrop[] itemDrops = UnityEngine.Object.FindObjectsOfType<ItemDrop>();
             foreach (ItemDrop itemDrop in itemDrops)
             {
-                ZNetView component = itemDrop.GetComponent<ZNetView>();
-                if (component && component.IsValid() && component.IsOwner())
+                Fish component = itemDrop.gameObject.GetComponent<Fish>();
+
+                if (!component || component.IsOutOfWater())
                 {
-                    component.Destroy();
+                    ZNetView component2 = itemDrop.GetComponent<ZNetView>();
+                    if (component2 && component2.IsValid() && component2.IsOwner())
+                    {
+                        component2.Destroy();
+                    }
                 }
+                
             }
         }
     }
