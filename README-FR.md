@@ -49,7 +49,8 @@ Voici la liste des fonctionnalités disponibles:
   * Pas de coût d'emplacement, vous pouvez tout construire
   * Explorer toute la minimap (Cette action est irréversible sur le monde sur lequel vous l'activez)
   * Réinitialiser la minimap
-  * Se téléporter à un autre joueur (fonctionne seulement si le joueur s'est affiché sur la minimap)
+  * Se téléporter à un autre joueur (fonctionne seulement si le joueur s'est affiché sur la minimap), sur un marquage de la carte ou à des coordonnées
+  * Permettre la téléportation avec des objets normalement interdits
   * Soignez instantanément un joueur
   * Soignez instantanément tous les joueurs
   * Activer un pouvoir du gardien au choix pour vous
@@ -57,6 +58,7 @@ Voici la liste des fonctionnalités disponibles:
   * Changez le niveau d'une compétence
   * Apprivoiser toutes les créatures proches
   * Poids illimité pour l'inventaire
+  * Craft instantané
 * **Entités et objets**
   * Faites apparaitre n'importe quel entité/objet
   * Supprimer tous les drops à proximité
@@ -65,9 +67,10 @@ Voici la liste des fonctionnalités disponibles:
   * Infligez des dégâts à un joueur (ignore le mode non-pvp)
   * Tuez tous les monstres
   * Tuez tous les joueurs (sauf vous)
+  * Auto-marquage sur la map des dépôts
   * Envoyez un message d'évènement aux autres joueurs (Le gros message jaune au milieu de l'écran)
   * Envoyer un message dans le chat avec la possibilité d'usurper l'identité d'un autre joueur
-  * Un ESP pour les joueurs, monstres, les objets ramassables, les dépôts et les drops
+  * Un ESP pour les joueurs, monstres, les objets ramassables, les dépôts et les drops avec une distance réglable
 
 **⚠️ Attention ⚠️**: Sur chaque fonctionnalité permettant de choisir un joueur, la liste ne comportera que les joueurs qui sont à une certaine distance de vous (assez grande mais pas toute la carte pour autant). Ce n'est pas un choix personnel mais une limitation technique du jeu. Jusqu'à ce que je trouve un moyen de le contourner (si c'est possible) ce comportement restera.
 

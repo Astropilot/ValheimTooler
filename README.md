@@ -48,7 +48,8 @@ Here is the list of features offered by this tool:
   * No placement cost
   * Explore all your minimap (Irreversible on the world on which it is activated!)
   * Reset your minimap
-  * Teleport to another player (works only if the player is visible on the minimap)
+  * Teleport a player to another player (works only if the player is visible on the minimap), to minimap marker or coordinates
+  * Allow teleporting with restricted items
   * Instantly heals a player
   * Instantly heals all players
   * Activate a Guardian Power for you
@@ -56,6 +57,7 @@ Here is the list of features offered by this tool:
   * Raise/Decrease a skill to any level
   * Tame all nearby creatures
   * Unlimited weight for inventory
+  * Fast crafting
 * **Entities & Items**
   * Spawn any entity
   * Delete all drops on the ground
@@ -64,9 +66,10 @@ Here is the list of features offered by this tool:
   * Inflict damage to a player (ignores the no-pvp mode)
   * Kill all entities except players
   * Kill all players
+  * Auto-pin on the minimap the deposits
   * Send a event message to all players (the yellow one on the middle of the screen)
   * Send a chat message as any username
-  * A ESP for players, monsters, pickables, deposits and drops
+  * A ESP for players, monsters, pickables, deposits and drops with radius setting
 
 **⚠️ Warning ⚠️**: On each feature that allows you to choose a player, the list will only include players who are at a certain distance from you (quite large but not the whole map for all that). This is not a personal choice but a technical limitation of the game. Until I find a way to get around it (if possible) this behavior will remain.
 
