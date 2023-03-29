@@ -39,6 +39,10 @@ namespace ValheimTooler.UI
                                                         (int)Math.Ceiling(sprite.textureRect.height));
             newText.SetPixels(newColors);
             newText.Apply();
+
+            if (newText.width > 200 || newText.height > 200)
+                newText.Resize(60, 60);
+
             return newText;
         }
 

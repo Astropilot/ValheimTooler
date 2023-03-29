@@ -261,6 +261,13 @@ namespace ValheimTooler.Core
                 }
             }
 
+            UserInfo fakePlayerSender = new UserInfo
+            {
+                Name = username,
+                Gamertag = (string)ReflectionExtensions.CallStaticMethod<UserInfo>("GetLocalPlayerGamertag"),
+                NetworkUserId = PrivilegeManager.GetNetworkUserId()
+            };
+
             if (playerSender)
             {
                 if (type == Talker.Type.Shout)
@@ -271,7 +278,7 @@ namespace ValheimTooler.Core
                         {
                             playerSender.GetHeadPoint(),
                             2,
-                            username,
+                            fakePlayerSender,
                             message,
                             PrivilegeManager.GetNetworkUserId()
                         });
@@ -285,7 +292,7 @@ namespace ValheimTooler.Core
                     nview.InvokeRPC(ZNetView.Everybody, "Say", new object[]
                     {
                         (int)type,
-                        username,
+                        fakePlayerSender,
                         message,
                         PrivilegeManager.GetNetworkUserId()
                     });

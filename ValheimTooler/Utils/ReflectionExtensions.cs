@@ -29,5 +29,16 @@ namespace ValheimTooler.Utils
             }
             return null;
         }
+
+        public static object CallStaticMethod<T>(string methodName, params object[] args) where T: new()
+        {
+            var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+            var mi = typeof(T).GetMethod(methodName, bindingFlags);
+            if (mi != null)
+            {
+                return mi.Invoke(null, args);
+            }
+            return null;
+        }
     }
 }
