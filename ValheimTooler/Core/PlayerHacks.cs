@@ -19,6 +19,8 @@ namespace ValheimTooler.Core
         private static bool s_isNoStaminaOthers = false;
         private static int s_teleportSourceIdx = -1;
         private static int s_teleportTargetIdx = -1;
+        private static string s_teleportTargetSearchTerms = "";
+        private static string s_teleportTargetPreviousSearchTerms = "";
         private static string s_teleportCoordinates = "0,0,0";
         private static int s_healTargetIdx = -1;
         private static string s_guardianPowerIdx = "";
@@ -34,6 +36,7 @@ namespace ValheimTooler.Core
         private static readonly float s_updateTimerInterval = 1.5f;
 
         private static List<TPTarget> s_tpTargets = null;
+        private static List<TPTarget> s_tpTargetsFiltered = null;
         private static List<Player> s_players = null;
 
         private static readonly List<Skills.SkillType> s_skills = new List<Skills.SkillType>();
@@ -86,6 +89,7 @@ namespace ValheimTooler.Core
                 if (ZNet.instance == null || Minimap.instance == null)
                 {
                     s_tpTargets = null;
+                    s_tpTargetsFiltered = null;
                     s_teleportSourceIdx = -1;
                     s_teleportTargetIdx = -1;
                 }
@@ -117,6 +121,9 @@ namespace ValheimTooler.Core
                     }
 
                     s_tpTargets = targets;
+                    s_tpTargetsFiltered = targets;
+                    s_teleportTargetPreviousSearchTerms = "";
+                    SearchTeleportTarget();
                 }
 
                 s_players = Player.GetAllPlayers();
@@ -201,6 +208,18 @@ namespace ValheimTooler.Core
                                 }
                             }
                         }
+                        GUILayout.BeginHorizontal();
+                        {
+                            var maxInteract = Player.m_localPlayer != null ? Player.m_localPlayer.m_maxInteractDistance : 5f;
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_player_farinteract_label (") + maxInteract.ToString("F1") + ")", GUILayout.ExpandWidth(false));
+                            maxInteract = GUILayout.HorizontalSlider(maxInteract, 1f, 50f, GUILayout.ExpandWidth(true));
+                            if (Player.m_localPlayer != null)
+                            {
+                                Player.m_localPlayer.m_maxInteractDistance = maxInteract;
+                                Player.m_localPlayer.m_maxPlaceDistance = maxInteract;
+                            }
+                        }
+                        GUILayout.EndHorizontal();
                     }
                     GUILayout.EndVertical();
 
@@ -263,7 +282,8 @@ namespace ValheimTooler.Core
                         {
                             GUILayout.Label(VTLocalization.instance.Localize("$vt_player_teleport_target :"), GUILayout.ExpandWidth(false));
 
-                            s_teleportTargetIdx = RGUI.SelectionPopup(s_teleportTargetIdx, s_tpTargets?.Select(t => t.ToString()).ToArray());
+                            s_teleportTargetIdx = RGUI.SearchableSelectionPopup(s_teleportTargetIdx, s_tpTargetsFiltered?.Select(t => t.ToString()).ToArray(), ref s_teleportTargetSearchTerms);
+                            SearchTeleportTarget();
                         }
                         GUILayout.EndHorizontal();
 
@@ -271,10 +291,10 @@ namespace ValheimTooler.Core
                         {
                             if (s_players != null && s_teleportSourceIdx < s_players.Count && s_teleportSourceIdx >= 0)
                             {
-                                if (s_tpTargets != null && s_teleportTargetIdx < s_tpTargets.Count && s_teleportTargetIdx >= 0)
+                                if (s_tpTargetsFiltered != null && s_teleportTargetIdx < s_tpTargetsFiltered.Count && s_teleportTargetIdx >= 0)
                                 {
                                     var source = s_players[s_teleportSourceIdx];
-                                    var targetPosition = s_tpTargets[s_teleportTargetIdx].Position;
+                                    var targetPosition = s_tpTargetsFiltered[s_teleportTargetIdx].Position;
 
                                     if (targetPosition != null && targetPosition is Vector3 targetPositionValue)
                                     {
@@ -387,6 +407,24 @@ namespace ValheimTooler.Core
                 GUILayout.EndVertical();
             }
             GUILayout.EndHorizontal();
+        }
+
+        private static void SearchTeleportTarget()
+        {
+            if (s_teleportTargetPreviousSearchTerms.Equals(s_teleportTargetSearchTerms))
+            {
+                return;
+            }
+            if (s_teleportTargetSearchTerms.Length == 0)
+            {
+                s_tpTargetsFiltered = s_tpTargets;
+            }
+            else
+            {
+                string searchLower = s_teleportTargetSearchTerms.ToLower();
+                s_tpTargetsFiltered = s_tpTargets.Where(i => i.ToString().ToLower().Contains(searchLower)).ToList();
+            }
+            s_teleportTargetPreviousSearchTerms = s_teleportTargetSearchTerms;
         }
 
         private static void AllOtherPlayersMaxStamina()

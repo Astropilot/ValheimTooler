@@ -12,7 +12,7 @@ namespace ValheimTooler.Utils
             return (T)field?.GetValue(obj);
         }
 
-        public static void SetFieldValue<T>(this object obj, string name, object value)
+        public static void SetFieldValue<T>(this object obj, string name, T value)
         {
             var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
             var field = obj.GetType().GetField(name, bindingFlags);

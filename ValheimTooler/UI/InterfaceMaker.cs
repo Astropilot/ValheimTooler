@@ -239,12 +239,9 @@ namespace ValheimTooler.UI
             InterfaceMaker.s_flatButtonActiveBackground.Apply();
             UnityEngine.Object.DontDestroyOnLoad(InterfaceMaker.s_flatButtonActiveBackground);
 
-            InterfaceMaker.s_font = (Resources.FindObjectsOfTypeAll(typeof(Font)) as Font[]).ToList().First(f => f.name.Equals("Norsebold"));
+            InterfaceMaker.s_font = (Resources.FindObjectsOfTypeAll(typeof(Font)) as Font[]).FirstOrDefault(f => f.name.Equals("AveriaSerifLibre-Bold"));
 
-            if (InterfaceMaker.s_font != null)
-            {
-                UnityEngine.Object.DontDestroyOnLoad(InterfaceMaker.s_font);
-            } else
+            if (InterfaceMaker.s_font == null)
             {
                 ZLog.Log("Error while loading font!");
             }

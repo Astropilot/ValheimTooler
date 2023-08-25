@@ -53,7 +53,6 @@ namespace ValheimTooler.Core
                         ZLog.Log($"[ValheimTooler - ItemGiver] Failed to load item {component.m_itemData.m_shared.m_name} with variant {variant}. This item will be ignored.");
                         continue;
                     }
-                    
                 }
             }
         }

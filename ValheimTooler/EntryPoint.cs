@@ -20,6 +20,7 @@ namespace ValheimTooler
         private readonly string[] _toolbarChoices = {
             "$vt_toolbar_player",
             "$vt_toolbar_entities",
+            "$vt_toolbar_terrain_shaper",
             "$vt_toolbar_misc"
         };
 
@@ -37,6 +38,7 @@ namespace ValheimTooler
             ItemGiver.Start();
             MiscHacks.Start();
             ESP.Start();
+            TerrainShaper.Start();
 
             _version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
@@ -52,6 +54,7 @@ namespace ValheimTooler
             ItemGiver.Update();
             MiscHacks.Update();
             ESP.Update();
+            TerrainShaper.Update();
         }
 
         public void OnGUI()
@@ -105,6 +108,9 @@ namespace ValheimTooler
                     break;
                 case WindowToolbar.ENTITIES_ITEMS:
                     EntitiesItemsHacks.DisplayGUI();
+                    break;
+                case WindowToolbar.TERRAIN_SHAPER:
+                    TerrainShaper.DisplayGUI();
                     break;
                 case WindowToolbar.MISC:
                     MiscHacks.DisplayGUI();

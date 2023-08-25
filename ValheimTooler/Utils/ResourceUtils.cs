@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -8,6 +9,8 @@ namespace ValheimTooler.Utils
 {
     public static class ResourceUtils
     {
+        private static Dictionary<string, GameObject> s_cachedPrefabs = new Dictionary<string, GameObject>();
+
         public static byte[] ReadAllBytes(this Stream input)
         {
             byte[] array = new byte[16384];
@@ -82,6 +85,30 @@ namespace ValheimTooler.Utils
                 });
             }
             return texture2D;
+        }
+
+        public static GameObject GetHiddenPrefab(string name)
+        {
+            if (s_cachedPrefabs.TryGetValue(name.ToLower(), out GameObject ret) && ret != null)
+                return ret;
+
+            var objects = Resources.FindObjectsOfTypeAll<Transform>()
+                .Where(t => t.parent == null)
+                .Select(x => x.gameObject);
+
+            foreach (var prefab in objects)
+            {
+                if (prefab.name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (s_cachedPrefabs.ContainsKey(name.ToLower()))
+                        s_cachedPrefabs.Remove(name.ToLower());
+
+                    s_cachedPrefabs.Add(name.ToLower(), prefab);
+                    return prefab;
+                }
+            }
+
+            return null;
         }
     }
 }
