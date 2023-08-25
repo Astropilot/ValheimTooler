@@ -3,7 +3,7 @@ using ValheimTooler.Core;
 
 namespace ValheimTooler.Patches
 {
-    [HarmonyPatch(typeof(Inventory), "GetTotalWeight")]
+    [HarmonyPatch(typeof(Inventory), nameof(Inventory.GetTotalWeight))]
     class InventoryNoWeightLimit
     {
         private static bool Prefix(ref float __result)

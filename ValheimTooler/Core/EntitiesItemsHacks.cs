@@ -181,7 +181,7 @@ namespace ValheimTooler.Core
                 if (!component || component.IsOutOfWater())
                 {
                     ZNetView component2 = itemDrop.GetComponent<ZNetView>();
-                    if (component2 && component2.IsValid() && component2.IsOwner())
+                    if (component2 && component2.IsValid())
                     {
                         component2.Destroy();
                     }

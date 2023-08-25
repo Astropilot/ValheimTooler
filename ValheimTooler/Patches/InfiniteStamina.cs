@@ -4,9 +4,9 @@ using ValheimTooler.Core;
 
 namespace ValheimTooler.Patches
 {
-    [HarmonyPatch(typeof(Player), "UseStamina", new Type[]
+    [HarmonyPatch(typeof(Player), nameof(Player.UseStamina), new Type[]
     {
-        typeof(float)
+        typeof(float), typeof(bool)
     })]
     class InfiniteStamina
     {

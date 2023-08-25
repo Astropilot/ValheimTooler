@@ -124,7 +124,7 @@ namespace ValheimTooler.Core.Extensions
         {
             if (player != null)
             {
-                player.GetSEMan().AddStatusEffect(guardianPower, true);
+                player.GetSEMan().AddStatusEffect(guardianPower.GetStableHashCode(), true);
             }
         }
 
@@ -138,8 +138,7 @@ namespace ValheimTooler.Core.Extensions
                 {
                     Skills.Skill skill = (Skills.Skill)player.GetSkills().CallMethod("GetSkill", skillType);
 
-                    skill.m_level = level;
-                    skill.m_level = Mathf.Clamp(skill.m_level, 0f, 100f);
+                    skill.m_level = Mathf.Clamp(level, 0f, 100f);
                 }
             }
         }
@@ -160,30 +159,6 @@ namespace ValheimTooler.Core.Extensions
             if (player != null)
             {
                 Tameable.TameAllInArea(player.transform.position, 20f);
-            }
-        }
-
-        public static bool VTIsInventoryInfiniteWeight(this Player player)
-        {
-            if (player != null)
-            {
-                return player.m_maxCarryWeight != 300;
-            }
-            return false;
-        }
-
-        public static void VTInventoryInfiniteWeight(this Player player, bool isInventoryInfiniteWeight)
-        {
-            if (player != null)
-            {
-                if (isInventoryInfiniteWeight)
-                {
-                    player.m_maxCarryWeight = 999999999;
-                }
-                else
-                {
-                    player.m_maxCarryWeight = 300;
-                }
             }
         }
     }

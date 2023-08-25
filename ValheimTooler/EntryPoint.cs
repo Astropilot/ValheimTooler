@@ -1,9 +1,9 @@
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using ValheimTooler.Utils;
 using ValheimTooler.Core;
 using ValheimTooler.UI;
-using ValheimTooler.Utils;
 
 namespace ValheimTooler
 {
@@ -75,7 +75,8 @@ namespace ValheimTooler
                 _wasMainWindowShowed = true;
 
                 _config.s_mainWindowInitialPosition = _valheimToolerRect.position;
-            } else
+            }
+            else
             {
                 if (_wasMainWindowShowed)
                 {

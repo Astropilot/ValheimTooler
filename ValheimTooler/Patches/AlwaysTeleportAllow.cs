@@ -3,7 +3,7 @@ using ValheimTooler.Core;
 
 namespace ValheimTooler.Patches
 {
-    [HarmonyPatch(typeof(Inventory), "IsTeleportable")]
+    [HarmonyPatch(typeof(Inventory), nameof(Inventory.IsTeleportable))]
     class AlwaysTeleportAllow
     {
         private static bool Prefix(ref bool __result)
