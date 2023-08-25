@@ -183,6 +183,24 @@ namespace ValheimTooler.Core
                         {
                             s_instantCraft = !s_instantCraft;
                         }
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_remove_tombstone")))
+                        {
+                            if (Player.m_localPlayer != null)
+                            {
+                                var tombstones = UnityEngine.Object.FindObjectsOfType<TombStone>();
+                                foreach (var tombstone in tombstones)
+                                {
+                                    if ((long)tombstone.CallMethod("GetOwner") == Player.m_localPlayer.GetPlayerID())
+                                    {
+                                        var nview = tombstone.GetFieldValue<ZNetView>("m_nview");
+                                        if (nview != null && nview.IsValid())
+                                        {
+                                            nview.Destroy();
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     GUILayout.EndVertical();
 
