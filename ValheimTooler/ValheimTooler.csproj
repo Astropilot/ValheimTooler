@@ -431,6 +431,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\AcceptableValueBase.cs" />
+    <Compile Include="Configuration\AcceptableValueList.cs" />
+    <Compile Include="Configuration\AcceptableValueRange.cs" />
+    <Compile Include="Configuration\ConfigDefinition.cs" />
+    <Compile Include="Configuration\ConfigDescription.cs" />
+    <Compile Include="Configuration\ConfigEntryBase.cs" />
+    <Compile Include="Configuration\ConfigFile.cs" />
+    <Compile Include="Configuration\ConfigWrapper.cs" />
+    <Compile Include="Configuration\KeyboardShortcut.cs" />
+    <Compile Include="Configuration\SettingChangedEventArgs.cs" />
+    <Compile Include="Configuration\TomlTypeConverter.cs" />
+    <Compile Include="Configuration\TypeConverter.cs" />
     <Compile Include="Core\EntitiesItemsHacks.cs" />
     <Compile Include="Core\Extensions\CharacterExtensions.cs" />
     <Compile Include="Core\Extensions\MinimapExtensions.cs" />
@@ -456,6 +468,7 @@
     </Compile>
     <Compile Include="Core\ESP.cs" />
     <Compile Include="UI\InterfaceMaker.cs" />
+    <Compile Include="UI\Utils.cs" />
     <Compile Include="Utils\ConfigManager.cs" />
     <Compile Include="Utils\Translator.cs" />
     <Compile Include="Utils\ReflectionExtensions.cs" />

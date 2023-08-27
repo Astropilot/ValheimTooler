@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text;
-using SharpConfig;
 using UnityEngine;
 
 namespace ValheimTooler.Utils
@@ -37,7 +36,7 @@ namespace ValheimTooler.Utils
         {
             SetupLanguage("English");
 
-            var configLanguage = ConfigManager.instance.s_language;
+            var configLanguage = ConfigManager.s_language.Value;
 
             if (configLanguage == "Auto")
             {
@@ -152,7 +151,7 @@ namespace ValheimTooler.Utils
             }
 
             var translationFileContents = Encoding.UTF8.GetString(translationFile, 0, translationFile.Length);
-            var langueConfig = Configuration.LoadFromString(translationFileContents);
+            var langueConfig = SharpConfig.Configuration.LoadFromString(translationFileContents);
 
             if (!langueConfig.Contains(language))
             {

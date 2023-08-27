@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using RapidGUI;
 using UnityEngine;
+using ValheimTooler.Core.Extensions;
+using ValheimTooler.Patches;
 using ValheimTooler.Utils;
 
 namespace ValheimTooler.Core
@@ -55,6 +57,11 @@ namespace ValheimTooler.Core
 
                 s_updateTimer = Time.time + s_updateTimerInterval;
             }
+
+            if (ConfigManager.s_removeAllDropShortcut.Value.IsDown())
+            {
+                RemoveAllDrops();
+            }
         }
 
         public static void DisplayGUI()
@@ -101,7 +108,7 @@ namespace ValheimTooler.Core
             GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_entities_drops_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_entities_drops_button")))
+                if (GUILayout.Button(UI.Utils.LabelWithShortcut("$vt_entities_drops_button", ConfigManager.s_removeAllDropShortcut.Value)))
                 {
                     RemoveAllDrops();
                 }
@@ -186,7 +193,6 @@ namespace ValheimTooler.Core
                         component2.Destroy();
                     }
                 }
-                
             }
         }
     }

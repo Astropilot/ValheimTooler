@@ -1,218 +1,115 @@
-using System;
 using System.IO;
 using System.Reflection;
-using SharpConfig;
 using UnityEngine;
+using ValheimTooler.Configuration;
 
 namespace ValheimTooler.Utils
 {
-    public sealed class ConfigManager
+    public static class ConfigManager
     {
-        private static ConfigManager s_instance;
-        private Configuration _settingsConfiguration = null;
-        private Configuration _internalConfiguration = null;
-        private string _configurationPath = null;
+        private static readonly ConfigFile s_settingsFile = null;
+        private static readonly ConfigFile s_internalFile = null;
+        private static readonly string s_configurationPath = null;
 
         private const string SettingsFileName = "valheimtooler_settings.cfg";
         private const string InternalFileName = "valheimtooler_internal.cfg";
 
-        public KeyCode s_toggleInterfaceKey { get; private set; } = KeyCode.Delete;
-        public bool s_showAtStartup { get; private set; } = true;
-        public string s_language { get; private set; } = "Auto";
+        public static ConfigEntry<KeyboardShortcut> s_toggleInterfaceKey;
+        public static ConfigEntry<bool> s_showAtStartup;
+        public static ConfigEntry<string> s_language;
+        public static ConfigEntry<KeyboardShortcut> s_godModeShortCut;
+        public static ConfigEntry<KeyboardShortcut> s_unlimitedStaminaShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_flyModeShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_ghostModeShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_noPlacementCostShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_inventoryInfiniteWeightShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_instantCraftShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_removeAllDropShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_terrainShapeShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_terrainLevelShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_terrainLowerShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_terrainRaiseShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_terrainResetShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_terrainSmoothShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_terrainPaintShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_espPlayersShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_espMonstersShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_espDroppedItemsShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_espDepositsShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_espPickablesShortcut;
 
-        public Vector2 s_mainWindowInitialPosition = new Vector2(5, 5);
-        public Vector2 s_itemGiverInitialPosition = new Vector2(Screen.width - 400, 5);
-        public bool s_permanentPins = false;
-        public bool s_espRadiusEnabled = false;
-        public float s_espRadius = 5.0f;
+        public static ConfigEntry<Vector2> s_mainWindowPosition;
+        public static ConfigEntry<Vector2> s_itemGiverWindowPosition;
+        public static ConfigEntry<bool> s_permanentPins;
+        public static ConfigEntry<bool> s_espRadiusEnabled;
+        public static ConfigEntry<float> s_espRadius;
 
-        public static ConfigManager instance
-        {
-            get
-            {
-                if (s_instance == null)
-                {
-                    Initialize();
-                }
-                return s_instance;
-            }
-        }
-
-        private ConfigManager()
+        static ConfigManager()
         {
             var valheimAssemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             var configPathFilePath = Path.Combine(valheimAssemblyFolder, "config_vt.path");
+            var configPath = "";
 
-            if (!File.Exists(configPathFilePath))
+            if (File.Exists(configPathFilePath))
             {
-                ZLog.Log("[ValheimTooler - ConfigManager] Failed to find config_vt.path file. Fallback to default configuration.");
-                return;
-            }
+                configPath = Path.GetFullPath(File.ReadAllText(configPathFilePath));
 
-            var configPath = Path.GetFullPath(File.ReadAllText(configPathFilePath));
-
-            if (!Directory.Exists(configPath))
-            {
-                ZLog.Log("[ValheimTooler - ConfigManager] Path given in config_vt.path file is incorrect. Fallback to default configuration.");
-                return;
-            }
-
-            _configurationPath = configPath;
-
-            var configFilePath = Path.Combine(_configurationPath, SettingsFileName);
-            var internalFilePath = Path.Combine(_configurationPath, InternalFileName);
-            
-            if (File.Exists(configFilePath))
-            {
-                _settingsConfiguration = Configuration.LoadFromFile(configFilePath);
-
-                if (_settingsConfiguration.Contains("Settings"))
+                if (!Directory.Exists(configPath))
                 {
-                    var settingsSection = _settingsConfiguration["Settings"];
-
-                    if (settingsSection.Contains("ToggleInterfaceKey"))
-                    {
-                        try
-                        {
-                            var toggleInterfaceKey = settingsSection["ToggleInterfaceKey"].GetValue<KeyCode>();
-
-                            s_toggleInterfaceKey = toggleInterfaceKey;
-                        } catch (InvalidOperationException)
-                        {
-                            ZLog.Log("[ValheimTooler - ConfigManager] ToggleInterfaceKey value is not correct. Fallback to default value.");
-                        }
-                    }
-
-                    if (settingsSection.Contains("ShowAtStartup"))
-                    {
-                        try
-                        {
-                            s_showAtStartup = settingsSection["ShowAtStartup"].BoolValue;
-                        }
-                        catch (InvalidOperationException)
-                        {
-                            ZLog.Log("[ValheimTooler - ConfigManager] ShowAtStartup value is not correct. Fallback to default value.");
-                        }
-                    }
-
-                    if (settingsSection.Contains("Language"))
-                    {
-                        try
-                        {
-                            s_language = settingsSection["Language"].StringValue;
-                        }
-                        catch (InvalidOperationException)
-                        {
-                            ZLog.Log("[ValheimTooler - ConfigManager] Language value is not correct. Fallback to default value.");
-                        }
-                    }
-                }
-                else
-                {
-                    ZLog.Log("[ValheimTooler - ConfigManager] Failed to find settings section. Fallback to default values.");
+                    ZLog.Log("[ValheimTooler - ConfigManager] Path given in config_vt.path file is incorrect.");
+                    configPath = "";
                 }
             }
             else
             {
-                ZLog.Log($"[ValheimTooler - ConfigManager] Failed to find {SettingsFileName} file! Fallback to default values.");
-                CreateDefaultSettingConfiguration();
+                ZLog.Log("[ValheimTooler - ConfigManager] Failed to find config_vt.path file.");
             }
 
-            if (File.Exists(internalFilePath))
-            {
-                _internalConfiguration = Configuration.LoadFromFile(internalFilePath);
+            s_configurationPath = configPath;
 
-                if (_internalConfiguration.Contains("Internal"))
-                {
-                    var internalSection = _internalConfiguration["Internal"];
+            var configFilePath = Path.Combine(s_configurationPath, SettingsFileName);
+            var internalFilePath = Path.Combine(s_configurationPath, InternalFileName);
 
-                    if (internalSection.Contains("MainWindowLocationX") && internalSection.Contains("MainWindowLocationY"))
-                    {
-                        var mainWindowLocationX = internalSection["MainWindowLocationX"].FloatValue;
-                        var mainWindowLocationY = internalSection["MainWindowLocationY"].FloatValue;
-                        s_mainWindowInitialPosition = new Vector2(mainWindowLocationX, mainWindowLocationY);
-                    }
+            s_settingsFile = new ConfigFile(configFilePath, true);
+            s_internalFile = new ConfigFile(internalFilePath, true);
 
-                    if (internalSection.Contains("ItemGiverLocationX") && internalSection.Contains("ItemGiverLocationY"))
-                    {
-                        var itemGiverLocationX = internalSection["ItemGiverLocationX"].FloatValue;
-                        var itemGiverLocationY = internalSection["ItemGiverLocationY"].FloatValue;
-                        s_itemGiverInitialPosition = new Vector2(itemGiverLocationX, itemGiverLocationY);
-                    }
+            s_toggleInterfaceKey = s_settingsFile.Bind("General", "ToggleInterfaceKey", new KeyboardShortcut(KeyCode.Delete), "Which key will show/hide the tool.");
+            s_showAtStartup = s_settingsFile.Bind("General", "ShowAtStartup", true, "Choose whether or not to display the tool at startup.");
+            s_language = s_settingsFile.Bind("General", "Language", "Auto", new ConfigDescription("Tool language, in auto the language is chosen according to the game language.", new AcceptableValueList<string>("Auto", "French", "English")));
 
-                    if (internalSection.Contains("PermanentPins"))
-                    {
-                        s_permanentPins = internalSection["PermanentPins"].BoolValue;
-                    }
+            s_godModeShortCut = s_settingsFile.Bind("Shortcuts", "GodMode", new KeyboardShortcut(), "The shortcut to use the god mode feature");
+            s_unlimitedStaminaShortcut = s_settingsFile.Bind("Shortcuts", "UnlimitedStamina", new KeyboardShortcut(), "The shortcut to use the unlimited stamina feature");
+            s_flyModeShortcut = s_settingsFile.Bind("Shortcuts", "FlyMode", new KeyboardShortcut(), "The shortcut to use the fly mode feature");
+            s_ghostModeShortcut = s_settingsFile.Bind("Shortcuts", "GhostMode", new KeyboardShortcut(), "The shortcut to use the ghost mode feature");
+            s_noPlacementCostShortcut = s_settingsFile.Bind("Shortcuts", "NoPlacementCost", new KeyboardShortcut(), "The shortcut to use the no placement cost feature");
+            s_inventoryInfiniteWeightShortcut = s_settingsFile.Bind("Shortcuts", "InventoryInfiniteWeight", new KeyboardShortcut(), "The shortcut to use the inventory with infinite weight feature");
+            s_instantCraftShortcut = s_settingsFile.Bind("Shortcuts", "InstantCraft", new KeyboardShortcut(), "The shortcut to use the instant craft feature");
+            s_removeAllDropShortcut = s_settingsFile.Bind("Shortcuts", "RemoveAllDrops", new KeyboardShortcut(), "The shortcut to use the remove all drops feature");
+            s_terrainShapeShortcut = s_settingsFile.Bind("Shortcuts", "TerrainChangeShape", new KeyboardShortcut(), "");
+            s_terrainLevelShortcut = s_settingsFile.Bind("Shortcuts", "TerrainLevel", new KeyboardShortcut(), "");
+            s_terrainLowerShortcut = s_settingsFile.Bind("Shortcuts", "TerrainLower", new KeyboardShortcut(), "");
+            s_terrainRaiseShortcut = s_settingsFile.Bind("Shortcuts", "TerrainRaise", new KeyboardShortcut(), "");
+            s_terrainResetShortcut = s_settingsFile.Bind("Shortcuts", "TerrainReset", new KeyboardShortcut(), "");
+            s_terrainSmoothShortcut = s_settingsFile.Bind("Shortcuts", "TerrainSmooth", new KeyboardShortcut(), "");
+            s_terrainPaintShortcut = s_settingsFile.Bind("Shortcuts", "TerrainPaint", new KeyboardShortcut(), "");
+            s_espPlayersShortcut = s_settingsFile.Bind("Shortcuts", "ESPPlayers", new KeyboardShortcut(), "The shortcut to show/hide the ESP for players");
+            s_espMonstersShortcut = s_settingsFile.Bind("Shortcuts", "ESPMonsters", new KeyboardShortcut(), "The shortcut to show/hide the ESP for monsters");
+            s_espDroppedItemsShortcut = s_settingsFile.Bind("Shortcuts", "ESPDroppedItems", new KeyboardShortcut(), "The shortcut to show/hide the ESP for dropped items");
+            s_espDepositsShortcut = s_settingsFile.Bind("Shortcuts", "ESPDeposits", new KeyboardShortcut(), "The shortcut to show/hide the ESP for deposits");
+            s_espPickablesShortcut = s_settingsFile.Bind("Shortcuts", "ESPPickables", new KeyboardShortcut(), "The shortcut to show/hide the ESP for pickables");
 
-                    if (internalSection.Contains("RadiusEnabled"))
-                    {
-                        s_espRadiusEnabled = internalSection["RadiusEnabled"].BoolValue;
-                    }
+            s_mainWindowPosition = s_internalFile.Bind("Internal", "MainWindowPosition", new Vector2(5, 5));
+            s_itemGiverWindowPosition = s_internalFile.Bind("Internal", "ItemGiverPosition", new Vector2(Screen.width - 400, 5));
+            s_permanentPins = s_internalFile.Bind("Internal", "PermanentPins", false);
+            s_espRadiusEnabled = s_internalFile.Bind("Internal", "RadiusEnabled", false);
+            s_espRadius = s_internalFile.Bind("Internal", "RadiusValue", 5f);
 
-                    if (internalSection.Contains("RadiusValue"))
-                    {
-                        s_espRadius = internalSection["RadiusValue"].FloatValue;
-                    }
-                }
-                else
-                {
-                    ZLog.Log("[ValheimTooler - ConfigManager] Failed to find internal section. Fallback to default values.");
-                }
-            }
-            else
-            {
-                ZLog.Log($"[ValheimTooler - ConfigManager] Failed to find {InternalFileName} file! Fallback to default values.");
-                _internalConfiguration = new Configuration();
-            }
-        }
+            s_settingsFile.OrphanedEntries.Clear();
+            s_internalFile.OrphanedEntries.Clear();
 
-        private void CreateDefaultSettingConfiguration()
-        {
-            var configFilePath = Path.Combine(_configurationPath, SettingsFileName);
-            _settingsConfiguration = new Configuration();
-
-            _settingsConfiguration["Settings"]["ToggleInterfaceKey"].SetValue(s_toggleInterfaceKey);
-            _settingsConfiguration["Settings"]["ToggleInterfaceKey"].PreComment = "Which key will show/hide the tool. See the possible list here: https://gist.github.com/Extremelyd1/4bcd495e21453ed9e1dffa27f6ba5f69";
-
-            _settingsConfiguration["Settings"]["ShowAtStartup"].BoolValue = s_showAtStartup;
-            _settingsConfiguration["Settings"]["ShowAtStartup"].PreComment = "Set True for showing the tool window when started, False otherwise";
-
-            _settingsConfiguration["Settings"]["Language"].StringValue = s_language;
-            _settingsConfiguration["Settings"]["Language"].PreComment = "The language to use. Auto will use the game language. Either French or English available";
-
-            _settingsConfiguration.SaveToFile(configFilePath);
-        }
-
-        public void SaveConfig()
-        {
-            if (string.IsNullOrEmpty(_configurationPath))
-            {
-                return;
-            }
-
-            var internalFilePath = Path.Combine(_configurationPath, InternalFileName);
-
-            _internalConfiguration["Internal"]["MainWindowLocationX"].FloatValue = s_mainWindowInitialPosition.x;
-            _internalConfiguration["Internal"]["MainWindowLocationY"].FloatValue = s_mainWindowInitialPosition.y;
-
-            _internalConfiguration["Internal"]["ItemGiverLocationX"].FloatValue = s_itemGiverInitialPosition.x;
-            _internalConfiguration["Internal"]["ItemGiverLocationY"].FloatValue = s_itemGiverInitialPosition.y;
-
-            _internalConfiguration["Internal"]["PermanentPins"].BoolValue = s_permanentPins;
-            _internalConfiguration["Internal"]["RadiusEnabled"].BoolValue = s_espRadiusEnabled;
-            _internalConfiguration["Internal"]["RadiusValue"].FloatValue = s_espRadius;
-
-            _internalConfiguration.SaveToFile(internalFilePath);
-        }
-
-        private static void Initialize()
-        {
-            if (s_instance == null)
-            {
-                s_instance = new ConfigManager();
-            }
+            s_settingsFile.Save();
+            s_internalFile.Save();
         }
     }
 }

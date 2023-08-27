@@ -121,7 +121,7 @@ namespace ValheimTooler.Core
                                 continue;
                             }
 
-                            if (distance > 2 && (!ConfigManager.instance.s_espRadiusEnabled || distance < ConfigManager.instance.s_espRadius))
+                            if (distance > 2 && (!ConfigManager.s_espRadiusEnabled.Value || distance < ConfigManager.s_espRadius.Value))
                             {
                                 s_characters.Add(character);
                             }
@@ -139,7 +139,7 @@ namespace ValheimTooler.Core
                         {
                             var distance = Vector3.Distance(Camera.main.transform.position, pickable.transform.position);
 
-                            if (distance > 2 && (!ConfigManager.instance.s_espRadiusEnabled || distance < ConfigManager.instance.s_espRadius))
+                            if (distance > 2 && (!ConfigManager.s_espRadiusEnabled.Value || distance < ConfigManager.s_espRadius.Value))
                             {
                                 s_pickables.Add(pickable);
                             }
@@ -154,7 +154,7 @@ namespace ValheimTooler.Core
                         {
                             var distance = Vector3.Distance(Camera.main.transform.position, pickableItem.transform.position);
 
-                            if (distance > 2 && (!ConfigManager.instance.s_espRadiusEnabled || distance < ConfigManager.instance.s_espRadius))
+                            if (distance > 2 && (!ConfigManager.s_espRadiusEnabled.Value || distance < ConfigManager.s_espRadius.Value))
                             {
                                 s_pickableItems.Add(pickableItem);
                             }
@@ -172,7 +172,7 @@ namespace ValheimTooler.Core
                         {
                             var distance = Vector3.Distance(Camera.main.transform.position, itemDrop.transform.position);
 
-                            if (distance > 2 && (!ConfigManager.instance.s_espRadiusEnabled || distance < ConfigManager.instance.s_espRadius))
+                            if (distance > 2 && (!ConfigManager.s_espRadiusEnabled.Value || distance < ConfigManager.s_espRadius.Value))
                             {
                                 s_drops.Add(itemDrop);
                             }
@@ -195,7 +195,7 @@ namespace ValheimTooler.Core
 
                             var distance = Vector3.Distance(Camera.main.transform.position, mineRock5.transform.position);
 
-                            if (distance > 2 && (!ConfigManager.instance.s_espRadiusEnabled || distance < ConfigManager.instance.s_espRadius))
+                            if (distance > 2 && (!ConfigManager.s_espRadiusEnabled.Value || distance < ConfigManager.s_espRadius.Value))
                             {
                                 s_mineRock5s.Add(mineRock5);
                             }
@@ -220,7 +220,7 @@ namespace ValheimTooler.Core
 
                             var distance = Vector3.Distance(Camera.main.transform.position, destructible.transform.position);
 
-                            if (distance > 2 && (!ConfigManager.instance.s_espRadiusEnabled || distance < ConfigManager.instance.s_espRadius))
+                            if (distance > 2 && (!ConfigManager.s_espRadiusEnabled.Value || distance < ConfigManager.s_espRadius.Value))
                             {
                                 s_depositsDestructible.Add(destructible);
                             }

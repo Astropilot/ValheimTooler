@@ -38,6 +38,27 @@ namespace ValheimTooler.Core
 
                 s_updateTimer = Time.time + s_updateTimerInterval;
             }
+
+            if (ConfigManager.s_espPlayersShortcut.Value.IsDown())
+            {
+                ActionToggleESPPlayers(true);
+            }
+            if (ConfigManager.s_espMonstersShortcut.Value.IsDown())
+            {
+                ActionToggleESPMonsters(true);
+            }
+            if (ConfigManager.s_espDroppedItemsShortcut.Value.IsDown())
+            {
+                ActionToggleESPDroppedItems(true);
+            }
+            if (ConfigManager.s_espDepositsShortcut.Value.IsDown())
+            {
+                ActionToggleESPDeposits(true);
+            }
+            if (ConfigManager.s_espPickablesShortcut.Value.IsDown())
+            {
+                ActionToggleESPPickables(true);
+            }
         }
 
         public static void DisplayGUI()
@@ -86,14 +107,14 @@ namespace ValheimTooler.Core
                     {
                         GUILayout.Space(EntryPoint.s_boxSpacing);
 
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_autopin : " + (s_enableAutopinMap ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_misc_autopin", s_enableAutopinMap)))
                         {
                             s_enableAutopinMap = !s_enableAutopinMap;
                         }
 
                         GUILayout.BeginHorizontal();
                         {
-                            ConfigManager.instance.s_permanentPins = GUILayout.Toggle(ConfigManager.instance.s_permanentPins, "");
+                            ConfigManager.s_permanentPins.Value = GUILayout.Toggle(ConfigManager.s_permanentPins.Value, "");
                             GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_autopin_permanent"));
                         }
                         GUILayout.EndHorizontal();
@@ -171,37 +192,37 @@ namespace ValheimTooler.Core
                     {
                         GUILayout.Space(EntryPoint.s_boxSpacing);
 
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_player_esp_button : " + (ESP.s_showPlayerESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_misc_player_esp_button", ESP.s_showPlayerESP, ConfigManager.s_espPlayersShortcut.Value)))
                         {
-                            ESP.s_showPlayerESP = !ESP.s_showPlayerESP;
+                            ActionToggleESPPlayers();
                         }
 
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_monster_esp_button : " + (ESP.s_showMonsterESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_misc_monster_esp_button", ESP.s_showMonsterESP, ConfigManager.s_espMonstersShortcut.Value)))
                         {
-                            ESP.s_showMonsterESP = !ESP.s_showMonsterESP;
+                            ActionToggleESPMonsters();
                         }
 
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_dropped_esp_button : " + (ESP.s_showDroppedESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_misc_dropped_esp_button", ESP.s_showDroppedESP, ConfigManager.s_espDroppedItemsShortcut.Value)))
                         {
-                            ESP.s_showDroppedESP = !ESP.s_showDroppedESP;
+                            ActionToggleESPDroppedItems();
                         }
 
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_deposit_esp_button : " + (ESP.s_showDepositESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_misc_deposit_esp_button", ESP.s_showDepositESP, ConfigManager.s_espDepositsShortcut.Value)))
                         {
-                            ESP.s_showDepositESP = !ESP.s_showDepositESP;
+                            ActionToggleESPDeposits();
                         }
 
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_misc_pickable_esp_button : " + (ESP.s_showPickableESP ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_misc_pickable_esp_button", ESP.s_showPickableESP, ConfigManager.s_espPickablesShortcut.Value)))
                         {
-                            ESP.s_showPickableESP = !ESP.s_showPickableESP;
+                            ActionToggleESPPickables();
                         }
 
-                        GUILayout.Label("ESP Radius distance (" + ConfigManager.instance.s_espRadius.ToString("0.0") + "m)", GUILayout.MinWidth(200));
-                        ConfigManager.instance.s_espRadius = GUILayout.HorizontalSlider(ConfigManager.instance.s_espRadius, 5f, 500f, GUILayout.ExpandWidth(true));
+                        GUILayout.Label("ESP Radius distance (" + ConfigManager.s_espRadius.Value.ToString("0.0") + "m)", GUILayout.MinWidth(200));
+                        ConfigManager.s_espRadius.Value = GUILayout.HorizontalSlider(ConfigManager.s_espRadius.Value, 5f, 500f, GUILayout.ExpandWidth(true));
 
                         GUILayout.BeginHorizontal();
                         {
-                            ConfigManager.instance.s_espRadiusEnabled = GUILayout.Toggle(ConfigManager.instance.s_espRadiusEnabled, "");
+                            ConfigManager.s_espRadiusEnabled.Value = GUILayout.Toggle(ConfigManager.s_espRadiusEnabled.Value, "");
                             GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_radius_enable"));
                         }
                         GUILayout.EndHorizontal();
@@ -211,6 +232,56 @@ namespace ValheimTooler.Core
                 GUILayout.EndVertical();
             }
             GUILayout.EndHorizontal();
+        }
+
+        private static void ActionToggleESPPlayers(bool sendNotification = false)
+        {
+            ESP.s_showPlayerESP = !ESP.s_showPlayerESP;
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_misc_player_esp_button", ESP.s_showPlayerESP));
+            }
+        }
+
+        private static void ActionToggleESPMonsters(bool sendNotification = false)
+        {
+            ESP.s_showMonsterESP = !ESP.s_showMonsterESP;
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_misc_monster_esp_button", ESP.s_showMonsterESP));
+            }
+        }
+
+        private static void ActionToggleESPDroppedItems(bool sendNotification = false)
+        {
+            ESP.s_showDroppedESP = !ESP.s_showDroppedESP;
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_misc_dropped_esp_button", ESP.s_showDroppedESP));
+            }
+        }
+
+        private static void ActionToggleESPDeposits(bool sendNotification = false)
+        {
+            ESP.s_showDepositESP = !ESP.s_showDepositESP;
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_misc_deposit_esp_button", ESP.s_showDepositESP));
+            }
+        }
+
+        private static void ActionToggleESPPickables(bool sendNotification = false)
+        {
+            ESP.s_showPickableESP = !ESP.s_showPickableESP;
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_misc_pickable_esp_button", ESP.s_showPickableESP));
+            }
         }
 
         private static void DamageAllCharacters()

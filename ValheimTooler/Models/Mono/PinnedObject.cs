@@ -10,7 +10,7 @@ namespace ValheimTooler.Models.Mono
 
         public void Init(string aName)
         {
-            pin = Minimap.instance.AddPin(base.transform.position, Minimap.PinType.Icon3, aName, ConfigManager.instance.s_permanentPins, false);
+            pin = Minimap.instance.AddPin(base.transform.position, Minimap.PinType.Icon3, aName, ConfigManager.s_permanentPins.Value, false);
             ZLog.Log(string.Format("Tracking: {0} at {1} {2} {3}", new object[]
             {
                 aName,
@@ -22,7 +22,7 @@ namespace ValheimTooler.Models.Mono
 
         private void OnDestroy()
         {
-            bool flag = pin != null && Minimap.instance != null && !ConfigManager.instance.s_permanentPins;
+            bool flag = pin != null && Minimap.instance != null && !ConfigManager.s_permanentPins.Value;
             if (flag)
             {
                 Minimap.instance.RemovePin(pin);

@@ -161,5 +161,13 @@ namespace ValheimTooler.Core.Extensions
                 Tameable.TameAllInArea(player.transform.position, 20f);
             }
         }
+
+        public static void VTSendMessage(this Player player, string message)
+        {
+            if (player != null)
+            {
+                player.Message(MessageHud.MessageType.Center, message);
+            }
+        }
     }
 }

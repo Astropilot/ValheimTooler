@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using RapidGUI;
 using UnityEngine;
+using ValheimTooler.Core.Extensions;
+using ValheimTooler.Patches;
 using ValheimTooler.Utils;
 
 namespace ValheimTooler.Core
@@ -21,7 +23,34 @@ namespace ValheimTooler.Core
 
         public static void Update()
         {
-            return;
+            if (ConfigManager.s_terrainShapeShortcut.Value.IsDown())
+            {
+                ActionToggleTerrainShape(true);
+            }
+            if (ConfigManager.s_terrainLevelShortcut.Value.IsDown())
+            {
+                ActionTerrainLevel();
+            }
+            if (ConfigManager.s_terrainLowerShortcut.Value.IsDown())
+            {
+                ActionTerrainLower();
+            }
+            if (ConfigManager.s_terrainRaiseShortcut.Value.IsDown())
+            {
+                ActionTerrainRaise();
+            }
+            if (ConfigManager.s_terrainResetShortcut.Value.IsDown())
+            {
+                ActionTerrainReset();
+            }
+            if (ConfigManager.s_terrainSmoothShortcut.Value.IsDown())
+            {
+                ActionTerrainSmooth();
+            }
+            if (ConfigManager.s_terrainPaintShortcut.Value.IsDown())
+            {
+                ActionTerrainPaint();
+            }
         }
 
         public static void DisplayGUI()
@@ -50,9 +79,9 @@ namespace ValheimTooler.Core
                 }
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_terrainshaper_shape : " + (Ground.square ? VTLocalization.instance.Localize("$vt_terrainshaper_shape_square") : VTLocalization.instance.Localize("$vt_terrainshaper_shape_circle")))))
+                if (GUILayout.Button(UI.Utils.ToggleButtonLabelCustom("$vt_terrainshaper_shape", Ground.square, "$vt_terrainshaper_shape_square", "$vt_terrainshaper_shape_circle", ConfigManager.s_terrainShapeShortcut.Value)))
                 {
-                    Ground.square = !Ground.square;
+                    ActionToggleTerrainShape();
                 }
             }
             GUILayout.EndVertical();
@@ -61,40 +90,25 @@ namespace ValheimTooler.Core
             {
                 GUILayout.Space(EntryPoint.s_boxSpacing);
 
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_terrainshaper_action_level")))
+                if (GUILayout.Button(UI.Utils.LabelWithShortcut("$vt_terrainshaper_action_level", ConfigManager.s_terrainLevelShortcut.Value)))
                 {
-                    if (Player.m_localPlayer != null)
-                    {
-                        Ground.Level(Player.m_localPlayer.transform.position, s_radius);
-                    }
+                    ActionTerrainLevel();
                 }
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_terrainshaper_action_lower")))
+                if (GUILayout.Button(UI.Utils.LabelWithShortcut("$vt_terrainshaper_action_lower", ConfigManager.s_terrainLowerShortcut.Value)))
                 {
-                    if (Player.m_localPlayer != null)
-                    {
-                        Ground.Lower(Player.m_localPlayer.transform.position, s_radius, s_depth, s_strength);
-                    }
+                    ActionTerrainLower();
                 }
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_terrainshaper_action_raise")))
+                if (GUILayout.Button(UI.Utils.LabelWithShortcut("$vt_terrainshaper_action_raise", ConfigManager.s_terrainRaiseShortcut.Value)))
                 {
-                    if (Player.m_localPlayer != null)
-                    {
-                        Ground.Raise(Player.m_localPlayer.transform.position, s_radius, s_depth, s_strength);
-                    }
+                    ActionTerrainRaise();
                 }
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_terrainshaper_action_reset")))
+                if (GUILayout.Button(UI.Utils.LabelWithShortcut("$vt_terrainshaper_action_reset", ConfigManager.s_terrainResetShortcut.Value)))
                 {
-                    if (Player.m_localPlayer != null)
-                    {
-                        Ground.Reset(Player.m_localPlayer.transform.position, s_radius);
-                    }
+                    ActionTerrainReset();
                 }
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_terrainshaper_action_smooth")))
+                if (GUILayout.Button(UI.Utils.LabelWithShortcut("$vt_terrainshaper_action_smooth", ConfigManager.s_terrainSmoothShortcut.Value)))
                 {
-                    if (Player.m_localPlayer != null)
-                    {
-                        Ground.Smooth(Player.m_localPlayer.transform.position, s_radius, s_strength);
-                    }
+                    ActionTerrainSmooth();
                 }
             }
             GUILayout.EndVertical();
@@ -117,15 +131,71 @@ namespace ValheimTooler.Core
                 }
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button(VTLocalization.instance.Localize("$vt_terrainshaper_action_paint")))
+                if (GUILayout.Button(UI.Utils.LabelWithShortcut("$vt_terrainshaper_action_paint", ConfigManager.s_terrainPaintShortcut.Value)))
                 {
-                    if (Player.m_localPlayer != null)
-                    {
-                        Ground.Paint(Player.m_localPlayer.transform.position, s_radius, s_paintType);
-                    }
+                    ActionTerrainPaint();
                 }
             }
             GUILayout.EndVertical();
+        }
+
+        private static void ActionToggleTerrainShape(bool sendNotification = false)
+        {
+            Ground.square = !Ground.square;
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabelCustom("$vt_terrainshaper_shape", Ground.square, "$vt_terrainshaper_shape_square", "$vt_terrainshaper_shape_circle"));
+            }
+        }
+
+        private static void ActionTerrainLevel()
+        {
+            if (Player.m_localPlayer != null)
+            {
+                Ground.Level(Player.m_localPlayer.transform.position, s_radius);
+            }
+        }
+
+        private static void ActionTerrainLower()
+        {
+            if (Player.m_localPlayer != null)
+            {
+                Ground.Lower(Player.m_localPlayer.transform.position, s_radius, s_depth, s_strength);
+            }
+        }
+
+
+        private static void ActionTerrainRaise()
+        {
+            if (Player.m_localPlayer != null)
+            {
+                Ground.Raise(Player.m_localPlayer.transform.position, s_radius, s_depth, s_strength);
+            }
+        }
+
+        private static void ActionTerrainReset()
+        {
+            if (Player.m_localPlayer != null)
+            {
+                Ground.Reset(Player.m_localPlayer.transform.position, s_radius);
+            }
+        }
+
+        private static void ActionTerrainSmooth()
+        {
+            if (Player.m_localPlayer != null)
+            {
+                Ground.Smooth(Player.m_localPlayer.transform.position, s_radius, s_strength);
+            }
+        }
+
+        private static void ActionTerrainPaint()
+        {
+            if (Player.m_localPlayer != null)
+            {
+                Ground.Paint(Player.m_localPlayer.transform.position, s_radius, s_paintType);
+            }
         }
     }
 

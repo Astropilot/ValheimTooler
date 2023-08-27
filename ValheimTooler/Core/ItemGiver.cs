@@ -23,8 +23,7 @@ namespace ValheimTooler.Core
 
         public static void Start()
         {
-            var _config = ConfigManager.instance;
-            s_itemGiverRect = new Rect(_config.s_itemGiverInitialPosition.x, _config.s_itemGiverInitialPosition.y, 400, 400);
+            s_itemGiverRect = new Rect(ConfigManager.s_itemGiverWindowPosition.Value.x, ConfigManager.s_itemGiverWindowPosition.Value.y, 400, 400);
 
             if (ObjectDB.instance == null)
             {
@@ -66,7 +65,7 @@ namespace ValheimTooler.Core
         {
             s_itemGiverRect = GUILayout.Window(1002, s_itemGiverRect, ItemGiverWindow, VTLocalization.instance.Localize("$vt_item_giver_title"));
 
-            ConfigManager.instance.s_itemGiverInitialPosition = s_itemGiverRect.position;
+            ConfigManager.s_itemGiverWindowPosition.Value = s_itemGiverRect.position;
         }
 
         public static void ItemGiverWindow(int windowID)

@@ -130,6 +130,35 @@ namespace ValheimTooler.Core
 
                 s_updateTimer = Time.time + s_updateTimerInterval;
             }
+
+            if (ConfigManager.s_godModeShortCut.Value.IsDown())
+            {
+                ActionCurrentPlayerToggleGodMode(true);
+            }
+            if (ConfigManager.s_unlimitedStaminaShortcut.Value.IsDown())
+            {
+                ActionCurrentPlayerToggleUnlimitedStamina(true);
+            }
+            if (ConfigManager.s_flyModeShortcut.Value.IsDown())
+            {
+                ActionCurrentPlayerToggleFlyMode(true);
+            }
+            if (ConfigManager.s_ghostModeShortcut.Value.IsDown())
+            {
+                ActionCurrentPlayerToggleGhostMode(true);
+            }
+            if (ConfigManager.s_noPlacementCostShortcut.Value.IsDown())
+            {
+                ActionCurrentPlayerToggleNoPlacementCost(true);
+            }
+            if (ConfigManager.s_inventoryInfiniteWeightShortcut.Value.IsDown())
+            {
+                ActionCurrentPlayerToggleInventoryInfiniteWeight(true);
+            }
+            if (ConfigManager.s_instantCraftShortcut.Value.IsDown())
+            {
+                ActionCurrentPlayerToggleInstantCraft(true);
+            }
         }
 
         public static void DisplayGUI()
@@ -142,33 +171,33 @@ namespace ValheimTooler.Core
                     {
                         GUILayout.Space(EntryPoint.s_boxSpacing);
 
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_god_mode : " + (Player.m_localPlayer.VTInGodMode() ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_player_god_mode", Player.m_localPlayer.VTInGodMode(), ConfigManager.s_godModeShortCut.Value)))
                         {
-                            Player.m_localPlayer.VTSetGodMode(!Player.m_localPlayer.VTInGodMode());
+                            ActionCurrentPlayerToggleGodMode();
                         }
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_inf_stamina_me : " + (s_isInfiniteStaminaMe ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_player_inf_stamina_me", s_isInfiniteStaminaMe, ConfigManager.s_unlimitedStaminaShortcut.Value)))
                         {
-                            s_isInfiniteStaminaMe = !s_isInfiniteStaminaMe;
+                            ActionCurrentPlayerToggleUnlimitedStamina();
                         }
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_inf_stamina_others : " + (s_isInfiniteStaminaOthers ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_player_inf_stamina_others", s_isInfiniteStaminaOthers)))
                         {
                             s_isInfiniteStaminaOthers = !s_isInfiniteStaminaOthers;
                         }
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_no_stamina : " + (s_isNoStaminaOthers ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_player_no_stamina", s_isNoStaminaOthers)))
                         {
                             s_isNoStaminaOthers = !s_isNoStaminaOthers;
                         }
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_fly_mode : " + (Player.m_localPlayer.VTInFlyMode() ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_player_fly_mode", Player.m_localPlayer.VTInFlyMode(), ConfigManager.s_flyModeShortcut.Value)))
                         {
-                            Player.m_localPlayer.VTSetFlyMode(!Player.m_localPlayer.VTInFlyMode());
+                            ActionCurrentPlayerToggleFlyMode();
                         }
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_ghost_mode : " + (Player.m_localPlayer.VTInGhostMode() ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_player_ghost_mode", Player.m_localPlayer.VTInGhostMode(), ConfigManager.s_ghostModeShortcut.Value)))
                         {
-                            Player.m_localPlayer.VTSetGhostMode(!Player.m_localPlayer.VTInGhostMode());
+                            ActionCurrentPlayerToggleGhostMode();
                         }
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_nop_lacement_cost : " + (Player.m_localPlayer.VTIsNoPlacementCost() ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_player_no_placement_cost", Player.m_localPlayer.VTIsNoPlacementCost(), ConfigManager.s_noPlacementCostShortcut.Value)))
                         {
-                            Player.m_localPlayer.VTSetNoPlacementCost(!Player.m_localPlayer.VTIsNoPlacementCost());
+                            ActionCurrentPlayerToggleNoPlacementCost();
                         }
                         if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_explore_minimap")))
                         {
@@ -182,13 +211,13 @@ namespace ValheimTooler.Core
                         {
                             Player.m_localPlayer.VTTameNearbyCreatures();
                         }
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_infinite_weight : " + (s_inventoryNoWeightLimit ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_player_infinite_weight", s_inventoryNoWeightLimit, ConfigManager.s_inventoryInfiniteWeightShortcut.Value)))
                         {
-                            s_inventoryNoWeightLimit = !s_inventoryNoWeightLimit;
+                            ActionCurrentPlayerToggleInventoryInfiniteWeight();
                         }
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_instant_craft : " + (s_instantCraft ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_player_instant_craft", s_instantCraft, ConfigManager.s_instantCraftShortcut.Value)))
                         {
-                            s_instantCraft = !s_instantCraft;
+                            ActionCurrentPlayerToggleInstantCraft();
                         }
                         if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_remove_tombstone")))
                         {
@@ -265,7 +294,7 @@ namespace ValheimTooler.Core
                     {
                         GUILayout.Space(EntryPoint.s_boxSpacing);
 
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_teleport_restricted : " + (s_bypassRestrictedTeleportable ? VTLocalization.s_cheatOn : VTLocalization.s_cheatOff))))
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_player_teleport_restricted", s_bypassRestrictedTeleportable)))
                         {
                             s_bypassRestrictedTeleportable = !s_bypassRestrictedTeleportable;
                         }
@@ -407,6 +436,76 @@ namespace ValheimTooler.Core
                 GUILayout.EndVertical();
             }
             GUILayout.EndHorizontal();
+        }
+
+        private static void ActionCurrentPlayerToggleGodMode(bool sendNotification = false)
+        {
+            Player.m_localPlayer.VTSetGodMode(!Player.m_localPlayer.VTInGodMode());
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_player_god_mode", Player.m_localPlayer.VTInGodMode()));
+            }
+        }
+
+        private static void ActionCurrentPlayerToggleUnlimitedStamina(bool sendNotification = false)
+        {
+            s_isInfiniteStaminaMe = !s_isInfiniteStaminaMe;
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_player_inf_stamina_me", s_isInfiniteStaminaMe));
+            }
+        }
+
+        private static void ActionCurrentPlayerToggleFlyMode(bool sendNotification = false)
+        {
+            Player.m_localPlayer.VTSetFlyMode(!Player.m_localPlayer.VTInFlyMode());
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_player_fly_mode", Player.m_localPlayer.VTInFlyMode()));
+            }
+        }
+
+        private static void ActionCurrentPlayerToggleGhostMode(bool sendNotification = false)
+        {
+            Player.m_localPlayer.VTSetGhostMode(!Player.m_localPlayer.VTInGhostMode());
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_player_ghost_mode", Player.m_localPlayer.VTInGhostMode()));
+            }
+        }
+
+        private static void ActionCurrentPlayerToggleNoPlacementCost(bool sendNotification = false)
+        {
+            Player.m_localPlayer.VTSetNoPlacementCost(!Player.m_localPlayer.VTIsNoPlacementCost());
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_player_no_placement_cost", Player.m_localPlayer.VTIsNoPlacementCost()));
+            }
+        }
+
+        private static void ActionCurrentPlayerToggleInventoryInfiniteWeight(bool sendNotification = false)
+        {
+            s_inventoryNoWeightLimit = !s_inventoryNoWeightLimit;
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_player_infinite_weight", s_inventoryNoWeightLimit));
+            }
+        }
+
+        private static void ActionCurrentPlayerToggleInstantCraft(bool sendNotification = false)
+        {
+            s_instantCraft = !s_instantCraft;
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_player_instant_craft", s_instantCraft));
+            }
         }
 
         private static void SearchTeleportTarget()

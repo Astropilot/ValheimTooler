@@ -25,13 +25,11 @@ namespace ValheimTooler
         };
 
         private string _version;
-        private ConfigManager _config;
 
         public void Start()
         {
-            _config = ConfigManager.instance;
-            _valheimToolerRect = new Rect(_config.s_mainWindowInitialPosition.x, _config.s_mainWindowInitialPosition.y, 800, 300);
-            _showMainWindow = _config.s_showAtStartup;
+            _valheimToolerRect = new Rect(ConfigManager.s_mainWindowPosition.Value.x, ConfigManager.s_mainWindowPosition.Value.y, 800, 300);
+            _showMainWindow = ConfigManager.s_showAtStartup.Value;
 
             PlayerHacks.Start();
             EntitiesItemsHacks.Start();
@@ -44,7 +42,7 @@ namespace ValheimTooler
         }
         public void Update()
         {
-            if (Input.GetKeyDown(_config.s_toggleInterfaceKey))
+            if (ConfigManager.s_toggleInterfaceKey.Value.IsDown())
             {
                 _showMainWindow = !_showMainWindow;
             }
@@ -77,7 +75,7 @@ namespace ValheimTooler
                 }
                 _wasMainWindowShowed = true;
 
-                _config.s_mainWindowInitialPosition = _valheimToolerRect.position;
+                ConfigManager.s_mainWindowPosition.Value = _valheimToolerRect.position;
             }
             else
             {
@@ -118,11 +116,6 @@ namespace ValheimTooler
             }
 
             GUI.DragWindow();
-        }
-
-        public void OnDestroy()
-        {
-            ConfigManager.instance.SaveConfig();
         }
     }
 }
