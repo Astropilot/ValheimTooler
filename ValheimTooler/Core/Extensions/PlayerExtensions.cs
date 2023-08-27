@@ -38,7 +38,7 @@ namespace ValheimTooler.Core.Extensions
             {
                 player.SetFieldValue<bool>("m_debugFly", isFlyMode);
                 ZNetView m_nview = player.GetFieldValue<ZNetView>("m_nview");
-                m_nview.GetZDO().Set("DebugFly", isFlyMode);
+                m_nview.GetZDO().Set(ZDOVars.s_debugFly, isFlyMode);
             }
         }
 
@@ -85,7 +85,7 @@ namespace ValheimTooler.Core.Extensions
             }
 
             player.UseStamina(- player.GetMaxStamina());
-            player.GetFieldValue<ZNetView>("m_nview").GetZDO().Set("stamina", player.GetMaxStamina());
+            player.GetFieldValue<ZNetView>("m_nview").GetZDO().Set(ZDOVars.s_stamina, player.GetMaxStamina());
         }
 
         public static void VTSetNoStamina(this Player player)
@@ -96,7 +96,7 @@ namespace ValheimTooler.Core.Extensions
             }
 
             player.UseStamina(99999f);
-            player.GetFieldValue<ZNetView>("m_nview").GetZDO().Set("stamina", 0);
+            player.GetFieldValue<ZNetView>("m_nview").GetZDO().Set(ZDOVars.s_stamina, 0);
         }
 
         public static void VTTeleportTo(this Player player, ZNet.PlayerInfo target)
