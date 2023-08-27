@@ -74,6 +74,10 @@ namespace ValheimTooler.UI
             guiskin.box.onNormal.background = null;
             guiskin.box.normal.background = InterfaceMaker.s_boxBackground;
             guiskin.box.normal.textColor = Color.gray;
+            guiskin.box.padding.top += 7;
+            guiskin.box.padding.bottom += 7;
+            guiskin.box.padding.left += 7;
+            guiskin.box.padding.right += 7;
 
             guiskin.window.border = new RectOffset(80, 80, 80, 20);
             guiskin.window.padding.top += 5;
@@ -81,11 +85,11 @@ namespace ValheimTooler.UI
             guiskin.window.normal.background = InterfaceMaker.s_winTitleBackground;
             guiskin.window.normal.textColor = Color.white;
 
-            guiskin.button.normal.textColor = Color.gray;
+            guiskin.button.normal.textColor = Color.white;
             guiskin.button.normal.background = s_buttonNormalBackground;
-            guiskin.button.hover.textColor = Color.gray;
+            guiskin.button.hover.textColor = Color.white;
             guiskin.button.hover.background = s_buttonHoverBackground;
-            guiskin.button.active.textColor = Color.gray;
+            guiskin.button.active.textColor = Color.white;
             guiskin.button.active.background = s_buttonActiveBackground;
             guiskin.button.onNormal.textColor = Color.white;
             guiskin.button.onNormal.background = s_buttonActiveNormalBackground;
@@ -128,28 +132,29 @@ namespace ValheimTooler.UI
             guiskin.toggle.fixedHeight = 30;
 
             guiskin.button.padding.top = guiskin.button.padding.bottom = 6;
+            guiskin.button.padding.left = guiskin.button.padding.left = 5;
             guiskin.button.border.bottom = guiskin.button.border.top = 0;
             guiskin.button.border.left = guiskin.button.border.right = 10;
 
             guiskin.textField.normal.background = s_fieldBackground;
-            guiskin.textField.normal.textColor = Color.gray;
+            guiskin.textField.normal.textColor = Color.white;
             guiskin.textField.onNormal.background = s_fieldBackground;
-            guiskin.textField.onNormal.textColor = Color.gray;
+            guiskin.textField.onNormal.textColor = Color.white;
             guiskin.textField.hover.background = s_fieldBackground;
-            guiskin.textField.hover.textColor = Color.gray;
+            guiskin.textField.hover.textColor = Color.white;
             guiskin.textField.onHover.background = s_fieldBackground;
-            guiskin.textField.onHover.textColor = Color.gray;
+            guiskin.textField.onHover.textColor = Color.white;
             guiskin.textField.active.background = s_fieldBackground;
-            guiskin.textField.active.textColor = Color.gray;
+            guiskin.textField.active.textColor = Color.white;
             guiskin.textField.onActive.background = s_fieldBackground;
-            guiskin.textField.onActive.textColor = Color.gray;
+            guiskin.textField.onActive.textColor = Color.white;
             guiskin.textField.focused.background = s_fieldBackground;
-            guiskin.textField.focused.textColor = Color.gray;
+            guiskin.textField.focused.textColor = Color.white;
             guiskin.textField.onFocused.background = s_fieldBackground;
-            guiskin.textField.onFocused.textColor = Color.gray;
+            guiskin.textField.onFocused.textColor = Color.white;
             guiskin.textField.padding = new RectOffset(8, 8, 5, 5);
 
-            guiskin.settings.cursorColor = Color.gray;
+            guiskin.settings.cursorColor = Color.white;
 
             guiskin.verticalScrollbar.normal.background = s_scrollBackground;
             guiskin.verticalScrollbarThumb.normal.background = s_scrollThumbBackground;

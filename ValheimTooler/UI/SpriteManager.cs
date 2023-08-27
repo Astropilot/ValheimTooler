@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ValheimTooler.UI
 {
@@ -13,7 +14,7 @@ namespace ValheimTooler.UI
             s_atlasCache = new Dictionary<string, Texture2D>();
         }
 
-        public static Texture2D TextureFromSprite(Sprite sprite)
+        public static Texture2D TextureFromSprite(Sprite sprite, bool resize = true)
         {
             if (sprite.rect.width == sprite.texture.width)
             {
@@ -33,14 +34,14 @@ namespace ValheimTooler.UI
             }
 
             Texture2D newText = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
-            Color[] newColors = spriteTexture.GetPixels((int)Math.Ceiling(sprite.textureRect.x),
-                                                        (int)Math.Ceiling(sprite.textureRect.y),
-                                                        (int)Math.Ceiling(sprite.textureRect.width),
-                                                        (int)Math.Ceiling(sprite.textureRect.height));
+            Color[] newColors = spriteTexture.GetPixels(Mathf.CeilToInt(sprite.textureRect.x),
+                                                        Mathf.CeilToInt(sprite.textureRect.y),
+                                                        Mathf.CeilToInt(sprite.textureRect.width),
+                                                        Mathf.CeilToInt(sprite.textureRect.height));
             newText.SetPixels(newColors);
             newText.Apply();
 
-            if (newText.width > 200 || newText.height > 200)
+            if (resize && (newText.width > 200 || newText.height > 200))
                 newText.Resize(60, 60);
 
             return newText;
