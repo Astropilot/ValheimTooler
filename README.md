@@ -58,10 +58,18 @@ Here is the list of features offered by this tool:
   * Tame all nearby creatures
   * Unlimited weight for inventory
   * Fast crafting
+  * Remove your tombstones
+  * Change the interaction distance
 * **Entities & Items**
   * Spawn any entity
   * Delete all drops on the ground
   * An Item Giver to add any item you want in your inventory
+* **Terrain Shaper**
+  * Level terrain
+  * Lower terrain
+  * Raise terrain
+  * Reset modifications
+  * Smooth terrain
 * **Miscellaneous**
   * Inflict damage to a player (ignores the no-pvp mode)
   * Kill all entities except players
@@ -108,6 +116,7 @@ This file allows you to modify the following parameters:
 - Change the key that displays/hides the tool, defaulting to the Delete key
 - Choose to show the tool when it starts, default is active
 - Choose the display language of the program, auto by default (depending on the game language)
+- Set up keyboard shortcuts for some features
 
 ## Contributing
 
@@ -121,4 +130,6 @@ A more complete contributing file will arrive soon...
 * Many thanks to [wh0am15533](https://github.com/wh0am15533) for its [Unity Runtime DevTools](https://www.unknowncheats.me/forum/unity/388951-unity-runtime-devtools-v1-01-a.html) utility from which I got some parts related to resource loading in the assembly and its [SharpMonoInjector](https://github.com/wh0am15533/SharpMonoInjector) update
 * Thanks to [KillerGoldFisch](https://github.com/KillerGoldFisch) for his proposal to put this tool as a mod for BepInEx as well as [his example code](https://github.com/KillerGoldFisch/ValheimToolerLoaderMod) for the implementation of this plugin
 * Thanks to [themaoci](https://github.com/themaoci) for his work allowing to redo a part of the functionalities via patching as well as the addition of new functionalities such as: auto-marking on the minimap of deposits, instant crafting and teleportation with forbidden items
+* Thanks to [the Gungnir mod](https://github.com/zambony/Gungnir) for the Terrain Shaper
+* Thanks to [BepInEx](https://github.com/BepInEx/BepInEx) for the configuration system reused in this code
 * Many thanks to [BastienMarais](https://github.com/BastienMarais) for his precious help during the development phase for his tests and feature ideas!

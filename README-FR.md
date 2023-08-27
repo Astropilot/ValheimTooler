@@ -59,10 +59,18 @@ Voici la liste des fonctionnalités disponibles:
   * Apprivoiser toutes les créatures proches
   * Poids illimité pour l'inventaire
   * Craft instantané
+  * Supprimer ses tombes
+  * Changer la distance d'intéraction
 * **Entités et objets**
   * Faites apparaitre n'importe quel entité/objet
   * Supprimer tous les drops à proximité
   * Une interface est disponible pour vous ajouter n'importe quel objet dans votre inventaire
+* **Modificateur de Terrain**
+  * Mettre à niveau
+  * Abaisser
+  * Augmenter
+  * Annuler les modifications
+  * Lisser le terrain
 * **Autres**
   * Infligez des dégâts à un joueur (ignore le mode non-pvp)
   * Tuez tous les monstres
@@ -111,6 +119,7 @@ Ce fichier vous permet de modifier les paramètres suivants:
 - Changer la touche qui permet d'afficher/cacher l'outil, par défaut sur la touche Delete
 - Choisir d'afficher l'outil lorsqu'il démarre, actif par défaut
 - Choisir la langue d'affichage du programme, auto par défaut (en fonction de la langue du jeu)
+- Choisir des raccourcis clavier pour certaines fonctionnalités
 
 ## Contribution
 
@@ -124,4 +133,6 @@ Un fichier de contribution plus complet arrivera sous peu...
 * De gros merci à [wh0am15533](https://github.com/wh0am15533) pour son outil [Unity Runtime DevTools](https://www.unknowncheats.me/forum/unity/388951-unity-runtime-devtools-v1-01-a.html) d'où j'ai récupérer quelques morceaux de code pour le chargement au runtime de ressources présentes dans mon assembly et sa mise à jour du [SharpMonoInjector](https://github.com/wh0am15533/SharpMonoInjector)
 * Merci à [KillerGoldFisch](https://github.com/KillerGoldFisch) pour sa proposition de mettre cet outil sous forme de mod pour BepInEx ainsi que [son code d'exemple]((https://github.com/KillerGoldFisch/ValheimToolerLoaderMod)) pour la mise en place de ce plugin
 * Merci à [themaoci](https://github.com/themaoci) pour son travail permettant de refaire une partie des fonctionnalités via le patching ainsi que l'ajout de nouvelles fonctionnalités comme: l'auto-marquage sur la minimap des dépôts, le craft instantané et la téléportation avec objets interdits
+* Merci au [mod Gungnir](https://github.com/zambony/Gungnir) pour le code concernant la modification de terrain
+* Merci à [BepInEx](https://github.com/BepInEx/BepInEx) pour le système de configuration réutilisé dans ce code
 * Pleins de bisous à [BastienMarais](https://github.com/BastienMarais) pour son aide pendant la phase de développement pour m'avoir aidé à tester certaines fonctionnalités et m'avoir donné de nouvelles idées !
