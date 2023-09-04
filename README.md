@@ -8,6 +8,10 @@
     <img src="https://img.shields.io/github/downloads/Astropilot/ValheimTooler/total"
          alt="Download counter">
   </a>
+  <a href="https://valheim.thunderstore.io/package/Astropilot/ValheimTooler/">
+    <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fvalheim.thunderstore.io%2Fapi%2Fexperimental%2Fpackage%2FAstropilot%2FValheimTooler%2F&query=%24.total_downloads&label=Thunderstore%20downloads&color=%234c1
+" alt="Thunderstore download counter">
+  </a>
   <img src="https://img.shields.io/github/v/tag/Astropilot/ValheimTooler">
   <a href="https://github.com/Astropilot/ValheimTooler/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/Astropilot/ValheimTooler"
