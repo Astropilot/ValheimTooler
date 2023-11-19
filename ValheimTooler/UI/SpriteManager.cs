@@ -42,7 +42,7 @@ namespace ValheimTooler.UI
             newText.Apply();
 
             if (resize && (newText.width > 200 || newText.height > 200))
-                newText.Resize(60, 60);
+                newText.Reinitialize(60, 60);
 
             return newText;
         }

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
@@ -46,7 +47,7 @@ namespace ValheimTooler.Utils
 
         static ConfigManager()
         {
-            var valheimAssemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var valheimAssemblyFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
 
             var configPathFilePath = Path.Combine(valheimAssemblyFolder, "config_vt.path");
             var configPath = "";

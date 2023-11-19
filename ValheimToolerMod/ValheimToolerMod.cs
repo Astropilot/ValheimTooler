@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +15,7 @@ namespace ValheimToolerMod
     {
         const string PluginGUID = "com.github.Astropilot.ValheimTooler";
         const string PluginName = "ValheimTooler";
-        const string PluginVersion = "1.9.1";
+        const string PluginVersion = "1.9.2";
 
         private Harmony _harmony;
 
@@ -36,26 +37,10 @@ namespace ValheimToolerMod
             _harmony?.UnpatchSelf();
             _harmony = null;
 
-            string bepInExPluginsPath = Paths.PluginPath;
-            var valheimToolerFiles = Directory.GetFiles(bepInExPluginsPath, "ValheimToolerMod.dll", SearchOption.AllDirectories).ToList();
-            string configpathfilepath = null;
+            var valheimAssemblyFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+            var configPathFilePath = Path.Combine(valheimAssemblyFolder, "config_vt.path");
 
-            while (configpathfilepath == null && valheimToolerFiles.Count > 0)
-            {
-                string valheimToolerPath = Path.GetDirectoryName(valheimToolerFiles[0]);
-
-                valheimToolerFiles.RemoveAt(0);
-
-                if (File.Exists(Path.Combine(valheimToolerPath, "ValheimTooler.dll")))
-                {
-                    configpathfilepath = Path.Combine(valheimToolerPath, "config_vt.path");
-                }
-            }
-
-            if (!string.IsNullOrEmpty(configpathfilepath))
-            {
-                File.WriteAllText(configpathfilepath, Paths.ConfigPath);
-            }
+            File.WriteAllText(configPathFilePath, Paths.ConfigPath);
 
             CallLoaderInit();
         }
