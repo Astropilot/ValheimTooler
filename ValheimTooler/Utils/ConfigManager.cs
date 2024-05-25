@@ -25,6 +25,8 @@ namespace ValheimTooler.Utils
         public static ConfigEntry<KeyboardShortcut> s_noPlacementCostShortcut;
         public static ConfigEntry<KeyboardShortcut> s_inventoryInfiniteWeightShortcut;
         public static ConfigEntry<KeyboardShortcut> s_instantCraftShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_guardianPowerAllShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_healAllShortcut;
         public static ConfigEntry<KeyboardShortcut> s_removeAllDropShortcut;
         public static ConfigEntry<KeyboardShortcut> s_terrainShapeShortcut;
         public static ConfigEntry<KeyboardShortcut> s_terrainLevelShortcut;
@@ -86,6 +88,8 @@ namespace ValheimTooler.Utils
             s_noPlacementCostShortcut = s_settingsFile.Bind("Shortcuts", "NoPlacementCost", new KeyboardShortcut(), "The shortcut to use the no placement cost feature");
             s_inventoryInfiniteWeightShortcut = s_settingsFile.Bind("Shortcuts", "InventoryInfiniteWeight", new KeyboardShortcut(), "The shortcut to use the inventory with infinite weight feature");
             s_instantCraftShortcut = s_settingsFile.Bind("Shortcuts", "InstantCraft", new KeyboardShortcut(), "The shortcut to use the instant craft feature");
+            s_guardianPowerAllShortcut = s_settingsFile.Bind("Shortcuts", "GuardianPowerAllPlayers", new KeyboardShortcut(), "The shortcut to give all players the selected guardian power");
+            s_healAllShortcut = s_settingsFile.Bind("Shortcuts", "HealAllPlayers", new KeyboardShortcut(), "Shortcut to heal all the players");
             s_removeAllDropShortcut = s_settingsFile.Bind("Shortcuts", "RemoveAllDrops", new KeyboardShortcut(), "The shortcut to use the remove all drops feature");
             s_terrainShapeShortcut = s_settingsFile.Bind("Shortcuts", "TerrainChangeShape", new KeyboardShortcut(), "");
             s_terrainLevelShortcut = s_settingsFile.Bind("Shortcuts", "TerrainLevel", new KeyboardShortcut(), "");

@@ -66,6 +66,7 @@ namespace ValheimTooler.Core
                 { Localization.instance.Localize("$se_moder_name"), "GP_Moder" },
                 { Localization.instance.Localize("$se_yagluth_name"), "GP_Yagluth" },
                 { Localization.instance.Localize("$se_queen_name"), "GP_Queen" },
+                { Localization.instance.Localize("$se_fader_name"), "GP_Fader" },
             };
         }
 
@@ -159,6 +160,20 @@ namespace ValheimTooler.Core
             {
                 ActionCurrentPlayerToggleInstantCraft(true);
             }
+            if (ConfigManager.s_guardianPowerAllShortcut.Value.IsDown())
+            {
+                if (s_guardianPowers.ContainsKey(s_guardianPowerIdx))
+                {
+                    AllPlayersActiveGuardianPower(s_guardianPowers[s_guardianPowerIdx]);
+                }
+            }
+            if (ConfigManager.s_healAllShortcut.Value.IsDown())
+            {
+                foreach (Player player in s_players)
+                {
+                    player.VTHeal();
+                }
+            }
         }
 
         public static void DisplayGUI()
@@ -249,6 +264,13 @@ namespace ValheimTooler.Core
                             }
                         }
                         GUILayout.EndHorizontal();
+                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_farinteract_reset")))
+                        {
+                            if (Player.m_localPlayer != null)
+                            {
+                                Player.m_localPlayer.m_maxInteractDistance = 5f;
+                            }
+                        }
                     }
                     GUILayout.EndVertical();
 

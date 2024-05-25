@@ -136,18 +136,18 @@ namespace ValheimToolerLauncher.ViewModels
                 _isUpgrade = true;
 
                 // Code purely for 1.9.2, time to remove unused files as the autoupdater will not do it
-                DirectoryInfo managedDir = new DirectoryInfo("Managed");
-                IEnumerable<FileInfo> managedFiles = managedDir.GetFiles("*.dll", SearchOption.TopDirectoryOnly);
+                //DirectoryInfo managedDir = new DirectoryInfo("Managed");
+                //IEnumerable<FileInfo> managedFiles = managedDir.GetFiles("*.dll", SearchOption.TopDirectoryOnly);
 
-                var acceptList = new List<string>{ "0Harmony.dll", "Mono.Cecil.dll", "Mono.Cecil.Mdb.dll", "Mono.Cecil.Pdb.dll", "Mono.Cecil.Rocks.dll", "MonoMod.RuntimeDetour.dll", "MonoMod.Utils.dll", "SharpConfig.dll" };
+                //var acceptList = new List<string>{ "0Harmony.dll", "Mono.Cecil.dll", "Mono.Cecil.Mdb.dll", "Mono.Cecil.Pdb.dll", "Mono.Cecil.Rocks.dll", "MonoMod.RuntimeDetour.dll", "MonoMod.Utils.dll", "SharpConfig.dll" };
 
-                foreach (FileInfo file in managedFiles)
-                {
-                    if (!acceptList.Contains(file.Name))
-                    {
-                        file.Delete();
-                    }
-                }
+                //foreach (FileInfo file in managedFiles)
+                //{
+                //    if (!acceptList.Contains(file.Name))
+                //    {
+                //        file.Delete();
+                //    }
+                //}
             }
 
             _installer = new Installer();

@@ -51,8 +51,8 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.10.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HarmonyX.2.10.1\lib\net45\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony, Version=2.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HarmonyX.2.10.2\lib\net45\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="assembly_guiutils">
       <HintPath>F:\SteamLibrary\steamapps\common\Valheim\valheim_Data\Managed\assembly_guiutils.dll</HintPath>
@@ -165,6 +165,7 @@
     <Compile Include="Patches\InstantCraft.cs" />
     <Compile Include="Patches\InventoryNoWeightLimit.cs" />
     <Compile Include="Patches\NoPlacementCostRepair.cs" />
+    <Compile Include="Patches\DisableInputWhenInterfaceIsShowed.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

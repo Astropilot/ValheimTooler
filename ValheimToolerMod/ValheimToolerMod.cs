@@ -15,7 +15,7 @@ namespace ValheimToolerMod
     {
         const string PluginGUID = "com.github.Astropilot.ValheimTooler";
         const string PluginName = "ValheimTooler";
-        const string PluginVersion = "1.9.2";
+        const string PluginVersion = "1.10.0";
 
         private Harmony _harmony;
 

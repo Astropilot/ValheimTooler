@@ -12,7 +12,7 @@ namespace ValheimTooler
         public static readonly int s_boxSpacing = 30;
         private Rect _valheimToolerRect;
 
-        private bool _showMainWindow = true;
+        public static bool s_showMainWindow = true;
         private bool _wasMainWindowShowed = false;
         public static bool s_showItemGiver = false;
 
@@ -29,7 +29,7 @@ namespace ValheimTooler
         public void Start()
         {
             _valheimToolerRect = new Rect(ConfigManager.s_mainWindowPosition.Value.x, ConfigManager.s_mainWindowPosition.Value.y, 800, 300);
-            _showMainWindow = ConfigManager.s_showAtStartup.Value;
+            s_showMainWindow = ConfigManager.s_showAtStartup.Value;
 
             PlayerHacks.Start();
             EntitiesItemsHacks.Start();
@@ -44,7 +44,13 @@ namespace ValheimTooler
         {
             if (ConfigManager.s_toggleInterfaceKey.Value.IsDown())
             {
-                _showMainWindow = !_showMainWindow;
+                s_showMainWindow = !s_showMainWindow;
+
+                if (s_showMainWindow && GameCamera.instance != null)
+                {
+                    GameCamera.instance.SetFieldValue<bool>("m_mouseCapture", false);
+                    GameCamera.instance.CallMethod("UpdateMouseCapture");
+                }
             }
 
             PlayerHacks.Update();
@@ -59,14 +65,8 @@ namespace ValheimTooler
         {
             GUI.skin = InterfaceMaker.CustomSkin;
 
-            if (_showMainWindow)
+            if (s_showMainWindow)
             {
-                if (GameCamera.instance != null)
-                {
-                    GameCamera.instance.SetFieldValue<bool>("m_mouseCapture", false);
-                    GameCamera.instance.CallMethod("UpdateMouseCapture");
-                }
-
                 _valheimToolerRect = GUILayout.Window(1001, _valheimToolerRect, ValheimToolerWindow, VTLocalization.instance.Localize($"$vt_main_title (v{_version})"), GUILayout.Height(10), GUILayout.Width(10));
 
                 if (s_showItemGiver)
