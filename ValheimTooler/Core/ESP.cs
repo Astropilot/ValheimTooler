@@ -106,15 +106,17 @@ namespace ValheimTooler.Core
                 s_depositsDestructible.Clear();
                 s_mineRock5s.Clear();
 
+                Camera mainCamera = global::Utils.GetMainCamera();
+
                 if (ESP.s_showPlayerESP || ESP.s_showMonsterESP)
                 {
                     List<Character> characters = Character.GetAllCharacters();
 
-                    if (characters != null && Camera.main != null && Player.m_localPlayer != null)
+                    if (characters != null && mainCamera != null && Player.m_localPlayer != null)
                     {
                         foreach (Character character in characters)
                         {
-                            var distance = Vector3.Distance(Camera.main.transform.position, character.transform.position);
+                            var distance = Vector3.Distance(mainCamera.transform.position, character.transform.position);
 
                             if (character.IsPlayer() && ((Player)character).GetPlayerID() == Player.m_localPlayer.GetPlayerID())
                             {
@@ -133,11 +135,11 @@ namespace ValheimTooler.Core
                 {
                     var pickables = UnityEngine.Object.FindObjectsOfType<Pickable>();
 
-                    if (pickables != null && Camera.main != null)
+                    if (pickables != null && mainCamera != null)
                     {
                         foreach (Pickable pickable in pickables)
                         {
-                            var distance = Vector3.Distance(Camera.main.transform.position, pickable.transform.position);
+                            var distance = Vector3.Distance(mainCamera.transform.position, pickable.transform.position);
 
                             if (distance > 2 && (!ConfigManager.s_espRadiusEnabled.Value || distance < ConfigManager.s_espRadius.Value))
                             {
@@ -148,11 +150,11 @@ namespace ValheimTooler.Core
 
                     var pickableItems = UnityEngine.Object.FindObjectsOfType<PickableItem>();
 
-                    if (pickableItems != null && Camera.main != null)
+                    if (pickableItems != null && mainCamera != null)
                     {
                         foreach (PickableItem pickableItem in pickableItems)
                         {
-                            var distance = Vector3.Distance(Camera.main.transform.position, pickableItem.transform.position);
+                            var distance = Vector3.Distance(mainCamera.transform.position, pickableItem.transform.position);
 
                             if (distance > 2 && (!ConfigManager.s_espRadiusEnabled.Value || distance < ConfigManager.s_espRadius.Value))
                             {
@@ -166,11 +168,11 @@ namespace ValheimTooler.Core
                 {
                     var itemDrops = UnityEngine.Object.FindObjectsOfType<ItemDrop>();
 
-                    if (itemDrops != null && Camera.main != null)
+                    if (itemDrops != null && mainCamera != null)
                     {
                         foreach (ItemDrop itemDrop in itemDrops)
                         {
-                            var distance = Vector3.Distance(Camera.main.transform.position, itemDrop.transform.position);
+                            var distance = Vector3.Distance(mainCamera.transform.position, itemDrop.transform.position);
 
                             if (distance > 2 && (!ConfigManager.s_espRadiusEnabled.Value || distance < ConfigManager.s_espRadius.Value))
                             {
@@ -184,7 +186,7 @@ namespace ValheimTooler.Core
                 {
                     var mineRock5s = UnityEngine.Object.FindObjectsOfType<MineRock5>();
 
-                    if (mineRock5s != null && Camera.main != null)
+                    if (mineRock5s != null && mainCamera != null)
                     {
                         foreach (MineRock5 mineRock5 in mineRock5s)
                         {
@@ -193,7 +195,7 @@ namespace ValheimTooler.Core
                             if (name.Contains("rock") || name.Length == 0)
                                 continue;
 
-                            var distance = Vector3.Distance(Camera.main.transform.position, mineRock5.transform.position);
+                            var distance = Vector3.Distance(mainCamera.transform.position, mineRock5.transform.position);
 
                             if (distance > 2 && (!ConfigManager.s_espRadiusEnabled.Value || distance < ConfigManager.s_espRadius.Value))
                             {
@@ -204,7 +206,7 @@ namespace ValheimTooler.Core
 
                     var destructibles = UnityEngine.Object.FindObjectsOfType<Destructible>();
 
-                    if (destructibles != null && Camera.main != null)
+                    if (destructibles != null && mainCamera != null)
                     {
                         foreach (Destructible destructible in destructibles)
                         {
@@ -218,7 +220,7 @@ namespace ValheimTooler.Core
                                 continue;
                             }
 
-                            var distance = Vector3.Distance(Camera.main.transform.position, destructible.transform.position);
+                            var distance = Vector3.Distance(mainCamera.transform.position, destructible.transform.position);
 
                             if (distance > 2 && (!ConfigManager.s_espRadiusEnabled.Value || distance < ConfigManager.s_espRadius.Value))
                             {
@@ -234,9 +236,11 @@ namespace ValheimTooler.Core
 
         public static void DisplayGUI()
         {
-            if (Camera.main != null && Player.m_localPlayer != null)
+            Camera mainCamera = global::Utils.GetMainCamera();
+
+            if (mainCamera != null && Player.m_localPlayer != null)
             {
-                var main = Camera.main;
+                var main = mainCamera;
                 var labelSkin = new GUIStyle(InterfaceMaker.CustomSkin.label);
 
                 if (ESP.s_showPlayerESP || ESP.s_showMonsterESP)
@@ -247,11 +251,11 @@ namespace ValheimTooler.Core
                         {
                             continue;
                         }
-                        Vector3 vector = main.WorldToScreenPoint(character.transform.position);
+                        Vector3 vector = main.WorldToScreenPointScaled(character.transform.position);
 
                         if (vector.z > -1)
                         {
-                            float a = Math.Abs(main.WorldToScreenPoint(character.GetEyePoint()).y - vector.y);
+                            float a = Math.Abs(main.WorldToScreenPointScaled(character.GetEyePoint()).y - vector.y);
 
                             if (character.IsPlayer() && ESP.s_showPlayerESP)
                             {
@@ -280,7 +284,7 @@ namespace ValheimTooler.Core
                         {
                             continue;
                         }
-                        Vector3 vector = main.WorldToScreenPoint(pickable.transform.position);
+                        Vector3 vector = main.WorldToScreenPointScaled(pickable.transform.position);
 
                         if (vector.z > -1)
                         {
@@ -295,7 +299,7 @@ namespace ValheimTooler.Core
                         {
                             continue;
                         }
-                        Vector3 vector = main.WorldToScreenPoint(pickableItem.transform.position);
+                        Vector3 vector = main.WorldToScreenPointScaled(pickableItem.transform.position);
 
                         if (vector.z > -1)
                         {
@@ -315,7 +319,7 @@ namespace ValheimTooler.Core
                         {
                             continue;
                         }
-                        Vector3 vector = main.WorldToScreenPoint(itemDrop.transform.position);
+                        Vector3 vector = main.WorldToScreenPointScaled(itemDrop.transform.position);
 
                         if (vector.z > -1)
                         {
@@ -336,7 +340,7 @@ namespace ValheimTooler.Core
                         {
                             continue;
                         }
-                        Vector3 vector = main.WorldToScreenPoint(depositDestructible.transform.position);
+                        Vector3 vector = main.WorldToScreenPointScaled(depositDestructible.transform.position);
 
                         if (vector.z > -1)
                         {
@@ -353,7 +357,7 @@ namespace ValheimTooler.Core
                         {
                             continue;
                         }
-                        Vector3 vector = main.WorldToScreenPoint(mineRock5.transform.position);
+                        Vector3 vector = main.WorldToScreenPointScaled(mineRock5.transform.position);
 
                         if (vector.z > -1)
                         {
