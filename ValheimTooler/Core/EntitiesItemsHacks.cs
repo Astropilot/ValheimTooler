@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using RapidGUI;
 using UnityEngine;
-using ValheimTooler.Core.Extensions;
-using ValheimTooler.Patches;
 using ValheimTooler.Utils;
 
 namespace ValheimTooler.Core
@@ -48,6 +46,10 @@ namespace ValheimTooler.Core
                 {
                     foreach (GameObject prefab in ZNetScene.instance.m_prefabs)
                     {
+                        if (prefab.name.Contains("_"))
+                        {
+                            continue;
+                        }
                         s_entityPrefabs.Add(prefab.name);
                     }
 

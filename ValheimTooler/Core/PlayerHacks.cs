@@ -252,25 +252,26 @@ namespace ValheimTooler.Core
                                 }
                             }
                         }
-                        GUILayout.BeginHorizontal();
-                        {
-                            var maxInteract = Player.m_localPlayer != null ? Player.m_localPlayer.m_maxInteractDistance : 5f;
-                            GUILayout.Label(VTLocalization.instance.Localize("$vt_player_farinteract_label (") + maxInteract.ToString("F1") + ")", GUILayout.ExpandWidth(false));
-                            maxInteract = GUILayout.HorizontalSlider(maxInteract, 1f, 50f, GUILayout.ExpandWidth(true));
-                            if (Player.m_localPlayer != null)
-                            {
-                                Player.m_localPlayer.m_maxInteractDistance = maxInteract;
-                                Player.m_localPlayer.m_maxPlaceDistance = maxInteract;
-                            }
-                        }
-                        GUILayout.EndHorizontal();
-                        if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_farinteract_reset")))
-                        {
-                            if (Player.m_localPlayer != null)
-                            {
-                                Player.m_localPlayer.m_maxInteractDistance = 5f;
-                            }
-                        }
+                        // Deactivated because of mod conflict. See https://github.com/Astropilot/ValheimTooler/issues/45
+                        //GUILayout.BeginHorizontal();
+                        //{
+                        //    var maxInteract = Player.m_localPlayer != null ? Player.m_localPlayer.m_maxInteractDistance : 5f;
+                        //    GUILayout.Label(VTLocalization.instance.Localize("$vt_player_farinteract_label (") + maxInteract.ToString("F1") + ")", GUILayout.ExpandWidth(false));
+                        //    maxInteract = GUILayout.HorizontalSlider(maxInteract, 1f, 50f, GUILayout.ExpandWidth(true));
+                        //    if (Player.m_localPlayer != null)
+                        //    {
+                        //        Player.m_localPlayer.m_maxInteractDistance = maxInteract;
+                        //        Player.m_localPlayer.m_maxPlaceDistance = maxInteract;
+                        //    }
+                        //}
+                        //GUILayout.EndHorizontal();
+                        //if (GUILayout.Button(VTLocalization.instance.Localize("$vt_player_farinteract_reset")))
+                        //{
+                        //    if (Player.m_localPlayer != null)
+                        //    {
+                        //        Player.m_localPlayer.m_maxInteractDistance = 5f;
+                        //    }
+                        //}
                     }
                     GUILayout.EndVertical();
 

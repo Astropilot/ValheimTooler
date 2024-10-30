@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using BepInEx;
 using HarmonyLib;
@@ -15,7 +14,7 @@ namespace ValheimToolerMod
     {
         const string PluginGUID = "com.github.Astropilot.ValheimTooler";
         const string PluginName = "ValheimTooler";
-        const string PluginVersion = "1.10.0";
+        const string PluginVersion = "1.11.0";
 
         private Harmony _harmony;
 
