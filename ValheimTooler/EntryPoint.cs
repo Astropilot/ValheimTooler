@@ -21,7 +21,8 @@ namespace ValheimTooler
             "$vt_toolbar_player",
             "$vt_toolbar_entities",
             "$vt_toolbar_terrain_shaper",
-            "$vt_toolbar_misc"
+            "$vt_toolbar_misc",
+            "$vt_toolbar_teleport"
         };
 
         private string _version;
@@ -37,6 +38,7 @@ namespace ValheimTooler
             MiscHacks.Start();
             ESP.Start();
             TerrainShaper.Start();
+            TeleportHacks.Start();
 
             _version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
@@ -59,6 +61,7 @@ namespace ValheimTooler
             MiscHacks.Update();
             ESP.Update();
             TerrainShaper.Update();
+            TeleportHacks.Update();
         }
 
         public void OnGUI()
@@ -112,6 +115,9 @@ namespace ValheimTooler
                     break;
                 case WindowToolbar.MISC:
                     MiscHacks.DisplayGUI();
+                    break;
+                case WindowToolbar.TELEPORT:
+                    TeleportHacks.DisplayGUI();
                     break;
             }
 

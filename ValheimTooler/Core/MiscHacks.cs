@@ -11,6 +11,14 @@ namespace ValheimTooler.Core
     public static class MiscHacks
     {
         public static bool s_enableAutopinMap = false;
+        public static bool s_fullBrightness = false;
+        private static bool s_fullBrightnessApplied = false;
+        private static Color s_originalAmbientLight;
+
+        public static bool s_disableFog = false;
+        private static bool s_disableFogApplied = false;
+        private static bool s_originalFog;
+        private static ParticleSystem[] s_smokeParticles;
         private static int s_playerDamageIdx = 0;
         private static string s_damageToDeal = "1";
 
@@ -58,6 +66,24 @@ namespace ValheimTooler.Core
             if (ConfigManager.s_espPickablesShortcut.Value.IsDown())
             {
                 ActionToggleESPPickables(true);
+            }
+
+            if (s_fullBrightness)
+            {
+                ApplyFullBrightness();
+            }
+            else if (s_fullBrightnessApplied)
+            {
+                RestoreBrightness();
+            }
+
+            if (s_disableFog)
+            {
+                ApplyNoFog();
+            }
+            else if (s_disableFogApplied)
+            {
+                RestoreFog();
             }
         }
 
@@ -133,6 +159,25 @@ namespace ValheimTooler.Core
                                 }
                             }
                         }
+                    }
+                    GUILayout.EndVertical();
+
+                    GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_misc_visual_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+                    {
+                        GUILayout.Space(EntryPoint.s_boxSpacing);
+                        GUILayout.BeginHorizontal();
+                        {
+                            s_fullBrightness = GUILayout.Toggle(s_fullBrightness, "");
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_full_brightness"));
+                        }
+                        GUILayout.EndHorizontal();
+
+                        GUILayout.BeginHorizontal();
+                        {
+                            s_disableFog = GUILayout.Toggle(s_disableFog, "");
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_disable_fog"));
+                        }
+                        GUILayout.EndHorizontal();
                     }
                     GUILayout.EndVertical();
 
@@ -217,6 +262,41 @@ namespace ValheimTooler.Core
                             ActionToggleESPPickables();
                         }
 
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("XRAY", ESP.s_xray)))
+                        {
+                            ActionToggleESPXRay();
+                        }
+
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("LABELS", ESP.s_showLabels)))
+                        {
+                            ActionToggleESPLabels();
+                        }
+
+                        GUILayout.BeginHorizontal();
+                        {
+                            ESP.s_show2DBoxes = GUILayout.Toggle(ESP.s_show2DBoxes, "");
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_esp_2d_boxes"));
+                        }
+                        GUILayout.EndHorizontal();
+
+                        GUILayout.BeginHorizontal();
+                        {
+                            ESP.s_show3DBoxes = GUILayout.Toggle(ESP.s_show3DBoxes, "");
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_esp_3d_boxes"));
+                        }
+                        GUILayout.EndHorizontal();
+
+                        GUILayout.BeginHorizontal();
+                        {
+                            bool newFill = GUILayout.Toggle(ESP.s_fillVisible, "");
+                            if (newFill != ESP.s_fillVisible)
+                            {
+                                ESP.SetFillVisible(newFill);
+                            }
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_misc_esp_fill_visible"));
+                        }
+                        GUILayout.EndHorizontal();
+
                         GUILayout.Label("ESP Radius distance (" + ConfigManager.s_espRadius.Value.ToString("0.0") + "m)", GUILayout.MinWidth(200));
                         ConfigManager.s_espRadius.Value = GUILayout.HorizontalSlider(ConfigManager.s_espRadius.Value, 5f, 500f, GUILayout.ExpandWidth(true));
 
@@ -274,6 +354,7 @@ namespace ValheimTooler.Core
             }
         }
 
+
         private static void ActionToggleESPPickables(bool sendNotification = false)
         {
             ESP.s_showPickableESP = !ESP.s_showPickableESP;
@@ -282,6 +363,90 @@ namespace ValheimTooler.Core
             {
                 Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("$vt_misc_pickable_esp_button", ESP.s_showPickableESP));
             }
+        }
+
+        private static void ActionToggleESPXRay(bool sendNotification = false)
+        {
+            ESP.SetXRay(!ESP.s_xray);
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("XRAY", ESP.s_xray));
+            }
+        }
+
+        private static void ActionToggleESPLabels(bool sendNotification = false)
+        {
+            ESP.s_showLabels = !ESP.s_showLabels;
+
+            if (sendNotification)
+            {
+                Player.m_localPlayer.VTSendMessage(UI.Utils.ToggleButtonLabel("LABELS", ESP.s_showLabels));
+            }
+        }
+
+        private static void ApplyFullBrightness()
+        {
+            if (!s_fullBrightnessApplied)
+            {
+                s_originalAmbientLight = RenderSettings.ambientLight;
+                s_fullBrightnessApplied = true;
+            }
+
+            RenderSettings.ambientLight = Color.white;
+
+            foreach (Light light in Object.FindObjectsOfType<Light>())
+            {
+                light.shadows = LightShadows.None;
+            }
+        }
+
+        private static void RestoreBrightness()
+        {
+            RenderSettings.ambientLight = s_originalAmbientLight;
+
+            foreach (Light light in Object.FindObjectsOfType<Light>())
+            {
+                light.shadows = LightShadows.Soft;
+            }
+
+            s_fullBrightnessApplied = false;
+        }
+
+        private static void ApplyNoFog()
+        {
+            if (!s_disableFogApplied)
+            {
+                s_originalFog = RenderSettings.fog;
+                s_smokeParticles = Object.FindObjectsOfType<ParticleSystem>()
+                    .Where(ps => ps.name.ToLower().Contains("smoke")).ToArray();
+                foreach (var ps in s_smokeParticles)
+                {
+                    // ParticleSystemStopBehavior is not available in all Unity versions
+                    ps.Stop(true);
+                    ps.Clear();
+                }
+                s_disableFogApplied = true;
+            }
+
+            RenderSettings.fog = false;
+        }
+
+        private static void RestoreFog()
+        {
+            RenderSettings.fog = s_originalFog;
+            if (s_smokeParticles != null)
+            {
+                foreach (var ps in s_smokeParticles)
+                {
+                    if (ps != null)
+                    {
+                        ps.Play();
+                    }
+                }
+            }
+            s_smokeParticles = null;
+            s_disableFogApplied = false;
         }
 
         private static void DamageAllCharacters()
@@ -332,43 +497,7 @@ namespace ValheimTooler.Core
                 }
             }
 
-            UserInfo fakePlayerSender = new UserInfo
-            {
-                Name = username,
-                Gamertag = (string)ReflectionExtensions.CallStaticMethod<UserInfo>("GetLocalPlayerGamertag"),
-                NetworkUserId = PrivilegeManager.GetNetworkUserId()
-            };
-
-            if (playerSender)
-            {
-                if (type == Talker.Type.Shout)
-                {
-                    if (ZRoutedRpc.instance != null)
-                    {
-                        ZRoutedRpc.instance.InvokeRoutedRPC(ZRoutedRpc.Everybody, "ChatMessage", new object[]
-                        {
-                            playerSender.GetHeadPoint(),
-                            2,
-                            fakePlayerSender,
-                            message,
-                            PrivilegeManager.GetNetworkUserId()
-                        });
-                    }
-                    return;
-                }
-                ZNetView nview = playerSender.GetComponent<Talker>().GetComponent<ZNetView>();
-
-                if (nview)
-                {
-                    nview.InvokeRPC(ZNetView.Everybody, "Say", new object[]
-                    {
-                        (int)type,
-                        fakePlayerSender,
-                        message,
-                        PrivilegeManager.GetNetworkUserId()
-                    });
-                }
-            }
+            
         }
     }
 }

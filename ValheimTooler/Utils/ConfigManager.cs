@@ -39,6 +39,8 @@ namespace ValheimTooler.Utils
         public static ConfigEntry<KeyboardShortcut> s_espDroppedItemsShortcut;
         public static ConfigEntry<KeyboardShortcut> s_espDepositsShortcut;
         public static ConfigEntry<KeyboardShortcut> s_espPickablesShortcut;
+        public static ConfigEntry<KeyboardShortcut> s_espBonesShortcut;
+
 
         public static ConfigEntry<Vector2> s_mainWindowPosition;
         public static ConfigEntry<Vector2> s_itemGiverWindowPosition;
@@ -102,6 +104,7 @@ namespace ValheimTooler.Utils
             s_espDroppedItemsShortcut = s_settingsFile.Bind("Shortcuts", "ESPDroppedItems", new KeyboardShortcut(), "The shortcut to show/hide the ESP for dropped items");
             s_espDepositsShortcut = s_settingsFile.Bind("Shortcuts", "ESPDeposits", new KeyboardShortcut(), "The shortcut to show/hide the ESP for deposits");
             s_espPickablesShortcut = s_settingsFile.Bind("Shortcuts", "ESPPickables", new KeyboardShortcut(), "The shortcut to show/hide the ESP for pickables");
+            s_espBonesShortcut = s_settingsFile.Bind("Shortcuts", "ESPBones", new KeyboardShortcut(), "The shortcut to show/hide the ESP for bones (skeleton rendering)");
 
             s_mainWindowPosition = s_internalFile.Bind("Internal", "MainWindowPosition", new Vector2(5, 5));
             s_itemGiverWindowPosition = s_internalFile.Bind("Internal", "ItemGiverPosition", new Vector2(Screen.width - 400, 5));

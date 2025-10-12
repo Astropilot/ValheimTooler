@@ -14,6 +14,10 @@ namespace ValheimTooler.Core
         public static bool s_isInfiniteStaminaMe = false;
         public static bool s_inventoryNoWeightLimit = false;
         public static bool s_instantCraft = false;
+        public static bool s_instantBow = false;
+        public static int s_arrowTypeIdx = 0;
+        private static readonly List<ItemDrop> s_arrowPrefabs = new List<ItemDrop>();
+        private static readonly List<string> s_arrowNames = new List<string>();
         public static bool s_bypassRestrictedTeleportable = false;
         private static bool s_isInfiniteStaminaOthers = false;
         private static bool s_isNoStaminaOthers = false;
@@ -68,6 +72,31 @@ namespace ValheimTooler.Core
                 { Localization.instance.Localize("$se_queen_name"), "GP_Queen" },
                 { Localization.instance.Localize("$se_fader_name"), "GP_Fader" },
             };
+
+            if (ObjectDB.instance != null)
+            {
+                s_arrowPrefabs.Add(null);
+                s_arrowNames.Add("");
+                foreach (GameObject go in ObjectDB.instance.m_items)
+                {
+                    ItemDrop drop = go.GetComponent<ItemDrop>();
+                    if (drop != null && drop.m_itemData.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Ammo && drop.m_itemData.m_shared.m_ammoType == "arrow")
+                    {
+                        s_arrowPrefabs.Add(drop);
+                        s_arrowNames.Add(Localization.instance.Localize(drop.m_itemData.m_shared.m_name));
+                    }
+                }
+            }
+        }
+
+        public static ItemDrop.ItemData GetSelectedArrowItem()
+        {
+            if (s_arrowTypeIdx <= 0 || s_arrowTypeIdx >= s_arrowPrefabs.Count)
+            {
+                return null;
+            }
+
+            return s_arrowPrefabs[s_arrowTypeIdx].m_itemData.Clone();
         }
 
         public static void Update()
@@ -408,6 +437,23 @@ namespace ValheimTooler.Core
                                 player.VTHeal();
                             }
                         }
+                    }
+                    GUILayout.EndVertical();
+
+                    GUILayout.BeginVertical(VTLocalization.instance.Localize("$vt_player_weapon_mods_title"), GUI.skin.box, GUILayout.ExpandWidth(false));
+                    {
+                        GUILayout.Space(EntryPoint.s_boxSpacing);
+                        if (GUILayout.Button(UI.Utils.ToggleButtonLabel("$vt_player_instant_bow", s_instantBow)))
+                        {
+                            s_instantBow = !s_instantBow;
+                        }
+
+                        GUILayout.BeginHorizontal();
+                        {
+                            GUILayout.Label(VTLocalization.instance.Localize("$vt_player_arrow_type :"), GUILayout.ExpandWidth(false));
+                            s_arrowTypeIdx = RGUI.SelectionPopup(s_arrowTypeIdx, s_arrowNames.ToArray());
+                        }
+                        GUILayout.EndHorizontal();
                     }
                     GUILayout.EndVertical();
 
