@@ -1,3 +1,8 @@
+> [!CAUTION]
+> This project is no longer maintained or updated. It is kept for archival purposes only.
+> 
+> If you are looking for an active alternative, please use [Valheim Admin Tool](https://thunderstore.io/c/valheim/p/QoLTeam/Valheim_Admin_Tool/)
+
 <h1 align="center">
   <br>
   <img src="./docs/images/valheimtooler_logo.png" alt="Valheim Tooler" width="300">
