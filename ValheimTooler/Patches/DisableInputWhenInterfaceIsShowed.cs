@@ -48,21 +48,5 @@ namespace ValheimTooler.Patches
                 return true;
             }
         }
-
-        [HarmonyPatch(typeof(InventoryGrid), "OnRightClick", new Type[]
-        {
-                typeof(UIInputHandler)
-        })]
-        class InventoryGridOnRightClick
-        {
-            private static bool Prefix()
-            {
-                if (EntryPoint.s_showMainWindow)
-                {
-                    return false;
-                }
-                return true;
-            }
-        }
     }
 }

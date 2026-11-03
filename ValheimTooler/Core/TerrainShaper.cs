@@ -346,18 +346,26 @@ namespace ValheimTooler.Core
                 if (!modified)
                     continue;
 
+                ZNetView compNview = compiler.GetComponent<ZNetView>();
+                if (compNview != null && !compNview.IsOwner())
+                {
+                    compNview.ClaimOwnership();
+                }
+
                 compiler.SetFieldValue("m_levelDelta", levelDelta);
                 compiler.SetFieldValue("m_smoothDelta", smoothDelta);
                 compiler.SetFieldValue("m_modifiedHeight", modifiedHeight);
                 compiler.SetFieldValue("m_paintMask", paintMask);
                 compiler.SetFieldValue("m_modifiedPaint", modifiedPaint);
 
-                compiler.CallMethod("Save");
-                heightmap.Poke(true);
+                compiler.CallMethod("Save", false);
+                heightmap.Poke(1, false);
 
                 // Push new terrain data to all clients.
-                var zdo = compiler.GetComponent<ZNetView>().GetZDO();
-                ZDOMan.instance.ForceSendZDO(zdo.m_uid);
+                if (compNview != null && compNview.GetZDO() != null && ZDOMan.instance != null)
+                {
+                    ZDOMan.instance.ForceSendZDO(compNview.GetZDO().m_uid);
+                }
             }
 
             if (ClutterSystem.instance != null && resetGrass)

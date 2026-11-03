@@ -4,17 +4,28 @@ using UnityEngine;
 
 namespace ValheimTooler
 {
-    class Loader
+    public class Loader
     {
         public static void Init()
         {
             if (Loader.s_entryPoint == null)
             {
-                RunPatches();
-                Loader.s_entryPoint = new GameObject();
+                Debug.Log("[ValheimTooler] Initializing ValheimTooler...");
+                try
+                {
+                    RunPatches();
+                    Debug.Log("[ValheimTooler] Harmony patches applied successfully.");
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError("[ValheimTooler] Error applying Harmony patches: " + ex);
+                }
+
+                Loader.s_entryPoint = new GameObject("ValheimTooler_EntryPoint");
                 Loader.s_entryPoint.AddComponent<EntryPoint>();
                 Loader.s_entryPoint.AddComponent<RapidGUIBehaviour>();
                 Object.DontDestroyOnLoad(Loader.s_entryPoint);
+                Debug.Log("[ValheimTooler] EntryPoint GameObject created and set to DontDestroyOnLoad.");
             }
         }
 

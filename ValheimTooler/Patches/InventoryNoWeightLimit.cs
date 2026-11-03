@@ -16,4 +16,18 @@ namespace ValheimTooler.Patches
             return true;
         }
     }
+
+    [HarmonyPatch(typeof(Player), nameof(Player.IsEncumbered))]
+    class PlayerIsEncumbered
+    {
+        private static bool Prefix(ref bool __result)
+        {
+            if (PlayerHacks.s_inventoryNoWeightLimit)
+            {
+                __result = false;
+                return false;
+            }
+            return true;
+        }
+    }
 }

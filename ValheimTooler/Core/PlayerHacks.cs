@@ -59,14 +59,15 @@ namespace ValheimTooler.Core
                 s_levels.Add(i.ToString());
             }
 
+            Func<string, string, string> loc = (key, fallback) => Localization.instance != null ? Localization.instance.Localize(key) : fallback;
             s_guardianPowers = new Dictionary<string, string>() {
-                { Localization.instance.Localize("$se_eikthyr_name"), "GP_Eikthyr" },
-                { Localization.instance.Localize("$se_theelder_name"), "GP_TheElder" },
-                { Localization.instance.Localize("$se_bonemass_name"), "GP_Bonemass" },
-                { Localization.instance.Localize("$se_moder_name"), "GP_Moder" },
-                { Localization.instance.Localize("$se_yagluth_name"), "GP_Yagluth" },
-                { Localization.instance.Localize("$se_queen_name"), "GP_Queen" },
-                { Localization.instance.Localize("$se_fader_name"), "GP_Fader" },
+                { loc("$se_eikthyr_name", "Eikthyr"), "GP_Eikthyr" },
+                { loc("$se_theelder_name", "The Elder"), "GP_TheElder" },
+                { loc("$se_bonemass_name", "Bonemass"), "GP_Bonemass" },
+                { loc("$se_moder_name", "Moder"), "GP_Moder" },
+                { loc("$se_yagluth_name", "Yagluth"), "GP_Yagluth" },
+                { loc("$se_queen_name", "The Queen"), "GP_Queen" },
+                { loc("$se_fader_name", "Fader"), "GP_Fader" },
             };
         }
 

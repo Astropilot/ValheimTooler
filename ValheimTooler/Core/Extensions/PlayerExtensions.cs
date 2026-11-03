@@ -150,7 +150,7 @@ namespace ValheimTooler.Core.Extensions
                 long playerID = player.GetPlayerID();
                 string playerName = player.GetPlayerName();
 
-                player.GetInventory().AddItem(itemPrefab, quantity, quality, variant, playerID, playerName);
+                player.GetInventory().AddItem(itemPrefab, quantity, quality, variant, playerID, playerName, true, false);
             }
         }
 

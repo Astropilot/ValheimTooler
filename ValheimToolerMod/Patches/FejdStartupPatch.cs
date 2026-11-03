@@ -11,10 +11,7 @@ namespace ValheimToolerMod.Patches
         [HarmonyPostfix]
         private static void OnFejdStartup(FejdStartup __instance)
         {
-            foreach (Action @event in OnGameInitialized.GetInvocationList())
-            {
-                @event();
-            }
+            OnGameInitialized?.Invoke();
         }
     }
 }

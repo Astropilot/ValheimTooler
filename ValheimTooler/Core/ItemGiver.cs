@@ -25,31 +25,49 @@ namespace ValheimTooler.Core
         {
             s_itemGiverRect = new Rect(ConfigManager.s_itemGiverWindowPosition.Value.x, ConfigManager.s_itemGiverWindowPosition.Value.y, 400, 400);
 
-            if (ObjectDB.instance == null)
+            LoadItems();
+        }
+
+        public static void LoadItems()
+        {
+            if (ObjectDB.instance == null || ObjectDB.instance.m_items == null)
             {
                 return;
             }
 
+            s_items.Clear();
+            s_itemsFiltered.Clear();
+            s_itemsGUIFiltered.Clear();
+
             foreach (GameObject gameObject in ObjectDB.instance.m_items)
             {
+                if (gameObject == null)
+                    continue;
+
                 ItemDrop component = gameObject.GetComponent<ItemDrop>();
 
-                if (component.m_itemData?.m_shared?.m_icons?.Length <= 0)
+                if (component == null || component.m_itemData?.m_shared?.m_icons == null || component.m_itemData.m_shared.m_icons.Length == 0)
                     continue;
 
                 for (var variant = 0; variant < component.m_itemData.m_shared.m_icons.Length; variant++)
                 {
                     try
                     {
-                        Texture texture = SpriteManager.TextureFromSprite(component.m_itemData.m_shared.m_icons[variant]);
-                        var content = new GUIContent(texture, Localization.instance.Localize(component.m_itemData.m_shared.m_name + (variant > 0 ? " Variant " + variant.ToString() : "")));
+                        var iconSprite = component.m_itemData.m_shared.m_icons[variant];
+                        if (iconSprite == null)
+                            continue;
+
+                        Texture texture = SpriteManager.TextureFromSprite(iconSprite);
+                        string itemName = component.m_itemData.m_shared.m_name ?? "";
+                        string localizedName = Localization.instance != null ? Localization.instance.Localize(itemName + (variant > 0 ? " Variant " + variant.ToString() : "")) : itemName;
+                        var content = new GUIContent(texture, localizedName);
                         var inventoryItem = new InventoryItem(gameObject, component, content, variant);
                         s_itemsGUIFiltered.Add(content);
                         s_items.Add(inventoryItem);
                         s_itemsFiltered.Add(inventoryItem);
                     } catch
                     {
-                        ZLog.Log($"[ValheimTooler - ItemGiver] Failed to load item {component.m_itemData.m_shared.m_name} with variant {variant}. This item will be ignored.");
+                        ZLog.Log($"[ValheimTooler - ItemGiver] Failed to load item {component.m_itemData?.m_shared?.m_name} with variant {variant}. This item will be ignored.");
                         continue;
                     }
                 }
@@ -58,7 +76,10 @@ namespace ValheimTooler.Core
 
         public static void Update()
         {
-            return;
+            if (s_items.Count == 0 && ObjectDB.instance != null && ObjectDB.instance.m_items != null && ObjectDB.instance.m_items.Count > 0)
+            {
+                LoadItems();
+            }
         }
 
         public static void DisplayGUI()
@@ -106,7 +127,10 @@ namespace ValheimTooler.Core
             {
                 if (int.TryParse(s_quantityItem, out int quantity) && int.TryParse(s_qualityItem, out int quality))
                 {
-                    Player.m_localPlayer.VTAddItemToInventory(s_itemsFiltered[s_selectedItem].itemPrefab.name, quantity, quality, s_itemsFiltered[s_selectedItem].variant);
+                    if (s_selectedItem >= 0 && s_selectedItem < s_itemsFiltered.Count && Player.m_localPlayer != null)
+                    {
+                        Player.m_localPlayer.VTAddItemToInventory(s_itemsFiltered[s_selectedItem].itemPrefab.name, quantity, quality, s_itemsFiltered[s_selectedItem].variant);
+                    }
                 }
             }
 
@@ -145,7 +169,11 @@ namespace ValheimTooler.Core
             }
             else
             {
-                s_itemsFiltered = s_items.Where(i => Localization.instance.Localize(i.itemDrop.m_itemData.m_shared.m_name + (i.variant > 0 ? " Variant " + i.variant.ToString() : "")).ToLower().Contains(search)).ToList();
+                s_itemsFiltered = s_items.Where(i => {
+                    string rawName = i.itemDrop?.m_itemData?.m_shared?.m_name ?? i.itemPrefab?.name ?? "";
+                    string localized = Localization.instance != null ? Localization.instance.Localize(rawName + (i.variant > 0 ? " Variant " + i.variant.ToString() : "")) : rawName;
+                    return localized.ToLower().Contains(search) || rawName.ToLower().Contains(search);
+                }).ToList();
                 s_itemsGUIFiltered = s_itemsFiltered.Select(i => i.guiContent).ToList();
             }
             s_previousSearchTerms = search;

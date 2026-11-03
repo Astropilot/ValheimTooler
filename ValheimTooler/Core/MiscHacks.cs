@@ -332,12 +332,16 @@ namespace ValheimTooler.Core
                 }
             }
 
-            UserInfo fakePlayerSender = new UserInfo
+            UserInfo fakePlayerSender;
+            try
             {
-                Name = username,
-                Gamertag = (string)ReflectionExtensions.CallStaticMethod<UserInfo>("GetLocalPlayerGamertag"),
-                NetworkUserId = PrivilegeManager.GetNetworkUserId()
-            };
+                fakePlayerSender = UserInfo.GetLocalUser();
+                fakePlayerSender.Name = username;
+            }
+            catch
+            {
+                fakePlayerSender = new UserInfo { Name = username };
+            }
 
             if (playerSender)
             {
@@ -350,8 +354,7 @@ namespace ValheimTooler.Core
                             playerSender.GetHeadPoint(),
                             2,
                             fakePlayerSender,
-                            message,
-                            PrivilegeManager.GetNetworkUserId()
+                            message
                         });
                     }
                     return;
@@ -364,8 +367,7 @@ namespace ValheimTooler.Core
                     {
                         (int)type,
                         fakePlayerSender,
-                        message,
-                        PrivilegeManager.GetNetworkUserId()
+                        message
                     });
                 }
             }

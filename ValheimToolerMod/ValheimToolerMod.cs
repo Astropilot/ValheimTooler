@@ -20,8 +20,18 @@ namespace ValheimToolerMod
 
         private void Awake()
         {
-            FejdStartupPatch.OnGameInitialized += LoadPlugin;
-            _harmony = Harmony.CreateAndPatchAll(typeof(FejdStartupPatch), PluginGUID);
+            Logger.LogInfo("ValheimToolerMod Awake called.");
+            if (FejdStartup.instance != null)
+            {
+                Logger.LogInfo("FejdStartup instance already exists, loading plugin immediately.");
+                LoadPlugin();
+            }
+            else
+            {
+                FejdStartupPatch.OnGameInitialized += LoadPlugin;
+                _harmony = Harmony.CreateAndPatchAll(typeof(FejdStartupPatch), PluginGUID);
+                Logger.LogInfo("Waiting for FejdStartup to initialize ValheimTooler.");
+            }
         }
 
         private void OnDestroy()
@@ -32,16 +42,24 @@ namespace ValheimToolerMod
 
         private void LoadPlugin()
         {
-            FejdStartupPatch.OnGameInitialized -= LoadPlugin;
-            _harmony?.UnpatchSelf();
-            _harmony = null;
+            try
+            {
+                FejdStartupPatch.OnGameInitialized -= LoadPlugin;
+                _harmony?.UnpatchSelf();
+                _harmony = null;
 
-            var valheimAssemblyFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            var configPathFilePath = Path.Combine(valheimAssemblyFolder, "config_vt.path");
+                var valheimAssemblyFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+                var configPathFilePath = Path.Combine(valheimAssemblyFolder, "config_vt.path");
 
-            File.WriteAllText(configPathFilePath, Paths.ConfigPath);
+                File.WriteAllText(configPathFilePath, Paths.ConfigPath);
 
-            CallLoaderInit();
+                CallLoaderInit();
+                Logger.LogInfo("ValheimTooler loaded successfully!");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"Error loading ValheimTooler: {ex}");
+            }
         }
 
         private static Type GetLoaderType()
